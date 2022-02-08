@@ -18,3 +18,12 @@ C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\obj\D
 C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.csproj.CoreCompileInputs.cache
 C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.exe
 C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.pdb
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\RayCastEngine.exe.config
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.exe
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.pdb
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\RayCastEngine.exe
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\RayCastEngine.pdb
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.csprojResolveAssemblyReference.cache
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Menu.resources
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Properties.Resources.resources
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.csproj.GenerateResource.Cache
