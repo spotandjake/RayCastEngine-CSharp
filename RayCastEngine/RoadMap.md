@@ -11,6 +11,7 @@
   - [ ] Renderer
   - [ ] Camera
   - [ ] Map
+  - [ ] Map Selector
   - [ ] Map Editor
   - [ ] Enemys
   - [ ] Multiplayer
