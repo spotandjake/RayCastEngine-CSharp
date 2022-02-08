@@ -27,3 +27,4 @@ C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\Ra
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Menu.resources
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Properties.Resources.resources
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.csproj.GenerateResource.Cache
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Views.Game.resources
