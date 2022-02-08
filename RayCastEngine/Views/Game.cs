@@ -27,6 +27,8 @@ namespace RayCastEngine.Views {
       WindowState = FormWindowState.Maximized;
       // Create Game
       currentEngine = new Engine();
+      Rectangle resolution = Screen.PrimaryScreen.Bounds;
+      currentEngine.Resolution = new Size(resolution.Width, resolution.Height);
       // Start
       Start();
     }

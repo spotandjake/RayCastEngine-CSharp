@@ -9,6 +9,7 @@ using RayCastEngine.Views;
 namespace RayCastEngine.GameComponents {
   class Engine {
     // Properties
+    public Size Resolution { get; set; }
     // Methods
     public void Load(GameType gameType) {
       // Initialize
@@ -20,7 +21,7 @@ namespace RayCastEngine.GameComponents {
     }
     public void Draw(Graphics gfx) {
       // Draw Our New Buffer
-      gfx.DrawRectangle(new Pen(Color.CornflowerBlue), new Rectangle(0, 0, 10, 10));
+      gfx.FillRectangle(new SolidBrush(Color.CornflowerBlue), new Rectangle(0, 0, Resolution.Width, Resolution.Height));
     }
   }
 }
