@@ -23,7 +23,6 @@ namespace RayCastEngine.Views {
       // Initalize
       InitializeComponent();
       // Lock To FullScreen
-      FormBorderStyle = FormBorderStyle.None;
       WindowState = FormWindowState.Maximized;
       // Create Game
       currentEngine = new Engine();

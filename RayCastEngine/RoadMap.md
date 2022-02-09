@@ -16,6 +16,7 @@
   - [ ] Enemys
   - [ ] Multiplayer
   - [ ] Multiple Floors
+  - [ ] Use an enum or something for textures
 - [ ] Settings Pane
 - [ ] Quick Pause Pane
 - [ ] Select Map Pane In Single Player
