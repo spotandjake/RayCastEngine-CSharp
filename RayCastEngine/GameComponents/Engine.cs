@@ -11,9 +11,35 @@ namespace RayCastEngine.GameComponents {
   class Engine {
     // Properties
     public Size Resolution { get; set; }
+    // Temporary Engine Variables
+    private Sprite[] sprites;
     // Methods
     public void Load(GameType gameType) {
       // Initialize
+      sprites = new int[10]{
+        new Sprite(20.5, 11.5, 10), //green light in front of playerstart
+        //green lights in every room
+        new Sprite(18.5, 4.5, 10),
+        new Sprite(10.0, 4.5, 10),
+        new Sprite(10.0, 12.5, 10),
+        new Sprite(3.5, 6.5, 10),
+        new Sprite(3.5, 20.5, 10),
+        new Sprite(3.5, 14.5, 10),
+        new Sprite(14.5, 20.5, 10),
+        //row of pillars in front of wall: fisheye test
+        new Sprite(18.5, 10.5, 9),
+        new Sprite(18.5, 11.5, 9),
+        new Sprite(18.5, 12.5, 9),
+        //some barrels around the map
+        new Sprite(21.5, 1.5,  8),
+        new Sprite(15.5, 1.5,  8),
+        new Sprite(16.0, 1.8,  8),
+        new Sprite(16.2, 1.2,  8),
+        new Sprite(3.5,  2.5,  8),
+        new Sprite(9.5,  15.5, 8),
+        new Sprite(10.0, 15.1, 8),
+        new Sprite(10.5, 15.8, 8),
+      };
     }
     public void Update(TimeSpan gameTime) {
       // Gametime elapsed
@@ -180,15 +206,14 @@ namespace RayCastEngine.GameComponents {
       //SPRITE CASTING
       int[] spriteOrder = new int[sprite.length];
       //sort sprites from far to close
-      for (int i = 0; i < sprite.length; i++) {
-        spriteOrder[i] = {
-          sprite: sprite[i],
-          depth: ((posX - sprite[i].x) * (posX - sprite[i].x) + (posY - sprite[i].y) * (posY - sprite[i].y)),
-        }
+      for (int i = 0; i < sprites.length; i++) {
+        sprites[i].distance = ((posX - sprites[i].x) * (posX - sprites[i].x) + (posY - sprites[i].y) * (posY - sprites[i].y));
       }
-      spriteOrder = spriteOrder.sort((a, b) => b.depth - a.depth);
+      Array.Sort(spriteOrder, sprites, (Sprite a, Sprite b) => {
+        return b.distance - a.distance;
+      });
       //after sorting the sprites, do the projection and draw them
-      for (let i = 0; i < sprite.length; i++) {
+      for (let i = 0; i < sprites.length; i++) {
         Sprite currentSprite = spriteOrder[i].sprite;
         //translate sprite position to relative to camera
         double spriteX = currentSprite.x - posX;
@@ -320,8 +345,8 @@ namespace RayCastEngine.GameComponents {
       // Print text
       fill(255, 255, 255);
       textSize(32);
-      text(`frameRate: ${ Math.round(1 / frameTime)}, x: ${ posX}, y: ${ posY}, z: ${ posZ}`, 0, 32);
-      text(`pitch: ${ camPitch}, dir: ${ Math.atan2(dirX, dirY) * 180 / Math.PI}`, 0, 64);
+      text($"frameRate: {Math.Round(1/frameTime)}, x: {Math.Truncate(posX,3)}, y: {Math.Truncate(posY,3)}, z: {Math.Truncate(posZ,3)}");
+      text($"pitch: {Math.Round(camPitch, 3)}, dir: {Math.atan2(dirX, dirY) * 180 / Math.PI}");
     }
     public void Draw(Graphics gfx) {
       // Draw UI
