@@ -7,6 +7,7 @@ using System.Drawing;
 using RayCastEngine.Views;
 
 namespace RayCastEngine.GameComponents {
+  // Our Main Engine
   class Engine {
     // Properties
     public Size Resolution { get; set; }
@@ -140,31 +141,31 @@ namespace RayCastEngine.GameComponents {
         // Calculate height of line to draw on screen
         int lineHeight = (int)(screenHeight / perpWallDist);
         // calculate lowest and highest pixel to fill in current stripe
-        let drawStart = -lineHeight / 2 + screenHeight2 + camPitch + (posZ / perpWallDist);
+        float drawStart = -lineHeight / 2 + screenHeight2 + camPitch + (posZ / perpWallDist);
         if (drawStart < 0) drawStart = 0;
-        let drawEnd = lineHeight / 2 + screenHeight2 + camPitch + (posZ / perpWallDist);
+        float drawEnd = lineHeight / 2 + screenHeight2 + camPitch + (posZ / perpWallDist);
         if (drawEnd >= screenHeight) drawEnd = screenHeight - 1;
         // texturing calculations
-        let texNum = worldMap[mapX][mapY] - 1; // 1 subtracted from it so that texture 0 can be used!
+        int texNum = worldMap[mapX][mapY] - 1; // 1 subtracted from it so that texture 0 can be used!
                                                //calculate value of wallX
-        let wallX; //where exactly the wall was hit
+        double wallX; //where exactly the wall was hit
         if (side == 0) wallX = posY + perpWallDist * rayDirY;
         else wallX = posX + perpWallDist * rayDirX;
-        wallX -= Math.floor(wallX);
+        wallX -= Math.Floor(wallX);
         //x coordinate on the texture
-        let texX = Math.trunc(wallX * texWidth);
+        int texX = (int)(wallX * texWidth);
         if (side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
         if (side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
         // TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
         // How much to increase the texture coordinate per screen pixel
-        let step = 1.0 * texHeight / lineHeight;
+        float step = 1.0 * texHeight / lineHeight;
         // Starting texture coordinate
-        let texPos = (drawStart - camPitch - (posZ / perpWallDist) - screenHeight2 + lineHeight / 2) * step;
-        for (let y = Math.trunc(drawStart); y < drawEnd; y++) {
+        float texPos = (drawStart - camPitch - (posZ / perpWallDist) - screenHeight2 + lineHeight / 2) * step;
+        for (int y = (int)(drawStart); y < drawEnd; y++) {
           // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
-          let texY = Math.trunc(texPos) & (texHeight - 1); // TODO: Figure this out
+          int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
           texPos += step;
-          const pixel = getPixel(texture[texNum], texX, texY, texWidth);
+          int[] pixel = getPixel(texture[texNum], texX, texY, texWidth);
           //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
           if (side == 1) {
             pixel[0] = (pixel[0] >> 1) & 8355711;
@@ -177,59 +178,60 @@ namespace RayCastEngine.GameComponents {
         ZBuffer[x] = perpWallDist; //perpendicular distance is used
       }
       //SPRITE CASTING
-      let spriteOrder = new Array(sprite.length);
+      int[] spriteOrder = new int[sprite.length];
       //sort sprites from far to close
-      for (let i = 0; i < sprite.length; i++) {
+      for (int i = 0; i < sprite.length; i++) {
         spriteOrder[i] = {
           sprite: sprite[i],
-      depth: ((posX - sprite[i].x) * (posX - sprite[i].x) + (posY - sprite[i].y) * (posY - sprite[i].y)),
-    }
+          depth: ((posX - sprite[i].x) * (posX - sprite[i].x) + (posY - sprite[i].y) * (posY - sprite[i].y)),
+        }
       }
       spriteOrder = spriteOrder.sort((a, b) => b.depth - a.depth);
       //after sorting the sprites, do the projection and draw them
       for (let i = 0; i < sprite.length; i++) {
-        const currentSprite = spriteOrder[i].sprite;
+        Sprite currentSprite = spriteOrder[i].sprite;
         //translate sprite position to relative to camera
-        let spriteX = currentSprite.x - posX;
-        let spriteY = currentSprite.y - posY;
+        double spriteX = currentSprite.x - posX;
+        double spriteY = currentSprite.y - posY;
         // transform sprite with the inverse camera matrix
         // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
         // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
         // [ planeY   dirY ]                                          [ -planeY  planeX ]
-        let invDet = 1.0 / (planeX * dirY - dirX * planeY); //required for correct matrix multiplication
-        let transformX = invDet * (dirY * spriteX - dirX * spriteY);
-        let transformY = invDet * (-planeY * spriteX + planeX * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
-        let spriteScreenX = Math.trunc((screenWidth * 0.5) * (1 + transformX / transformY));
+        float invDet = 1.0 / (planeX * dirY - dirX * planeY); //required for correct matrix multiplication
+        float transformX = invDet * (dirY * spriteX - dirX * spriteY);
+        float transformY = invDet * (-planeY * spriteX + planeX * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
+        int spriteScreenX = (int)((screenWidth * 0.5) * (1 + transformX / transformY));
         //parameters for scaling and moving the sprites
-        const uDiv = 1;
-        const vDiv = 1;
-        const vMove = 0.0;
-        let vMoveScreen = Math.trunc(Math.trunc(vMove / transformY) + camPitch + posZ / transformY);
+        // TODO: Convert These To Constants
+        int uDiv = 1;
+        int vDiv = 1;
+        float vMove = 0.0f;
+        int vMoveScreen = (int)((int)(vMove / transformY) + camPitch + posZ / transformY);
         //calculate height of the sprite on screen
-        let spriteHeight = Math.abs(Math.trunc(screenHeight / transformY)) / vDiv; //using "transformY" instead of the real distance prevents fisheye
+        int spriteHeight = Math.Abs((int)(screenHeight / transformY)) / vDiv; //using "transformY" instead of the real distance prevents fisheye
                                                                                    //calculate lowest and highest pixel to fill in current stripe
-        let drawStartY = -spriteHeight / 2 + screenHeight2 + vMoveScreen;
+        float drawStartY = -spriteHeight / 2 + screenHeight2 + vMoveScreen;
         if (drawStartY < 0) drawStartY = 0;
-        let drawEndY = spriteHeight / 2 + screenHeight2 + vMoveScreen;
+        float drawEndY = spriteHeight / 2 + screenHeight2 + vMoveScreen;
         if (drawEndY >= screenHeight) drawEndY = screenHeight - 1;
         //calculate width of the sprite
-        let spriteWidth = Math.abs(Math.trunc(screenHeight / transformY)) / uDiv;
-        let drawStartX = -spriteWidth / 2 + spriteScreenX;
+        int spriteWidth = Math.Abs((int)(screenHeight / transformY)) / uDiv;
+        float drawStartX = -spriteWidth / 2 + spriteScreenX;
         if (drawStartX < 0) drawStartX = 0;
-        let drawEndX = spriteWidth / 2 + spriteScreenX;
+        float drawEndX = spriteWidth / 2 + spriteScreenX;
         if (drawEndX >= screenWidth) drawEndX = screenWidth - 1;
         //loop through every vertical stripe of the sprite on screen
-        for (let stripe = Math.trunc(drawStartX); stripe < drawEndX; stripe++) {
-          let texX = Math.trunc((stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth);
+        for (int stripe = (int)drawStartX; stripe < drawEndX; stripe++) {
+          int texX = (int)((stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth);
           //the conditions in the if are:
           //1) it's in front of camera plane so you don't see things behind you
           //2) it's on the screen (left)
           //3) it's on the screen (right)
           //4) ZBuffer, with perpendicular distance
           if (transformY > 0 && stripe > 0 && stripe < screenWidth && transformY < ZBuffer[stripe])
-            for (let y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
-              let d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
-              let texY = Math.trunc(((d * texHeight) / spriteHeight) / 256);
+            for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
+              float d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
+              int texY = (int)(((d * texHeight) / spriteHeight) / 256);
               const pixel = getPixel(texture[currentSprite.texture], texX, texY, texWidth);
               if (pixel[3] == 0) continue;
               buffer.set(stripe, y, pixel); //paint pixel if it isn't black, black is the invisible color
@@ -239,14 +241,14 @@ namespace RayCastEngine.GameComponents {
       engine.drawBuffer(buffer);
       // No need to clear the screen here, since everything is overdrawn with floor and ceiling
       //timing for input and FPS counter
-      let frameTime = engine.deltaTime() / 1000; //frametime is the time this frame has taken, in seconds
+      float frameTime = engine.deltaTime() / 1000.0f; //frametime is the time this frame has taken, in seconds
                                                  //speed modifiers
-      let moveSpeed = frameTime * 3; //the constant value is in squares/second
-      let rotSpeed = frameTime * 2; //the constant value is in radians/second
+      float moveSpeed = frameTime * 3; //the constant value is in squares/second
+      float rotSpeed = frameTime * 2; //the constant value is in radians/second
                                     // TODO: We should do the math on the movement both forward and backward and then check if it works
       if (keyIsDown(87)) {
-        let projectedX = posX + dirX * moveSpeed;
-        let projectedY = posY + dirY * moveSpeed;
+        float projectedX = posX + dirX * moveSpeed;
+        float projectedY = posY + dirY * moveSpeed;
         if (worldMap[Math.trunc(projectedX)] == undefined) projectedX = mapWidth - 1;
         if (worldMap[Math.trunc(projectedX)][Math.trunc(projectedY)] == undefined) projectedY = mapHeight - 1;
         if (worldMap[Math.trunc(projectedX)][intPosY] == 0) posX = projectedX;
@@ -254,8 +256,8 @@ namespace RayCastEngine.GameComponents {
       }
       //move backwards if no wall behind you
       if (keyIsDown(83)) {
-        let projectedX = posX - dirX * moveSpeed;
-        let projectedY = posY - dirY * moveSpeed;
+        float projectedX = posX - dirX * moveSpeed;
+        float projectedY = posY - dirY * moveSpeed;
         if (worldMap[Math.trunc(projectedX)] == undefined) projectedX = mapWidth - 1;
         if (worldMap[Math.trunc(projectedX)][Math.trunc(projectedY)] == undefined) projectedY = mapHeight - 1;
         if (worldMap[Math.trunc(projectedX)][intPosY] == 0) posX = projectedX;
@@ -280,8 +282,8 @@ namespace RayCastEngine.GameComponents {
       //   if (worldMap[intPosX][Math.trunc(projectedY)] == 0) posY = projectedY;
       // }
       // TODO: We Want To Use The Mouse
-      let cosRotSpeed = Math.cos(rotSpeed);
-      let sinRotSpeed = Math.sin(rotSpeed);
+      float cosRotSpeed = Math.cos(rotSpeed);
+      float sinRotSpeed = Math.sin(rotSpeed);
       //rotate to the right
       if (keyIsDown(39)) {
         //both camera direction and camera plane must be rotated
@@ -311,10 +313,10 @@ namespace RayCastEngine.GameComponents {
       if (keyIsDown(32) && posZ == 0) posZ = 200;
       // crouch
       if (keyIsDown(16) && posZ == 0) posZ = -200;
-      if (camPitch > 0) camPitch = Math.max(0, camPitch - 100 * moveSpeed);
-      if (camPitch < 0) camPitch = Math.min(0, camPitch + 100 * moveSpeed);
-      if (posZ > 0) posZ = Math.max(0, posZ - 100 * moveSpeed);
-      if (posZ < 0) posZ = Math.min(0, posZ + 100 * moveSpeed);
+      if (camPitch > 0) camPitch = Math.Max(0, camPitch - 100 * moveSpeed);
+      if (camPitch < 0) camPitch = Math.Min(0, camPitch + 100 * moveSpeed);
+      if (posZ > 0) posZ = Math.Max(0, posZ - 100 * moveSpeed);
+      if (posZ < 0) posZ = Math.Min(0, posZ + 100 * moveSpeed);
       // Print text
       fill(255, 255, 255);
       textSize(32);

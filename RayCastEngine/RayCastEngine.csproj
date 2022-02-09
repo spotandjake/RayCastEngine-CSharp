@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameComponents\Engine.cs" />
+    <Compile Include="GameComponents\Sprite.cs" />
+    <Compile Include="GameComponents\Types.cs" />
     <Compile Include="Views\Game.cs">
       <SubType>Form</SubType>
     </Compile>

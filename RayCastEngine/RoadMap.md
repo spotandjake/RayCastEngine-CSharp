@@ -17,6 +17,8 @@
   - [ ] Multiplayer
   - [ ] Multiple Floors
   - [ ] Use an enum or something for textures
+  - [ ] Create A Color Class
+  - [ ] Create A Vector Class
 - [ ] Settings Pane
 - [ ] Quick Pause Pane
 - [ ] Select Map Pane In Single Player
