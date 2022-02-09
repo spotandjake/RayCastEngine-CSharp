@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace RayCastEngine.GameComponents {
   public class Color {
     // Properties
-    public int r { get };
-    public int g { get };
-    public int b { get };
-    public int a { get };
+    public int r;
+    public int g;
+    public int b;
+    public int a;
     // Constructor
-    void main(int red, int green, int blue, int alpha) {
+    public Color(int red, int green, int blue, int alpha) {
       r = red;
       g = green;
       b = blue;

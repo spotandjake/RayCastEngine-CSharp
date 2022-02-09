@@ -5,17 +5,20 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RayCastEngine.GameComponents {
-  public class Sprite {
+  public class Vector3 {
     // Properties
-    public double distance;
     public double x;
     public double y;
-    public Texture texture;
+    public double z;
     // Constructor
-    public Sprite(double xPos, double yPos, Texture tex) {
-      x = xPos;
-      y = yPos;
-      texture = tex;
+    public Vector3(double xVal, double yVal, double zVal) {
+      x = xVal;
+      y = yVal;
+      z = zVal;
+    }
+    // Functions
+    int[] toArray() {
+      return new int[2][x, y, z];
     }
   }
 }
