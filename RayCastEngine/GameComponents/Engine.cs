@@ -11,9 +11,10 @@ namespace RayCastEngine.GameComponents {
   class Engine {
     // Properties
     public Size Resolution { get; set; }
+    public Dictionary<int, bool> keys = new Dictionary<int, bool>();
+    // Temporary Engine Variables
     private int texWidth = 64;
     private int texHeight = 64;
-    // Temporary Engine Variables
     private int[,] worldMap;
     private Dictionary<Texture, Bitmap> textures = new Dictionary<Texture, Bitmap>();
     private double[] ZBuffer;
@@ -170,7 +171,7 @@ namespace RayCastEngine.GameComponents {
       // WALL CASTING
       for (int x = 0; x < screenWidth; x++) {
         //calculate ray position and direction
-        float cameraX = 2 * x / screenWidth - 1; //x-coordinate in camera space
+        double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
         double rayDirX = direction.x + plane.x * cameraX;
         double rayDirY = direction.y + plane.y * cameraX;
         //which box of the map we're in
@@ -224,13 +225,13 @@ namespace RayCastEngine.GameComponents {
         // Calculate height of line to draw on screen
         int lineHeight = (int)(screenHeight / perpWallDist);
         // calculate lowest and highest pixel to fill in current stripe
-        double drawStart = -lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist);
+        int drawStart = (int)(-lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist));
         if (drawStart < 0) drawStart = 0;
-        double drawEnd = lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist);
+        int drawEnd = (int)(lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist));
         if (drawEnd >= screenHeight) drawEnd = screenHeight - 1;
         // texturing calculations
-        int texNum = worldMap[mapX, mapY] - 1; // 1 subtracted from it so that texture 0 can be used!
-                                               //calculate value of wallX
+        int texNum = worldMap[mapX, mapY];
+        //calculate value of wallX
         double wallX; //where exactly the wall was hit
         if (side == 0) wallX = position.y + perpWallDist * rayDirY;
         else wallX = position.x + perpWallDist * rayDirX;
@@ -315,7 +316,6 @@ namespace RayCastEngine.GameComponents {
               float d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
               int texY = (int)(((d * texHeight) / spriteHeight) / 256);
               Color pixel = textures[(Texture)currentSprite.texture].GetPixel(texX, texY);
-              // Color pixel = getPixel(texture[currentSprite.texture], texX, texY, texWidth);
               if (pixel.A == 0) continue;
               buffer.SetPixel(stripe, y, pixel); //paint pixel if it isn't black, black is the invisible color
             }
@@ -408,15 +408,18 @@ namespace RayCastEngine.GameComponents {
       // text($"frameRate: {Math.Round(1/frameTime)}, x: {Math.Truncate(posX,3)}, y: {Math.Truncate(posY,3)}, z: {Math.Truncate(posZ,3)}");
       // text($"pitch: {Math.Round(camPitch, 3)}, dir: {Math.atan2(dirX, dirY) * 180 / Math.PI}");
     }
+
     private Boolean keyIsDown(int keycode) {
-      return false;
+      return keys.ContainsKey(keycode) && keys[keycode] == true;
     }
-    public void Draw(Graphics gfx) {
+    public void Draw(Graphics gfx, TimeSpan gameTime) {
       // Draw UI
       // Draw Game
-      // Draw Our New Buffer
-      //gfx.FillRectangle(new SolidBrush(Color.CornflowerBlue), new Rectangle(0, 0, Resolution.Width, Resolution.Height));
       gfx.DrawImage(buffer, new Point(0, 0));
+      // Draw Our New Buffer
+      double frameTime = gameTime.Milliseconds / 1000.0;
+      gfx.DrawString($"frameRate: {Math.Round(1 / frameTime)}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 0);
+      gfx.DrawString($"pitch: {Math.Round(direction.z, 3)}, dir: {Math.Atan2(direction.x, direction.y) * 180 / Math.PI}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 16);
     }
   }
 }

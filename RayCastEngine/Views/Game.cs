@@ -13,6 +13,7 @@ namespace RayCastEngine.Views {
   // Game Runtime
   public partial class Game : Form {
     // Properties
+    private Dictionary<int, bool> keys = new Dictionary<int, bool>();
     private Boolean Running = false;
     private GameType currentGameType;
     private Engine currentEngine;
@@ -53,13 +54,24 @@ namespace RayCastEngine.Views {
         TimeSpan GameTime = DateTime.Now - _previousGameTime;
         // Update the current previous game time
         _previousGameTime = _previousGameTime + GameTime;
+        // Update List Of Keys
+        currentEngine.keys = keys;
         // Update the game
         currentEngine.Update(GameTime);
         // Draw Frame
-        currentEngine.Draw(gfx);
+        currentEngine.Draw(gfx, GameTime);
         // Update Game at 60fps
-        await Task.Delay(8);
+       await Task.Delay(1000 / 60);
       }
+    }
+    // Keys
+    private void Menu_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e) {
+      if (keys.ContainsKey((int)e.KeyCode)) keys[(int)e.KeyCode] = true;
+      else keys.Add((int)e.KeyCode, true);
+    }
+    private void Menu_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e) {
+      if (keys.ContainsKey((int)e.KeyCode)) keys[(int)e.KeyCode] = false;
+      else keys.Add((int)e.KeyCode, false);
     }
   }
 }
