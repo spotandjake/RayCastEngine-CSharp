@@ -16,9 +16,58 @@ namespace RayCastEngine.GameComponents {
       y = yVal;
       z = zVal;
     }
+    // Set Methods
+    public void setX(double xVal) {
+      x = xVal;
+    }
+    public void setY(double yVal) {
+      y = yVal;
+    }
+    public void setZ(double zVal) {
+      z = zVal;
+    }
+    // Math Methods
+    public void add(Vector3 vec) {
+      x += vec.x;
+      y += vec.y;
+      z += vec.y;
+    }
+    public void addXYZ(double xVal, double yVal, double zVal) {
+      x += xVal;
+      y += yVal;
+      z += zVal;
+    }
+    public void addX(double xVal) {
+      x += xVal;
+    }
+    public void addY(double yVal) {
+      y += yVal;
+    }
+    public void addZ(double zVal) {
+      z += zVal;
+    }
+    public void sub(Vector3 vec) {
+      x -= vec.x;
+      y -= vec.y;
+      z -= vec.y;
+    }
+    public void subXYZ(double xVal, double yVal, double zVal) {
+      x -= xVal;
+      y -= yVal;
+      z -= zVal;
+    }
+    public void subX(double xVal) {
+      x -= xVal;
+    }
+    public void subY(double yVal) {
+      y -= yVal;
+    }
+    public void subZ(double zVal) {
+      z -= zVal;
+    }
     // Functions
-    int[] toArray() {
-      return new int[2][x, y, z];
+    public double[] toArray() {
+      return new double[] { x, y, z };
     }
   }
 }

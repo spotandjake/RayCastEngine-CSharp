@@ -14,13 +14,58 @@ namespace RayCastEngine.GameComponents {
     private int texWidth = 64;
     private int texHeight = 64;
     // Temporary Engine Variables
+    private int[,] worldMap;
+    private Dictionary<Texture, Bitmap> textures = new Dictionary<Texture, Bitmap>();
+    private double[] ZBuffer;
+    private Bitmap buffer;
     private Vector3 position = new Vector3(22.0, 11.5, 0.0);
-    private Vector3 rotation = new Vector3(0.0, 0.0, 0.0);
+    private Vector3 direction = new Vector3(0.0, 0.0, 0.0); // dirX, dirY, camPitch
+    private Vector3 plane = new Vector3(0.0, 0.66, 0.0); // planeX, planeY
     private Sprite[] sprites;
     // Methods
     public void Load(GameType gameType) {
       // Initialize
-      sprites = new Sprite[10]{
+      // Load Images
+      textures.Add(Texture.EagleWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/eagle.png"));
+      textures.Add(Texture.RedBrickWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/redbrick.png"));
+      textures.Add(Texture.PurpleStoneWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/purplestone.png"));
+      textures.Add(Texture.GreyStoneWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/reystone.png"));
+      textures.Add(Texture.BlueStoneWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/bluestone.png"));
+      textures.Add(Texture.MossyWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/mossy.png"));;
+      textures.Add(Texture.WoodWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/wood.png"));
+      textures.Add(Texture.ColorStoneWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/colorstone.png"));
+      textures.Add(Texture.BarrelEntity, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/barrel.png")); ;
+      textures.Add(Texture.PillarEntity, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/pillar.png"));
+      textures.Add(Texture.GreenLight, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/greenlight.png"));
+      // Load World Map
+      worldMap = new int[,] {
+        { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5 }
+      };
+      // Load Sprites
+      sprites = new Sprite[]{
         new Sprite(20.5, 11.5, Texture.GreenLight), //green light in front of playerstart
         //green lights in every room
         new Sprite(18.5, 4.5, Texture.GreenLight),
@@ -42,8 +87,10 @@ namespace RayCastEngine.GameComponents {
         new Sprite(3.5,  2.5,  Texture.BarrelEntity),
         new Sprite(9.5,  15.5, Texture.BarrelEntity),
         new Sprite(10.0, 15.1, Texture.BarrelEntity),
-        new Sprite(10.5, 15.8, Texture.BarrelEntity),
+        new Sprite(10.5, 15.8, Texture.BarrelEntity)
       };
+      // Create Our Buffer
+      buffer = new Bitmap(Resolution.Width, Resolution.Height);
     }
     public void Update(TimeSpan gameTime) {
       // Gametime elapsed
@@ -52,27 +99,27 @@ namespace RayCastEngine.GameComponents {
       // Set Cached Vars
       int screenWidth = Resolution.Width;
       int screenHeight = Resolution.Height;
-      int screenHeight2 = screenHeight * 0.5;
+      double screenHeight2 = screenHeight * 0.5;
       // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
-      float rayDirX0 = dirX - planeX;
-      float rayDirY0 = dirY - planeY;
-      float rayDirX1 = dirX + planeX;
-      float rayDirY1 = dirY + planeY;
+      double rayDirX0 = direction.x - plane.x;
+      double rayDirY0 = direction.y - plane.y;
+      double rayDirX1 = direction.x + plane.x;
+      double rayDirY1 = direction.y + plane.y;
       //move forward if no wall in front of you
       int intPosX = (int)position.x;
       int intPosY = (int)position.y;
       //FLOOR CASTING
       for (int y = 0; y < screenHeight; y++) {
         // whether this section is floor or ceiling
-        Boolean is_floor = y > screenHeight2 + camPitch;
+        Boolean is_floor = y > screenHeight2 + direction.z;
         // Current y position compared to the center of the screen (the horizon)
-        int p = (int)(is_floor ? (y - screenHeight2 - camPitch) : (screenHeight2 - y + camPitch));
+        int p = (int)(is_floor ? (y - screenHeight2 - direction.z) : (screenHeight2 - y + direction.z));
         // Vertical position of the camera.
         // NOTE: with 0.5, it's exactly in the center between floor and ceiling,
         // matching also how the walls are being raycasted. For different values
         // than 0.5, a separate loop must be done for ceiling and floor since
         // they're no longer symmetrical.
-        float camZ = is_floor ? (screenHeight2 + position.z) : (screenHeight2 - position.z);
+        double camZ = is_floor ? (screenHeight2 + position.z) : (screenHeight2 - position.z);
         // Horizontal distance from the camera to the floor for the current row.
         // 0.5 is the z position exactly in the middle between floor and ceiling.
         // NOTE: this is affine texture mapping, which is not perspective correct
@@ -87,14 +134,14 @@ namespace RayCastEngine.GameComponents {
         // posZ units. It will travel the same ratio horizontally. The ratio was
         // 1 / p for going through the camera plane, so to go posZ times farther
         // to reach the floor, we get that the total horizontal distance is posZ / p.
-        float rowDistance = camZ / p;
+        double rowDistance = camZ / p;
         // calculate the real world step vector we have to add for each x (parallel to camera plane)
         // adding step by step avoids multiplications with a weight in the inner loop
-        float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / screenWidth;
-        float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / screenWidth;
+        double floorStepX = rowDistance * (rayDirX1 - rayDirX0) / screenWidth;
+        double floorStepY = rowDistance * (rayDirY1 - rayDirY0) / screenWidth;
         // real world coordinates of the leftmost column. This will be updated as we step to the right.
-        float floorX = position.x + rowDistance * rayDirX0;
-        float floorY = position.y + rowDistance * rayDirY0;
+        double floorX = position.x + rowDistance * rayDirX0;
+        double floorY = position.y + rowDistance * rayDirY0;
         for (int x = 0; x < screenWidth; x++) {
           // the cell coord is simply got from the integer parts of floorX and floorY
           int cellX = (int)floorX;
@@ -105,35 +152,41 @@ namespace RayCastEngine.GameComponents {
           floorX += floorStepX;
           floorY += floorStepY;
           // choose texture and draw the pixel
-          int floorTexture = (((cellX + cellY) & 1) == 0) ? 3 : 4;
-          int ceilingTexture = 6;
-          Color pixel = getPixel(texture[is_floor ? floorTexture : ceilingTexture], tx, ty, texWidth);
-          pixel[0] = (pixel[0] >> 1) & 8355711; // make a bit darker
-          pixel[1] = (pixel[1] >> 1) & 8355711;
-          pixel[2] = (pixel[2] >> 1) & 8355711;
-          buffer.set(x, y, pixel);
+          Texture floorTexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
+          Texture ceilingTexture = Texture.WoodWall;
+          Color pixel = textures[is_floor ? floorTexture : ceilingTexture].GetPixel(tx, ty);
+          // Color pixel = getPixel(texture[], tx, ty, texWidth);
+          buffer.SetPixel(
+            x,
+            y,
+            Color.FromArgb(
+              (pixel.R >> 1) & 8355711,
+              (pixel.G >> 1) & 8355711,
+              (pixel.B >> 1) & 8355711
+            )
+          );
         }
       }
       // WALL CASTING
       for (int x = 0; x < screenWidth; x++) {
         //calculate ray position and direction
         float cameraX = 2 * x / screenWidth - 1; //x-coordinate in camera space
-        float rayDirX = dirX + planeX * cameraX;
-        float rayDirY = dirY + planeY * cameraX;
+        double rayDirX = direction.x + plane.x * cameraX;
+        double rayDirY = direction.y + plane.y * cameraX;
         //which box of the map we're in
-        float mapX = intPosX;
-        float mapY = intPosY;
+        int mapX = intPosX;
+        int mapY = intPosY;
         //length of ray from current position to next x or y-side
         double sideDistX;
         double sideDistY;
         //length of ray from one x or y-side to next x or y-side
         double deltaDistX = (rayDirX == 0) ? 1e30 : Math.Abs(1 / rayDirX);
         double deltaDistY = (rayDirY == 0) ? 1e30 : Math.Abs(1 / rayDirY);
-        float perpWallDist;
+        double perpWallDist;
         //what direction to step in x or y-direction (either +1 or -1)
-        float stepX;
-        float stepY;
-        Boolean hit = false; //was there a wall hit?
+        int stepX;
+        int stepY;
+        bool hit = false; //was there a wall hit?
         int side = 1; //was a NS or a EW wall hit?
                   //calculate step and initial sideDist
         if (rayDirX < 0) {
@@ -163,7 +216,7 @@ namespace RayCastEngine.GameComponents {
             side = 1;
           }
           //Check if ray has hit a wall
-          if (worldMap[mapX][mapY] > 0) hit = true;
+          if (worldMap[mapX, mapY] > 0) hit = true;
         }
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
         if (side == 0) perpWallDist = (sideDistX - deltaDistX);
@@ -171,12 +224,12 @@ namespace RayCastEngine.GameComponents {
         // Calculate height of line to draw on screen
         int lineHeight = (int)(screenHeight / perpWallDist);
         // calculate lowest and highest pixel to fill in current stripe
-        float drawStart = -lineHeight / 2 + screenHeight2 + camPitch + (position.z / perpWallDist);
+        double drawStart = -lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist);
         if (drawStart < 0) drawStart = 0;
-        float drawEnd = lineHeight / 2 + screenHeight2 + camPitch + (position.z / perpWallDist);
+        double drawEnd = lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist);
         if (drawEnd >= screenHeight) drawEnd = screenHeight - 1;
         // texturing calculations
-        int texNum = worldMap[mapX][mapY] - 1; // 1 subtracted from it so that texture 0 can be used!
+        int texNum = worldMap[mapX, mapY] - 1; // 1 subtracted from it so that texture 0 can be used!
                                                //calculate value of wallX
         double wallX; //where exactly the wall was hit
         if (side == 0) wallX = position.y + perpWallDist * rayDirY;
@@ -188,37 +241,37 @@ namespace RayCastEngine.GameComponents {
         if (side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
         // TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
         // How much to increase the texture coordinate per screen pixel
-        float step = 1.0 * texHeight / lineHeight;
+        double step = 1.0 * texHeight / lineHeight;
         // Starting texture coordinate
-        float texPos = (drawStart - camPitch - (position.z / perpWallDist) - screenHeight2 + lineHeight / 2) * step;
+        double texPos = (drawStart - direction.z - (position.z / perpWallDist) - screenHeight2 + lineHeight / 2) * step;
         for (int y = (int)(drawStart); y < drawEnd; y++) {
           // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
           int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
           texPos += step;
-          Color pixel = getPixel(texture[texNum], texX, texY, texWidth);
+          Color pixel = textures[(Texture)texNum].GetPixel(texX, texY);
+          // Color pixel = getPixel(texture[texNum], texX, texY, texWidth);
           //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
           if (side == 1) {
-            pixel[0] = (pixel[0] >> 1) & 8355711;
-            pixel[1] = (pixel[1] >> 1) & 8355711;
-            pixel[2] = (pixel[2] >> 1) & 8355711;
+            pixel = Color.FromArgb(
+              (pixel.R >> 1) & 8355711,
+              (pixel.G >> 1) & 8355711,
+              (pixel.B >> 1) & 8355711
+            );
           }
-          buffer.set(x, y, pixel);
+          buffer.SetPixel(x, y, pixel);
         }
         //SET THE ZBUFFER FOR THE SPRITE CASTING
         ZBuffer[x] = perpWallDist; //perpendicular distance is used
       }
       //SPRITE CASTING
-      int[] spriteOrder = new int[sprite.length];
       //sort sprites from far to close
       for (int i = 0; i < sprites.Length; i++) {
         sprites[i].distance = ((position.x - sprites[i].x) * (position.x - sprites[i].x) + (position.y - sprites[i].y) * (position.y - sprites[i].y));
       }
-      Array.Sort(spriteOrder, sprites, (Sprite a, Sprite b) => {
-        return b.distance - a.distance;
-      });
+      Array.Sort(sprites, new Comparison<Sprite>( (a, b) => a.distance.CompareTo(b.distance)));
       //after sorting the sprites, do the projection and draw them
       for (int i = 0; i < sprites.Length; i++) {
-        Sprite currentSprite = spriteOrder[i].sprite;
+        Sprite currentSprite = sprites[i];
         //translate sprite position to relative to camera
         double spriteX = currentSprite.x - position.x;
         double spriteY = currentSprite.y - position.y;
@@ -226,22 +279,22 @@ namespace RayCastEngine.GameComponents {
         // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
         // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
         // [ planeY   dirY ]                                          [ -planeY  planeX ]
-        float invDet = 1.0 / (planeX * dirY - dirX * planeY); //required for correct matrix multiplication
-        float transformX = invDet * (dirY * spriteX - dirX * spriteY);
-        float transformY = invDet * (-planeY * spriteX + planeX * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
+        double invDet = 1.0 / (plane.x * direction.y - direction.x * plane.y); //required for correct matrix multiplication
+        double transformX = invDet * (direction.y * spriteX - direction.x * spriteY);
+        double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
         int spriteScreenX = (int)((screenWidth * 0.5) * (1 + transformX / transformY));
         //parameters for scaling and moving the sprites
         // TODO: Convert These To Constants
         int uDiv = 1;
         int vDiv = 1;
         float vMove = 0.0f;
-        int vMoveScreen = (int)((int)(vMove / transformY) + camPitch + position.z / transformY);
+        int vMoveScreen = (int)((int)(vMove / transformY) + direction.z + position.z / transformY);
         //calculate height of the sprite on screen
         int spriteHeight = Math.Abs((int)(screenHeight / transformY)) / vDiv; //using "transformY" instead of the real distance prevents fisheye
                                                                                    //calculate lowest and highest pixel to fill in current stripe
-        float drawStartY = -spriteHeight / 2 + screenHeight2 + vMoveScreen;
+        double drawStartY = -spriteHeight / 2 + screenHeight2 + vMoveScreen;
         if (drawStartY < 0) drawStartY = 0;
-        float drawEndY = spriteHeight / 2 + screenHeight2 + vMoveScreen;
+        double drawEndY = spriteHeight / 2 + screenHeight2 + vMoveScreen;
         if (drawEndY >= screenHeight) drawEndY = screenHeight - 1;
         //calculate width of the sprite
         int spriteWidth = Math.Abs((int)(screenHeight / transformY)) / uDiv;
@@ -258,39 +311,41 @@ namespace RayCastEngine.GameComponents {
           //3) it's on the screen (right)
           //4) ZBuffer, with perpendicular distance
           if (transformY > 0 && stripe > 0 && stripe < screenWidth && transformY < ZBuffer[stripe])
-            for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
+            for (int y = (int)drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
               float d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
               int texY = (int)(((d * texHeight) / spriteHeight) / 256);
-              Color pixel = getPixel(texture[currentSprite.texture], texX, texY, texWidth);
-              if (pixel.a == 0) continue;
-              buffer.set(stripe, y, pixel); //paint pixel if it isn't black, black is the invisible color
+              Color pixel = textures[(Texture)currentSprite.texture].GetPixel(texX, texY);
+              // Color pixel = getPixel(texture[currentSprite.texture], texX, texY, texWidth);
+              if (pixel.A == 0) continue;
+              buffer.SetPixel(stripe, y, pixel); //paint pixel if it isn't black, black is the invisible color
             }
         }
       }
-      engine.drawBuffer(buffer);
       // No need to clear the screen here, since everything is overdrawn with floor and ceiling
       //timing for input and FPS counter
-      float frameTime = engine.deltaTime() / 1000.0f; //frametime is the time this frame has taken, in seconds
+      double frameTime = gameTime.Milliseconds / 1000.0; //frametime is the time this frame has taken, in seconds
                                                  //speed modifiers
-      float moveSpeed = frameTime * 3; //the constant value is in squares/second
-      float rotSpeed = frameTime * 2; //the constant value is in radians/second
+      double moveSpeed = frameTime * 3; //the constant value is in squares/second
+      double rotSpeed = frameTime * 2; //the constant value is in radians/second
                                     // TODO: We should do the math on the movement both forward and backward and then check if it works
       if (keyIsDown(87)) {
-        float projectedX = position.x + dirX * moveSpeed;
-        float projectedY = position.y + dirY * moveSpeed;
-        if (worldMap[int)projectedX] == undefined) projectedX = mapWidth - 1;
-        if (worldMap[int)projectedX][(int)projectedY] == undefined) projectedY = mapHeight - 1;
-        if (worldMap[int)projectedX][intPosY] == 0) position.setX(projectedX);
-        if (worldMap[intPosX][(int)projectedY]] == 0) position.setY(projectedY);
+        double projectedX = position.x + direction.x * moveSpeed;
+        double projectedY = position.y + direction.y * moveSpeed;
+        // TODO: Fix This
+        // if (worldMap[(int)projectedX] == undefined) projectedX = mapWidth - 1;
+        // if (worldMap[(int)projectedX, (int)projectedY] == undefined) projectedY = mapHeight - 1;
+        if (worldMap[(int)projectedX, intPosY] == 0) position.setX(projectedX);
+        if (worldMap[intPosX, (int)projectedY] == 0) position.setY(projectedY);
       }
       //move backwards if no wall behind you
       if (keyIsDown(83)) {
-        float projectedX = position.x - dirX * moveSpeed;
-        float projectedY = position.y - dirY * moveSpeed;
-        if (worldMap[(int)projectedX] == undefined) projectedX = mapWidth - 1;
-        if (worldMap[(int)projectedX][(int)projectedY] == undefined) projectedY = mapHeight - 1;
-        if (worldMap[(int)projectedX][intPosY] == 0) position.setX(projectedX);
-        if (worldMap[intPosX][(int)projectedY] == 0) position.setY(projectedY);
+        double projectedX = position.x - direction.x * moveSpeed;
+        double projectedY = position.y - direction.y * moveSpeed;
+        // TODO: Fix This
+        // if (worldMap[(int)projectedX] == undefined) projectedX = mapWidth - 1;
+        // if (worldMap[(int)projectedX, (int)projectedY] == undefined) projectedY = mapHeight - 1;
+        if (worldMap[(int)projectedX, intPosY] == 0) position.setX(projectedX);
+        if (worldMap[intPosX, (int)projectedY] == 0) position.setY(projectedY);
       }
       // Strafe Left
       // if (keyIsDown(68)) {
@@ -311,39 +366,39 @@ namespace RayCastEngine.GameComponents {
       //   if (worldMap[intPosX][Math.trunc(projectedY)] == 0) position.setY(projectedY);
       // }
       // TODO: We Want To Use The Mouse
-      float cosRotSpeed = Math.Cos(rotSpeed);
-      float sinRotSpeed = Math.Sin(rotSpeed);
+      double cosRotSpeed = Math.Cos(rotSpeed);
+      double sinRotSpeed = Math.Sin(rotSpeed);
       //rotate to the right
       if (keyIsDown(39)) {
         //both camera direction and camera plane must be rotated
-        int oldDirX = dirX;
-        dirX = dirX * cosRotSpeed - dirY * -sinRotSpeed;
-        dirY = oldDirX * -sinRotSpeed + dirY * cosRotSpeed;
-        int oldPlaneX = planeX;
-        planeX = planeX * cosRotSpeed - planeY * -sinRotSpeed;
-        planeY = oldPlaneX * -sinRotSpeed + planeY * cosRotSpeed;
+        double oldDirX = direction.x;
+        direction.setX(direction.x * cosRotSpeed - direction.y * -sinRotSpeed);
+        direction.setY(oldDirX * -sinRotSpeed + direction.y * cosRotSpeed);
+        double oldPlaneX = plane.x;
+        plane.setX(plane.x * cosRotSpeed - plane.y * -sinRotSpeed);
+        plane.setY(oldPlaneX * -sinRotSpeed + plane.y * cosRotSpeed);
       }
       //rotate to the left
       if (keyIsDown(37)) {
         //both camera direction and camera plane must be rotated
-        int oldDirX = dirX;
-        dirX = dirX * cosRotSpeed - dirY * sinRotSpeed;
-        dirY = oldDirX * sinRotSpeed + dirY * cosRotSpeed;
-        int oldPlaneX = planeX;
-        planeX = planeX * cosRotSpeed - planeY * sinRotSpeed;
-        planeY = oldPlaneX * sinRotSpeed + planeY * cosRotSpeed;
+        double oldDirX = direction.x;
+        direction.setX(direction.x * cosRotSpeed - direction.y * sinRotSpeed);
+        direction.setY(oldDirX * sinRotSpeed + direction.y * cosRotSpeed);
+        double oldPlaneX = plane.x;
+        plane.setX(plane.x * cosRotSpeed - plane.y * sinRotSpeed);
+        plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
       }
       // Very simple demonstration jump/pitch controls
       // look up
-      if (keyIsDown(38)) camPitch += 400 * moveSpeed;
+      if (keyIsDown(38)) direction.addZ(400 * moveSpeed);
       // look down
-      if (keyIsDown(40)) camPitch -= 400 * moveSpeed;
+      if (keyIsDown(40)) direction.subZ(400* moveSpeed);
       // jump
       if (keyIsDown(32) && position.z == 0) position.setZ(200);
       // crouch
       if (keyIsDown(16) && position.z == 0) position.setZ(-200);
-      if (camPitch > 0) camPitch = Math.Max(0, camPitch - 100 * moveSpeed);
-      if (camPitch < 0) camPitch = Math.Min(0, camPitch + 100 * moveSpeed);
+      if (direction.z > 0) direction.setZ(Math.Max(0, direction.z - 100 * moveSpeed));
+      if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
       if (position.z > 0) position.setZ(Math.Max(0, position.z - 100 * moveSpeed));
       if (position.z < 0) position.setZ(Math.Min(0, position.z + 100 * moveSpeed));
       // Print text
@@ -353,11 +408,15 @@ namespace RayCastEngine.GameComponents {
       // text($"frameRate: {Math.Round(1/frameTime)}, x: {Math.Truncate(posX,3)}, y: {Math.Truncate(posY,3)}, z: {Math.Truncate(posZ,3)}");
       // text($"pitch: {Math.Round(camPitch, 3)}, dir: {Math.atan2(dirX, dirY) * 180 / Math.PI}");
     }
+    private Boolean keyIsDown(int keycode) {
+      return false;
+    }
     public void Draw(Graphics gfx) {
       // Draw UI
       // Draw Game
       // Draw Our New Buffer
-      gfx.FillRectangle(new SolidBrush(Color.CornflowerBlue), new Rectangle(0, 0, Resolution.Width, Resolution.Height));
+      //gfx.FillRectangle(new SolidBrush(Color.CornflowerBlue), new Rectangle(0, 0, Resolution.Width, Resolution.Height));
+      gfx.DrawImage(buffer, new Point(0, 0));
     }
   }
 }
