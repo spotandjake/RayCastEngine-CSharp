@@ -19,24 +19,24 @@ namespace RayCastEngine.GameComponents {
     private double[] ZBuffer;
     private Bitmap buffer;
     private Vector3 position = new Vector3(22.0, 11.5, 0.0);
-    private Vector3 direction = new Vector3(0.0, 0.0, 0.0); // dirX, dirY, camPitch
+    private Vector3 direction = new Vector3(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
     private Vector3 plane = new Vector3(0.0, 0.66, 0.0); // planeX, planeY
     private Sprite[] sprites;
     // Methods
     public void Load(GameType gameType) {
       // Initialize
       // Load Images
-      textures.Add(Texture.EagleWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/eagle.png"));
-      textures.Add(Texture.RedBrickWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/redbrick.png"));
-      textures.Add(Texture.PurpleStoneWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/purplestone.png"));
-      textures.Add(Texture.GreyStoneWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/reystone.png"));
-      textures.Add(Texture.BlueStoneWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/bluestone.png"));
-      textures.Add(Texture.MossyWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/mossy.png"));;
-      textures.Add(Texture.WoodWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/wood.png"));
-      textures.Add(Texture.ColorStoneWall, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/colorstone.png"));
-      textures.Add(Texture.BarrelEntity, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/barrel.png")); ;
-      textures.Add(Texture.PillarEntity, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/pillar.png"));
-      textures.Add(Texture.GreenLight, (Bitmap)Image.FromFile("./Assets/Pictures/Textures/64/greenlight.png"));
+      textures.Add(Texture.EagleWall, RayCastEngine.Properties.Resources.eagle);
+      textures.Add(Texture.RedBrickWall, RayCastEngine.Properties.Resources.redbrick);
+      textures.Add(Texture.PurpleStoneWall, RayCastEngine.Properties.Resources.purplestone);
+      textures.Add(Texture.GreyStoneWall, RayCastEngine.Properties.Resources.greystone);
+      textures.Add(Texture.BlueStoneWall, RayCastEngine.Properties.Resources.bluestone);
+      textures.Add(Texture.MossyWall, RayCastEngine.Properties.Resources.mossy);
+      textures.Add(Texture.WoodWall, RayCastEngine.Properties.Resources.wood);
+      textures.Add(Texture.ColorStoneWall, RayCastEngine.Properties.Resources.colorstone);
+      textures.Add(Texture.BarrelEntity, RayCastEngine.Properties.Resources.barrel); ;
+      textures.Add(Texture.PillarEntity, RayCastEngine.Properties.Resources.pillar);
+      textures.Add(Texture.GreenLight, RayCastEngine.Properties.Resources.greenlight);
       // Load World Map
       worldMap = new int[,] {
         { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },
@@ -90,6 +90,7 @@ namespace RayCastEngine.GameComponents {
         new Sprite(10.5, 15.8, Texture.BarrelEntity)
       };
       // Create Our Buffer
+      ZBuffer = new double[Resolution.Width];
       buffer = new Bitmap(Resolution.Width, Resolution.Height);
     }
     public void Update(TimeSpan gameTime) {
@@ -99,7 +100,7 @@ namespace RayCastEngine.GameComponents {
       // Set Cached Vars
       int screenWidth = Resolution.Width;
       int screenHeight = Resolution.Height;
-      double screenHeight2 = screenHeight * 0.5;
+      int screenHeight2 = (int)(screenHeight * 0.5);
       // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
       double rayDirX0 = direction.x - plane.x;
       double rayDirY0 = direction.y - plane.y;
@@ -111,7 +112,7 @@ namespace RayCastEngine.GameComponents {
       //FLOOR CASTING
       for (int y = 0; y < screenHeight; y++) {
         // whether this section is floor or ceiling
-        Boolean is_floor = y > screenHeight2 + direction.z;
+        bool is_floor = y > screenHeight2 + direction.z;
         // Current y position compared to the center of the screen (the horizon)
         int p = (int)(is_floor ? (y - screenHeight2 - direction.z) : (screenHeight2 - y + direction.z));
         // Vertical position of the camera.
@@ -155,7 +156,6 @@ namespace RayCastEngine.GameComponents {
           Texture floorTexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
           Texture ceilingTexture = Texture.WoodWall;
           Color pixel = textures[is_floor ? floorTexture : ceilingTexture].GetPixel(tx, ty);
-          // Color pixel = getPixel(texture[], tx, ty, texWidth);
           buffer.SetPixel(
             x,
             y,
@@ -180,8 +180,8 @@ namespace RayCastEngine.GameComponents {
         double sideDistX;
         double sideDistY;
         //length of ray from one x or y-side to next x or y-side
-        double deltaDistX = (rayDirX == 0) ? 1e30 : Math.Abs(1 / rayDirX);
-        double deltaDistY = (rayDirY == 0) ? 1e30 : Math.Abs(1 / rayDirY);
+        double deltaDistX = (rayDirX == 0) ? 1e30 : Math.Abs(1.0 / rayDirX);
+        double deltaDistY = (rayDirY == 0) ? 1e30 : Math.Abs(1.0 / rayDirY);
         double perpWallDist;
         //what direction to step in x or y-direction (either +1 or -1)
         int stepX;
@@ -248,8 +248,8 @@ namespace RayCastEngine.GameComponents {
           // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
           int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
           texPos += step;
+          if (texNum == 0) continue;
           Color pixel = textures[(Texture)texNum].GetPixel(texX, texY);
-          // Color pixel = getPixel(texture[texNum], texX, texY, texWidth);
           //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
           if (side == 1) {
             pixel = Color.FromArgb(
@@ -268,7 +268,7 @@ namespace RayCastEngine.GameComponents {
       for (int i = 0; i < sprites.Length; i++) {
         sprites[i].distance = ((position.x - sprites[i].x) * (position.x - sprites[i].x) + (position.y - sprites[i].y) * (position.y - sprites[i].y));
       }
-      Array.Sort(sprites, new Comparison<Sprite>( (a, b) => a.distance.CompareTo(b.distance)));
+      Array.Sort(sprites, new Comparison<Sprite>( (a, b) => b.distance.CompareTo(a.distance)));
       //after sorting the sprites, do the projection and draw them
       for (int i = 0; i < sprites.Length; i++) {
         Sprite currentSprite = sprites[i];

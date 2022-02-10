@@ -98,6 +98,17 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <None Include="Assets\Pictures\Textures\64\eagle.png" />
+    <None Include="Assets\Pictures\Textures\64\barrel.png" />
+    <None Include="Assets\Pictures\Textures\64\bluestone.png" />
+    <None Include="Assets\Pictures\Textures\64\colorstone.png" />
+    <None Include="Assets\Pictures\Textures\64\greenlight.png" />
+    <None Include="Assets\Pictures\Textures\64\greystone.png" />
+    <None Include="Assets\Pictures\Textures\64\mossy.png" />
+    <None Include="Assets\Pictures\Textures\64\pillar.png" />
+    <None Include="Assets\Pictures\Textures\64\purplestone.png" />
+    <None Include="Assets\Pictures\Textures\64\redbrick.png" />
+    <None Include="Assets\Pictures\Textures\64\wood.png" />
     <Content Include="Assets\Pictures\UI\Background.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
