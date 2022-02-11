@@ -16,7 +16,7 @@ namespace RayCastEngine.GameComponents {
     private int texWidth = 64;
     private int texHeight = 64;
     private int[,] worldMap;
-    private Dictionary<Texture, Bitmap> textures = new Dictionary<Texture, Bitmap>();
+    private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
     private double[] ZBuffer;
     private DirectBitmap buffer;
     private Vector3 position = new Vector3(22.0, 11.5, 0.0);
@@ -27,17 +27,17 @@ namespace RayCastEngine.GameComponents {
     public void Load(GameType gameType) {
       // Initialize
       // Load Images
-      textures.Add(Texture.EagleWall, RayCastEngine.Properties.Resources.eagle);
-      textures.Add(Texture.RedBrickWall, RayCastEngine.Properties.Resources.redbrick);
-      textures.Add(Texture.PurpleStoneWall, RayCastEngine.Properties.Resources.purplestone);
-      textures.Add(Texture.GreyStoneWall, RayCastEngine.Properties.Resources.greystone);
-      textures.Add(Texture.BlueStoneWall, RayCastEngine.Properties.Resources.bluestone);
-      textures.Add(Texture.MossyWall, RayCastEngine.Properties.Resources.mossy);
-      textures.Add(Texture.WoodWall, RayCastEngine.Properties.Resources.wood);
-      textures.Add(Texture.ColorStoneWall, RayCastEngine.Properties.Resources.colorstone);
-      textures.Add(Texture.BarrelEntity, RayCastEngine.Properties.Resources.barrel); ;
-      textures.Add(Texture.PillarEntity, RayCastEngine.Properties.Resources.pillar);
-      textures.Add(Texture.GreenLight, RayCastEngine.Properties.Resources.greenlight);
+      textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.eagle));
+      textures.Add(Texture.RedBrickWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.redbrick));
+      textures.Add(Texture.PurpleStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.purplestone));
+      textures.Add(Texture.GreyStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greystone));
+      textures.Add(Texture.BlueStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.bluestone));
+      textures.Add(Texture.MossyWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.mossy));
+      textures.Add(Texture.WoodWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.wood));
+      textures.Add(Texture.ColorStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.colorstone));
+      textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.barrel));
+      textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.pillar));
+      textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greenlight));
       // Load World Map
       worldMap = new int[,] {
         { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },
@@ -229,6 +229,7 @@ namespace RayCastEngine.GameComponents {
         if (drawEnd >= screenHeight) drawEnd = screenHeight - 1;
         // texturing calculations
         int texNum = worldMap[mapX, mapY];
+        if (texNum == 0) continue;
         //calculate value of wallX
         double wallX; //where exactly the wall was hit
         if (!side1) wallX = position.y + perpWallDist * rayDirY;
@@ -247,7 +248,6 @@ namespace RayCastEngine.GameComponents {
           // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
           int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
           texPos += step;
-          if (texNum == 0) continue;
           Color pixel = textures[(Texture)texNum].GetPixel(texX, texY);
           //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
           if (side1) {
@@ -272,7 +272,7 @@ namespace RayCastEngine.GameComponents {
       //after sorting the sprites, do the projection and draw them
       for (int i = 0; i < sprites.Length; i++) {
         Sprite currentSprite = sprites[i];
-        //translate sprite position to relative to camera
+        //translate sprite position relative to camera
         double spriteX = currentSprite.x - position.x;
         double spriteY = currentSprite.y - position.y;
         // transform sprite with the inverse camera matrix
@@ -304,20 +304,22 @@ namespace RayCastEngine.GameComponents {
         if (drawEndX >= screenWidth) drawEndX = screenWidth - 1;
         //loop through every vertical stripe of the sprite on screen
         for (int stripe = (int)drawStartX; stripe < drawEndX; stripe++) {
-          int texX = (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth;
-          //the conditions in the if are:
-          //1) it's in front of camera plane so you don't see things behind you
-          //2) it's on the screen (left)
-          //3) it's on the screen (right)
-          //4) ZBuffer, with perpendicular distance
-          if (transformY > 0 && stripe > 0 && stripe < screenWidth && transformY < ZBuffer[stripe])
+          if (transformY > 0 && stripe > 0 && stripe < screenWidth && transformY < ZBuffer[stripe]) {
+            int texX = (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth;
+            //the conditions in the if are:
+            //1) it's in front of camera plane so you don't see things behind you
+            //2) it's on the screen (left)
+            //3) it's on the screen (right)
+            //4) ZBuffer, with perpendicular distance
             for (int y = (int)drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
+              // Displaying Code
               float d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
               int texY = (int)(((d * texHeight) / spriteHeight) / 256);
               Color pixel = textures[currentSprite.texture].GetPixel(texX, texY);
               if (pixel.A == 0) continue;
               buffer.SetPixel(stripe, y, pixel); //paint pixel if it isn't black, black is the invisible color
             }
+          }
         }
       }
       // No need to clear the screen here, since everything is overdrawn with floor and ceiling
