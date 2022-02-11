@@ -18,7 +18,7 @@ namespace RayCastEngine.GameComponents {
     private int[,] worldMap;
     private Dictionary<Texture, Bitmap> textures = new Dictionary<Texture, Bitmap>();
     private double[] ZBuffer;
-    private Bitmap buffer;
+    private DirectBitmap buffer;
     private Vector3 position = new Vector3(22.0, 11.5, 0.0);
     private Vector3 direction = new Vector3(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
     private Vector3 plane = new Vector3(0.0, 0.66, 0.0); // planeX, planeY
@@ -92,7 +92,7 @@ namespace RayCastEngine.GameComponents {
       };
       // Create Our Buffer
       ZBuffer = new double[Resolution.Width];
-      buffer = new Bitmap(Resolution.Width, Resolution.Height);
+      buffer = new DirectBitmap(Resolution.Width, Resolution.Height);
     }
     public void Update(TimeSpan gameTime) {
       // Gametime elapsed
@@ -414,7 +414,7 @@ namespace RayCastEngine.GameComponents {
     public void Draw(Graphics gfx, TimeSpan gameTime) {
       // Draw UI
       // Draw Game
-      gfx.DrawImage(buffer, new Point(0, 0));
+      gfx.DrawImage(buffer.Bitmap, new Point(0, 0));
       // Draw Our New Buffer
       double frameTime = gameTime.Milliseconds / 1000.0;
       gfx.DrawString($"frameRate: {Math.Round(1 / frameTime)}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 0);

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 
 namespace RayCastEngine.GameComponents {
   public class DirectBitmap : IDisposable {
@@ -20,7 +22,7 @@ namespace RayCastEngine.GameComponents {
       Height = height;
       Bits = new Int32[width * height];
       BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
-      Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppPArgb, BitsHandle.AddrOfPinnedObject());
+      Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, BitsHandle.AddrOfPinnedObject());
     }
 
     public void SetPixel(int x, int y, Color colour) {
