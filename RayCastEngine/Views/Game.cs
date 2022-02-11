@@ -48,7 +48,6 @@ namespace RayCastEngine.Views {
 
       // Set previous game time
       DateTime _previousGameTime = DateTime.Now;
-      int NormalFrameTime = 1000 / 60;
       while (Running) {
         // Calculate the time elapsed since the last game loop cycle
         TimeSpan GameTime = DateTime.Now - _previousGameTime;
@@ -60,11 +59,8 @@ namespace RayCastEngine.Views {
         currentEngine.Update(GameTime);
         // Draw Frame
         currentEngine.Draw(gfx, GameTime);
-        // Update Game at 60fps
-        int elapsedTime = (DateTime.Now - GameTime).Millisecond;
-        if (elapsedTime < NormalFrameTime) {
-          await Task.Delay(NormalFrameTime - elapsedTime);
-        }
+        // Update Game at 120fps
+        await Task.Delay(1000 / 120);
       }
     }
     // Keys

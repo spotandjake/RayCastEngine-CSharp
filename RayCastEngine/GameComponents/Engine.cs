@@ -183,13 +183,12 @@ namespace RayCastEngine.GameComponents {
         //length of ray from one x or y-side to next x or y-side
         double deltaDistX = (rayDirX == 0) ? 1e30 : Math.Abs(1.0 / rayDirX);
         double deltaDistY = (rayDirY == 0) ? 1e30 : Math.Abs(1.0 / rayDirY);
-        double perpWallDist;
         //what direction to step in x or y-direction (either +1 or -1)
         int stepX;
         int stepY;
         bool hit = false; //was there a wall hit?
-        int side = 1; //was a NS or a EW wall hit?
-                  //calculate step and initial sideDist
+        bool side1 = true; //was a NS or a EW wall hit?
+        //calculate step and initial sideDist
         if (rayDirX < 0) {
           stepX = -1;
           sideDistX = (position.x - mapX) * deltaDistX;
@@ -210,18 +209,17 @@ namespace RayCastEngine.GameComponents {
           if (sideDistX < sideDistY) {
             sideDistX += deltaDistX;
             mapX += stepX;
-            side = 0;
+            side1 = false;
           } else {
             sideDistY += deltaDistY;
             mapY += stepY;
-            side = 1;
+            side1 = true;
           }
           //Check if ray has hit a wall
           if (worldMap[mapX, mapY] > 0) hit = true;
         }
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
-        if (side == 0) perpWallDist = (sideDistX - deltaDistX);
-        else perpWallDist = (sideDistY - deltaDistY);
+        double perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
         // Calculate height of line to draw on screen
         int lineHeight = (int)(screenHeight / perpWallDist);
         // calculate lowest and highest pixel to fill in current stripe
@@ -233,26 +231,26 @@ namespace RayCastEngine.GameComponents {
         int texNum = worldMap[mapX, mapY];
         //calculate value of wallX
         double wallX; //where exactly the wall was hit
-        if (side == 0) wallX = position.y + perpWallDist * rayDirY;
+        if (!side1) wallX = position.y + perpWallDist * rayDirY;
         else wallX = position.x + perpWallDist * rayDirX;
         wallX -= Math.Floor(wallX);
         //x coordinate on the texture
         int texX = (int)(wallX * texWidth);
-        if (side == 0 && rayDirX > 0) texX = texWidth - texX - 1;
-        if (side == 1 && rayDirY < 0) texX = texWidth - texX - 1;
+        if (!side1 && rayDirX > 0) texX = texWidth - texX - 1;
+        if (side1 && rayDirY < 0) texX = texWidth - texX - 1;
         // TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
         // How much to increase the texture coordinate per screen pixel
         double step = 1.0 * texHeight / lineHeight;
         // Starting texture coordinate
         double texPos = (drawStart - direction.z - (position.z / perpWallDist) - screenHeight2 + lineHeight / 2) * step;
-        for (int y = (int)(drawStart); y < drawEnd; y++) {
+        for (int y = drawStart; y < drawEnd; y++) {
           // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
           int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
           texPos += step;
           if (texNum == 0) continue;
           Color pixel = textures[(Texture)texNum].GetPixel(texX, texY);
           //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-          if (side == 1) {
+          if (side1) {
             pixel = Color.FromArgb(
               (pixel.R >> 1) & 8355711,
               (pixel.G >> 1) & 8355711,
@@ -266,10 +264,11 @@ namespace RayCastEngine.GameComponents {
       }
       //SPRITE CASTING
       //sort sprites from far to close
+      // TODO: instead of sorting by distance why dont we use the ZBuffer
       for (int i = 0; i < sprites.Length; i++) {
         sprites[i].distance = ((position.x - sprites[i].x) * (position.x - sprites[i].x) + (position.y - sprites[i].y) * (position.y - sprites[i].y));
       }
-      Array.Sort(sprites, new Comparison<Sprite>( (a, b) => b.distance.CompareTo(a.distance)));
+      Array.Sort(sprites, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
       //after sorting the sprites, do the projection and draw them
       for (int i = 0; i < sprites.Length; i++) {
         Sprite currentSprite = sprites[i];
@@ -305,7 +304,7 @@ namespace RayCastEngine.GameComponents {
         if (drawEndX >= screenWidth) drawEndX = screenWidth - 1;
         //loop through every vertical stripe of the sprite on screen
         for (int stripe = (int)drawStartX; stripe < drawEndX; stripe++) {
-          int texX = (int)((stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth);
+          int texX = (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth;
           //the conditions in the if are:
           //1) it's in front of camera plane so you don't see things behind you
           //2) it's on the screen (left)
@@ -315,7 +314,7 @@ namespace RayCastEngine.GameComponents {
             for (int y = (int)drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
               float d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
               int texY = (int)(((d * texHeight) / spriteHeight) / 256);
-              Color pixel = textures[(Texture)currentSprite.texture].GetPixel(texX, texY);
+              Color pixel = textures[currentSprite.texture].GetPixel(texX, texY);
               if (pixel.A == 0) continue;
               buffer.SetPixel(stripe, y, pixel); //paint pixel if it isn't black, black is the invisible color
             }
@@ -409,7 +408,7 @@ namespace RayCastEngine.GameComponents {
       // text($"pitch: {Math.Round(camPitch, 3)}, dir: {Math.atan2(dirX, dirY) * 180 / Math.PI}");
     }
 
-    private Boolean keyIsDown(int keycode) {
+    private bool keyIsDown(int keycode) {
       return keys.ContainsKey(keycode) && keys[keycode] == true;
     }
     public void Draw(Graphics gfx, TimeSpan gameTime) {

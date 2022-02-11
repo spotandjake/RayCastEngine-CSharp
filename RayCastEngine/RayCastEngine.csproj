@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameComponents\Engine.cs" />
+    <Compile Include="GameComponents\DirectBitmap.cs" />
     <Compile Include="GameComponents\Vector3.cs" />
     <Compile Include="GameComponents\Sprite.cs" />
     <Compile Include="GameComponents\Types.cs" />
