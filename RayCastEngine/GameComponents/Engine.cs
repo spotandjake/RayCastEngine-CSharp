@@ -95,13 +95,10 @@ namespace RayCastEngine.GameComponents {
       buffer = new DirectBitmap(Resolution.Width, Resolution.Height);
     }
     public void Update(TimeSpan gameTime) {
-      // Gametime elapsed
-      double gameTimeElapsed = gameTime.TotalMilliseconds / 1000;
-      // Draw Frame Into Buffer
       // Set Cached Vars
       int screenWidth = Resolution.Width;
       int screenHeight = Resolution.Height;
-      int screenHeight2 = (int)(screenHeight * 0.5);
+      int screenHeight2 = screenHeight / 2;
       // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
       double rayDirX0 = direction.x - plane.x;
       double rayDirY0 = direction.y - plane.y;
@@ -154,17 +151,15 @@ namespace RayCastEngine.GameComponents {
           floorX += floorStepX;
           floorY += floorStepY;
           // choose texture and draw the pixel
-          Texture floorTexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
-          Texture ceilingTexture = Texture.WoodWall;
-          Color pixel = textures[is_floor ? floorTexture : ceilingTexture].GetPixel(tx, ty);
-          buffer.SetPixel(
+          Texture floortexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
+          Texture ceilingtexture = Texture.WoodWall;
+          Color pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixel(tx, ty);
+          buffer.setPixelRGB(
             x,
             y,
-            Color.FromArgb(
-              (pixel.R >> 1) & 8355711,
-              (pixel.G >> 1) & 8355711,
-              (pixel.B >> 1) & 8355711
-            )
+            (byte)((pixel.R >> 1) & 8355711),
+            (byte)((pixel.G >> 1) & 8355711),
+            (byte)((pixel.B >> 1) & 8355711)
           );
         }
       }
@@ -218,6 +213,9 @@ namespace RayCastEngine.GameComponents {
           //Check if ray has hit a wall
           if (worldMap[mapX, mapY] > 0) hit = true;
         }
+        // texturing calculations
+        Texture texNum = (Texture)worldMap[mapX, mapY];
+        if (texNum == Texture.Air) continue;
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
         double perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
         // Calculate height of line to draw on screen
@@ -227,9 +225,6 @@ namespace RayCastEngine.GameComponents {
         if (drawStart < 0) drawStart = 0;
         int drawEnd = (int)(lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist));
         if (drawEnd >= screenHeight) drawEnd = screenHeight - 1;
-        // texturing calculations
-        int texNum = worldMap[mapX, mapY];
-        if (texNum == 0) continue;
         //calculate value of wallX
         double wallX; //where exactly the wall was hit
         if (!side1) wallX = position.y + perpWallDist * rayDirY;
@@ -248,16 +243,11 @@ namespace RayCastEngine.GameComponents {
           // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
           int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
           texPos += step;
-          Color pixel = textures[(Texture)texNum].GetPixel(texX, texY);
+          Color pixel = textures[texNum].GetPixel(texX, texY);
           //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
           if (side1) {
-            pixel = Color.FromArgb(
-              (pixel.R >> 1) & 8355711,
-              (pixel.G >> 1) & 8355711,
-              (pixel.B >> 1) & 8355711
-            );
-          }
-          buffer.SetPixel(x, y, pixel);
+            buffer.setPixelRGB(x, y, (byte)((pixel.R >> 1) & 8355711), (byte)((pixel.G >> 1) & 8355711), (byte)((pixel.B >> 1) & 8355711));
+          } else buffer.SetPixel(x, y, pixel);
         }
         //SET THE ZBUFFER FOR THE SPRITE CASTING
         ZBuffer[x] = perpWallDist; //perpendicular distance is used
@@ -291,19 +281,19 @@ namespace RayCastEngine.GameComponents {
         int vMoveScreen = (int)((int)(vMove / transformY) + direction.z + position.z / transformY);
         //calculate height of the sprite on screen
         int spriteHeight = Math.Abs((int)(screenHeight / transformY)) / vDiv; //using "transformY" instead of the real distance prevents fisheye
-                                                                                   //calculate lowest and highest pixel to fill in current stripe
-        double drawStartY = -spriteHeight / 2 + screenHeight2 + vMoveScreen;
+                                                                              //calculate lowest and highest pixel to fill in current stripe
+        int drawStartY = -spriteHeight / 2 + screenHeight2 + vMoveScreen;
         if (drawStartY < 0) drawStartY = 0;
-        double drawEndY = spriteHeight / 2 + screenHeight2 + vMoveScreen;
+        int drawEndY = spriteHeight / 2 + screenHeight2 + vMoveScreen;
         if (drawEndY >= screenHeight) drawEndY = screenHeight - 1;
         //calculate width of the sprite
         int spriteWidth = Math.Abs((int)(screenHeight / transformY)) / uDiv;
-        float drawStartX = -spriteWidth / 2 + spriteScreenX;
+        int drawStartX = -spriteWidth / 2 + spriteScreenX;
         if (drawStartX < 0) drawStartX = 0;
-        float drawEndX = spriteWidth / 2 + spriteScreenX;
+        int drawEndX = spriteWidth / 2 + spriteScreenX;
         if (drawEndX >= screenWidth) drawEndX = screenWidth - 1;
         //loop through every vertical stripe of the sprite on screen
-        for (int stripe = (int)drawStartX; stripe < drawEndX; stripe++) {
+        for (int stripe = drawStartX; stripe < drawEndX; stripe++) {
           if (transformY > 0 && stripe > 0 && stripe < screenWidth && transformY < ZBuffer[stripe]) {
             int texX = (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth;
             //the conditions in the if are:
@@ -311,10 +301,10 @@ namespace RayCastEngine.GameComponents {
             //2) it's on the screen (left)
             //3) it's on the screen (right)
             //4) ZBuffer, with perpendicular distance
-            for (int y = (int)drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
+            for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
               // Displaying Code
-              float d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
-              int texY = (int)(((d * texHeight) / spriteHeight) / 256);
+              int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
+              int texY = ((d * texHeight) / spriteHeight) / 256;
               Color pixel = textures[currentSprite.texture].GetPixel(texX, texY);
               if (pixel.A == 0) continue;
               buffer.SetPixel(stripe, y, pixel); //paint pixel if it isn't black, black is the invisible color
@@ -328,7 +318,7 @@ namespace RayCastEngine.GameComponents {
                                                  //speed modifiers
       double moveSpeed = frameTime * 3; //the constant value is in squares/second
       double rotSpeed = frameTime * 2; //the constant value is in radians/second
-                                    // TODO: We should do the math on the movement both forward and backward and then check if it works
+      // TODO: We should do the math on the movement both forward and backward and then check if it works
       if (keyIsDown(87)) {
         double projectedX = position.x + direction.x * moveSpeed;
         double projectedY = position.y + direction.y * moveSpeed;
@@ -402,12 +392,6 @@ namespace RayCastEngine.GameComponents {
       if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
       if (position.z > 0) position.setZ(Math.Max(0, position.z - 100 * moveSpeed));
       if (position.z < 0) position.setZ(Math.Min(0, position.z + 100 * moveSpeed));
-      // Print text
-      // TODO: We want to move this stuff to Draw
-      // fill(255, 255, 255);
-      // textSize(32);
-      // text($"frameRate: {Math.Round(1/frameTime)}, x: {Math.Truncate(posX,3)}, y: {Math.Truncate(posY,3)}, z: {Math.Truncate(posZ,3)}");
-      // text($"pitch: {Math.Round(camPitch, 3)}, dir: {Math.atan2(dirX, dirY) * 180 / Math.PI}");
     }
 
     private bool keyIsDown(int keycode) {
@@ -419,7 +403,7 @@ namespace RayCastEngine.GameComponents {
       gfx.DrawImage(buffer.Bitmap, new Point(0, 0));
       // Draw Our New Buffer
       double frameTime = gameTime.Milliseconds / 1000.0;
-      gfx.DrawString($"frameRate: {Math.Round(1 / frameTime)}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 0);
+      gfx.DrawString($"frameRate: {1 / frameTime}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 0);
       gfx.DrawString($"pitch: {Math.Round(direction.z, 3)}, dir: {Math.Atan2(direction.x, direction.y) * 180 / Math.PI}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 16);
     }
   }

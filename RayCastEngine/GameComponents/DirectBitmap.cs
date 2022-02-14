@@ -30,6 +30,15 @@ namespace RayCastEngine.GameComponents {
       int col = colour.ToArgb();
       Bits[index] = col;
     }
+    public void setPixelRGB(int x, int y, byte red, byte green, byte blue) {
+      setPixelARGB(x, y, 255, red, green, blue);
+    }
+    public void setPixelARGB(int x, int y, byte alpha, byte red, byte green, byte blue) {
+      int index = x + (y * Width);
+      byte[] bytes = new byte[] { blue, green, red, alpha };
+      int col = BitConverter.ToInt32(bytes, 0);
+      Bits[index] = col;
+    }
 
     public Color GetPixel(int x, int y) {
       int index = x + (y * Width);
