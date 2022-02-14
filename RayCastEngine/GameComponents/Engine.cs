@@ -10,6 +10,7 @@ namespace RayCastEngine.GameComponents {
   // Our Main Engine
   class Engine {
     // Properties
+    public bool GameStateChanged = true;
     public Size Resolution { get; set; }
     public Dictionary<int, bool> keys = new Dictionary<int, bool>();
     // Temporary Engine Variables
@@ -95,6 +96,91 @@ namespace RayCastEngine.GameComponents {
       buffer = new DirectBitmap(Resolution.Width, Resolution.Height);
     }
     public void Update(TimeSpan gameTime) {
+      Vector3 oldPosition = position.copy();
+      Vector3 oldDirection = direction.copy();
+      int intPosX = (int)position.x;
+      int intPosY = (int)position.y;
+      // No need to clear the screen here, since everything is overdrawn with floor and ceiling
+      //timing for input and FPS counter
+      double frameTime = gameTime.Milliseconds / 1000.0; //frametime is the time this frame has taken, in seconds
+      //speed modifiers
+      double moveSpeed = frameTime * 3; //the constant value is in squares/second
+      double rotSpeed = frameTime * 2; //the constant value is in radians/second
+      // TODO: We should do the math on the movement both forward and backward and then check if it works
+      if (keyIsDown(87)) {
+        double projectedX = position.x + direction.x * moveSpeed;
+        double projectedY = position.y + direction.y * moveSpeed;
+        if (worldMap[(int)projectedX, intPosY] == 0) position.setX(projectedX);
+        if (worldMap[intPosX, (int)projectedY] == 0) position.setY(projectedY);
+      }
+      //move backwards if no wall behind you
+      if (keyIsDown(83)) {
+        double projectedX = position.x - direction.x * moveSpeed;
+        double projectedY = position.y - direction.y * moveSpeed;
+        if (worldMap[(int)projectedX, intPosY] == 0) position.setX(projectedX);
+        if (worldMap[intPosX, (int)projectedY] == 0) position.setY(projectedY);
+      }
+      // Strafe Left
+      // if (keyIsDown(68)) {
+      //   let projectedX = position.x + (dirX + 1) * moveSpeed;
+      //   let projectedY = position.y + (dirY - 1) * moveSpeed;
+      //   if (worldMap[Math.trunc(projectedX)] == undefined) projectedX = mapWidth-1;
+      //   if (worldMap[Math.trunc(projectedX)][Math.trunc(projectedY)] == undefined) projectedY = mapHeight-1;
+      //   if (worldMap[Math.trunc(projectedX)][intPosY] == 0) position.setX(projectedX);
+      //   if (worldMap[intPosX][Math.trunc(projectedY)] == 0) position.setY(projectedY);
+      // }
+      // // Strafe Right
+      // if (keyIsDown(65)) {
+      //   let projectedX = position.x + (dirX + 1) * moveSpeed;
+      //   let projectedY = position.y + (dirY + 1) * moveSpeed;
+      //   if (worldMap[Math.trunc(projectedX)] == undefined) projectedX = mapWidth-1;
+      //   if (worldMap[Math.trunc(projectedX)][Math.trunc(projectedY)] == undefined) projectedY = mapHeight-1;
+      //   if (worldMap[Math.trunc(projectedX)][intPosY] == 0) position.setX(projectedX);
+      //   if (worldMap[intPosX][Math.trunc(projectedY)] == 0) position.setY(projectedY);
+      // }
+      // TODO: We Want To Use The Mouse
+      double cosRotSpeed = Math.Cos(rotSpeed);
+      double sinRotSpeed = Math.Sin(rotSpeed);
+      //rotate to the right
+      if (keyIsDown(39)) {
+        //both camera direction and camera plane must be rotated
+        double oldDirX = direction.x;
+        direction.setX(direction.x * cosRotSpeed - direction.y * -sinRotSpeed);
+        direction.setY(oldDirX * -sinRotSpeed + direction.y * cosRotSpeed);
+        double oldPlaneX = plane.x;
+        plane.setX(plane.x * cosRotSpeed - plane.y * -sinRotSpeed);
+        plane.setY(oldPlaneX * -sinRotSpeed + plane.y * cosRotSpeed);
+      }
+      //rotate to the left
+      if (keyIsDown(37)) {
+        //both camera direction and camera plane must be rotated
+        double oldDirX = direction.x;
+        direction.setX(direction.x * cosRotSpeed - direction.y * sinRotSpeed);
+        direction.setY(oldDirX * sinRotSpeed + direction.y * cosRotSpeed);
+        double oldPlaneX = plane.x;
+        plane.setX(plane.x * cosRotSpeed - plane.y * sinRotSpeed);
+        plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
+      }
+      // Very simple demonstration jump/pitch controls
+      // look up
+      if (keyIsDown(38)) direction.addZ(400 * moveSpeed);
+      // look down
+      if (keyIsDown(40)) direction.subZ(400* moveSpeed);
+      // jump
+      if (keyIsDown(32) && position.z == 0) position.setZ(200);
+      // crouch
+      if (keyIsDown(16) && position.z == 0) position.setZ(-200);
+      if (direction.z > 0) direction.setZ(Math.Max(0, direction.z - 100 * moveSpeed));
+      if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
+      if (position.z > 0) position.setZ(Math.Max(0, position.z - 100 * moveSpeed));
+      if (position.z < 0) position.setZ(Math.Min(0, position.z + 100 * moveSpeed));
+      // TODO: Calculate Enemy Movements
+      // Determine if game has updated
+      if (!oldPosition.equals(position) || !oldDirection.equals(direction)) {
+        GameStateChanged = true;
+      }
+    }
+    public void UpdateScreen(TimeSpan gameTime) {
       // Set Cached Vars
       int screenWidth = Resolution.Width;
       int screenHeight = Resolution.Height;
@@ -172,17 +258,15 @@ namespace RayCastEngine.GameComponents {
         //which box of the map we're in
         int mapX = intPosX;
         int mapY = intPosY;
-        //length of ray from current position to next x or y-side
-        double sideDistX;
-        double sideDistY;
         //length of ray from one x or y-side to next x or y-side
         double deltaDistX = (rayDirX == 0) ? 1e30 : Math.Abs(1.0 / rayDirX);
         double deltaDistY = (rayDirY == 0) ? 1e30 : Math.Abs(1.0 / rayDirY);
+        //length of ray from current position to next x or y-side
+        double sideDistX;
+        double sideDistY;
         //what direction to step in x or y-direction (either +1 or -1)
         int stepX;
         int stepY;
-        bool hit = false; //was there a wall hit?
-        bool side1 = true; //was a NS or a EW wall hit?
         //calculate step and initial sideDist
         if (rayDirX < 0) {
           stepX = -1;
@@ -198,8 +282,10 @@ namespace RayCastEngine.GameComponents {
           stepY = 1;
           sideDistY = (mapY + 1.0 - position.y) * deltaDistY;
         }
+        bool hit = false; //was there a wall hit?
+        bool side1 = true; //was a NS or a EW wall hit?
         //perform DDA
-        while (hit == false) {
+        while (!hit) {
           //jump to next map square, either in x-direction, or in y-direction
           if (sideDistX < sideDistY) {
             sideDistX += deltaDistX;
@@ -211,7 +297,7 @@ namespace RayCastEngine.GameComponents {
             side1 = true;
           }
           //Check if ray has hit a wall
-          if (worldMap[mapX, mapY] > 0) hit = true;
+          if (worldMap[mapX, mapY] != 0) hit = true;
         }
         // texturing calculations
         Texture texNum = (Texture)worldMap[mapX, mapY];
@@ -226,10 +312,7 @@ namespace RayCastEngine.GameComponents {
         int drawEnd = (int)(lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist));
         if (drawEnd >= screenHeight) drawEnd = screenHeight - 1;
         //calculate value of wallX
-        double wallX; //where exactly the wall was hit
-        if (!side1) wallX = position.y + perpWallDist * rayDirY;
-        else wallX = position.x + perpWallDist * rayDirX;
-        wallX -= Math.Floor(wallX);
+        double wallX = (!side1 ? (position.y + perpWallDist * rayDirY) : (position.x + perpWallDist * rayDirX)) % 1; //where exactly the wall was hit
         //x coordinate on the texture
         int texX = (int)(wallX * texWidth);
         if (!side1 && rayDirX > 0) texX = texWidth - texX - 1;
@@ -312,96 +395,16 @@ namespace RayCastEngine.GameComponents {
           }
         }
       }
-      // No need to clear the screen here, since everything is overdrawn with floor and ceiling
-      //timing for input and FPS counter
-      double frameTime = gameTime.Milliseconds / 1000.0; //frametime is the time this frame has taken, in seconds
-                                                 //speed modifiers
-      double moveSpeed = frameTime * 3; //the constant value is in squares/second
-      double rotSpeed = frameTime * 2; //the constant value is in radians/second
-      // TODO: We should do the math on the movement both forward and backward and then check if it works
-      if (keyIsDown(87)) {
-        double projectedX = position.x + direction.x * moveSpeed;
-        double projectedY = position.y + direction.y * moveSpeed;
-        // TODO: Fix This
-        // if (worldMap[(int)projectedX] == undefined) projectedX = mapWidth - 1;
-        // if (worldMap[(int)projectedX, (int)projectedY] == undefined) projectedY = mapHeight - 1;
-        if (worldMap[(int)projectedX, intPosY] == 0) position.setX(projectedX);
-        if (worldMap[intPosX, (int)projectedY] == 0) position.setY(projectedY);
-      }
-      //move backwards if no wall behind you
-      if (keyIsDown(83)) {
-        double projectedX = position.x - direction.x * moveSpeed;
-        double projectedY = position.y - direction.y * moveSpeed;
-        // TODO: Fix This
-        // if (worldMap[(int)projectedX] == undefined) projectedX = mapWidth - 1;
-        // if (worldMap[(int)projectedX, (int)projectedY] == undefined) projectedY = mapHeight - 1;
-        if (worldMap[(int)projectedX, intPosY] == 0) position.setX(projectedX);
-        if (worldMap[intPosX, (int)projectedY] == 0) position.setY(projectedY);
-      }
-      // Strafe Left
-      // if (keyIsDown(68)) {
-      //   let projectedX = position.x + (dirX + 1) * moveSpeed;
-      //   let projectedY = position.y + (dirY - 1) * moveSpeed;
-      //   if (worldMap[Math.trunc(projectedX)] == undefined) projectedX = mapWidth-1;
-      //   if (worldMap[Math.trunc(projectedX)][Math.trunc(projectedY)] == undefined) projectedY = mapHeight-1;
-      //   if (worldMap[Math.trunc(projectedX)][intPosY] == 0) position.setX(projectedX);
-      //   if (worldMap[intPosX][Math.trunc(projectedY)] == 0) position.setY(projectedY);
-      // }
-      // // Strafe Right
-      // if (keyIsDown(65)) {
-      //   let projectedX = position.x + (dirX + 1) * moveSpeed;
-      //   let projectedY = position.y + (dirY + 1) * moveSpeed;
-      //   if (worldMap[Math.trunc(projectedX)] == undefined) projectedX = mapWidth-1;
-      //   if (worldMap[Math.trunc(projectedX)][Math.trunc(projectedY)] == undefined) projectedY = mapHeight-1;
-      //   if (worldMap[Math.trunc(projectedX)][intPosY] == 0) position.setX(projectedX);
-      //   if (worldMap[intPosX][Math.trunc(projectedY)] == 0) position.setY(projectedY);
-      // }
-      // TODO: We Want To Use The Mouse
-      double cosRotSpeed = Math.Cos(rotSpeed);
-      double sinRotSpeed = Math.Sin(rotSpeed);
-      //rotate to the right
-      if (keyIsDown(39)) {
-        //both camera direction and camera plane must be rotated
-        double oldDirX = direction.x;
-        direction.setX(direction.x * cosRotSpeed - direction.y * -sinRotSpeed);
-        direction.setY(oldDirX * -sinRotSpeed + direction.y * cosRotSpeed);
-        double oldPlaneX = plane.x;
-        plane.setX(plane.x * cosRotSpeed - plane.y * -sinRotSpeed);
-        plane.setY(oldPlaneX * -sinRotSpeed + plane.y * cosRotSpeed);
-      }
-      //rotate to the left
-      if (keyIsDown(37)) {
-        //both camera direction and camera plane must be rotated
-        double oldDirX = direction.x;
-        direction.setX(direction.x * cosRotSpeed - direction.y * sinRotSpeed);
-        direction.setY(oldDirX * sinRotSpeed + direction.y * cosRotSpeed);
-        double oldPlaneX = plane.x;
-        plane.setX(plane.x * cosRotSpeed - plane.y * sinRotSpeed);
-        plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
-      }
-      // Very simple demonstration jump/pitch controls
-      // look up
-      if (keyIsDown(38)) direction.addZ(400 * moveSpeed);
-      // look down
-      if (keyIsDown(40)) direction.subZ(400* moveSpeed);
-      // jump
-      if (keyIsDown(32) && position.z == 0) position.setZ(200);
-      // crouch
-      if (keyIsDown(16) && position.z == 0) position.setZ(-200);
-      if (direction.z > 0) direction.setZ(Math.Max(0, direction.z - 100 * moveSpeed));
-      if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
-      if (position.z > 0) position.setZ(Math.Max(0, position.z - 100 * moveSpeed));
-      if (position.z < 0) position.setZ(Math.Min(0, position.z + 100 * moveSpeed));
     }
-
     private bool keyIsDown(int keycode) {
       return keys.ContainsKey(keycode) && keys[keycode] == true;
     }
     public void Draw(Graphics gfx, TimeSpan gameTime) {
+      Bitmap frameBuffer = buffer.Bitmap;
       // Draw UI
       // Draw Game
-      gfx.DrawImage(buffer.Bitmap, new Point(0, 0));
-      // Draw Our New Buffer
+      gfx.DrawImage(frameBuffer, new Point(0, 0));
+      // Draw Text Info
       double frameTime = gameTime.Milliseconds / 1000.0;
       gfx.DrawString($"frameRate: {1 / frameTime}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 0);
       gfx.DrawString($"pitch: {Math.Round(direction.z, 3)}, dir: {Math.Atan2(direction.x, direction.y) * 180 / Math.PI}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 16);

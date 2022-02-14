@@ -57,18 +57,29 @@ namespace RayCastEngine.Views {
         currentEngine.keys = keys;
         // Update the game
         currentEngine.Update(GameTime);
+        // Check if the state changed
+        if (currentEngine.GameStateChanged) {
+          // Update The Screen
+          currentEngine.UpdateScreen(GameTime);
+          // Set The Update Cycle To False
+          currentEngine.GameStateChanged = false;
+        }
         // Draw Frame
         currentEngine.Draw(gfx, GameTime);
         // Update Game at 120fps
         await Task.Delay(1000 / 120);
       }
     }
+    // Close Window
+    private void Game_FormClosed(object sender, FormClosedEventArgs e) {
+      System.Windows.Forms.Application.Exit();
+    }
     // Keys
-    private void Menu_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e) {
+    private void Game_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e) {
       if (keys.ContainsKey((int)e.KeyCode)) keys[(int)e.KeyCode] = true;
       else keys.Add((int)e.KeyCode, true);
     }
-    private void Menu_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e) {
+    private void Game_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e) {
       if (keys.ContainsKey((int)e.KeyCode)) keys[(int)e.KeyCode] = false;
       else keys.Add((int)e.KeyCode, false);
     }

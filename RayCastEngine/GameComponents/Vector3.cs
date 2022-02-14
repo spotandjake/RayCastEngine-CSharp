@@ -26,7 +26,13 @@ namespace RayCastEngine.GameComponents {
     public void setZ(double zVal) {
       z = zVal;
     }
+    public Vector3 copy() {
+      return new Vector3(x, y, z);
+    }
     // Math Methods
+    public bool equals(Vector3 vec) {
+      return x == vec.x && y == vec.y && z == vec.z;
+    }
     public void add(Vector3 vec) {
       x += vec.x;
       y += vec.y;

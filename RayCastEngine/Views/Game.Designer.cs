@@ -32,8 +32,9 @@
       this.ClientSize = new System.Drawing.Size(1241, 617);
       this.Name = "Game";
       this.Text = "Game";
-      this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Menu_KeyDown);
-      this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Menu_KeyUp);
+      this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Game_FormClosed);
+      this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Game_KeyDown);
+      this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Game_KeyUp);
       this.ResumeLayout(false);
 
     }
