@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using RayCastEngine.Views;
 
 namespace RayCastEngine.GameComponents {
@@ -342,6 +343,10 @@ namespace RayCastEngine.GameComponents {
         sprites[i].distance = ((position.x - sprites[i].x) * (position.x - sprites[i].x) + (position.y - sprites[i].y) * (position.y - sprites[i].y));
       }
       Array.Sort(sprites, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
+      //parameters for scaling and moving the sprites
+      const int uDiv = 1;
+      const int vDiv = 1;
+      const float vMove = 0.0f;
       //after sorting the sprites, do the projection and draw them
       for (int i = 0; i < sprites.Length; i++) {
         Sprite currentSprite = sprites[i];
@@ -355,12 +360,7 @@ namespace RayCastEngine.GameComponents {
         double invDet = 1.0 / (plane.x * direction.y - direction.x * plane.y); //required for correct matrix multiplication
         double transformX = invDet * (direction.y * spriteX - direction.x * spriteY);
         double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
-        int spriteScreenX = (int)((screenWidth * 0.5) * (1 + transformX / transformY));
-        //parameters for scaling and moving the sprites
-        // TODO: Convert These To Constants
-        int uDiv = 1;
-        int vDiv = 1;
-        float vMove = 0.0f;
+        int spriteScreenX = (int)((screenWidth / 2) * (1 + transformX / transformY));
         int vMoveScreen = (int)((int)(vMove / transformY) + direction.z + position.z / transformY);
         //calculate height of the sprite on screen
         int spriteHeight = Math.Abs((int)(screenHeight / transformY)) / vDiv; //using "transformY" instead of the real distance prevents fisheye
@@ -379,11 +379,13 @@ namespace RayCastEngine.GameComponents {
         for (int stripe = drawStartX; stripe < drawEndX; stripe++) {
           if (transformY > 0 && stripe > 0 && stripe < screenWidth && transformY < ZBuffer[stripe]) {
             int texX = (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth;
-            //the conditions in the if are:
-            //1) it's in front of camera plane so you don't see things behind you
-            //2) it's on the screen (left)
-            //3) it's on the screen (right)
-            //4) ZBuffer, with perpendicular distance
+            /*
+              the conditions in the if are:
+              1) it's in front of camera plane so you don't see things behind you
+              2) it's on the screen (left)
+              3) it's on the screen (right)
+              4) ZBuffer, with perpendicular distance
+            */
             for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
               // Displaying Code
               int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
@@ -403,8 +405,10 @@ namespace RayCastEngine.GameComponents {
       Bitmap frameBuffer = buffer.Bitmap;
       // Draw UI
       // Draw Game
+      gfx.CompositingMode = CompositingMode.SourceCopy;
       gfx.DrawImage(frameBuffer, new Point(0, 0));
       // Draw Text Info
+      gfx.CompositingMode = CompositingMode.SourceOver;
       double frameTime = gameTime.Milliseconds / 1000.0;
       gfx.DrawString($"frameRate: {1 / frameTime}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 0);
       gfx.DrawString($"pitch: {Math.Round(direction.z, 3)}, dir: {Math.Atan2(direction.x, direction.y) * 180 / Math.PI}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 16);

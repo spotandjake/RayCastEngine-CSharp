@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing.Drawing2D;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -37,6 +38,9 @@ namespace RayCastEngine.Views {
     /// </summary>
     public async void Start() {
       Graphics gfx = this.CreateGraphics();
+      // Optimize Rendering Speed
+      gfx.InterpolationMode = InterpolationMode.NearestNeighbor;
+      // Make Sure We Load A Game
       if (currentEngine == null)
         throw new ArgumentException("Game not loaded!");
 
@@ -64,10 +68,9 @@ namespace RayCastEngine.Views {
           // Set The Update Cycle To False
           currentEngine.GameStateChanged = false;
         }
-        // Draw Frame
         currentEngine.Draw(gfx, GameTime);
         // Update Game at 120fps
-        await Task.Delay(1000 / 120);
+        await Task.Delay(1000 / 240);
       }
     }
     // Close Window
