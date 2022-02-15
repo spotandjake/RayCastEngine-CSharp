@@ -8,21 +8,37 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>RayCastEngine</RootNamespace>
     <AssemblyName>RayCastEngine</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -97,7 +113,13 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Pictures\Textures\64\eagle.png" />
     <None Include="Assets\Pictures\Textures\64\barrel.png" />
@@ -110,6 +132,17 @@
     <None Include="Assets\Pictures\Textures\64\purplestone.png" />
     <None Include="Assets\Pictures\Textures\64\redbrick.png" />
     <None Include="Assets\Pictures\Textures\64\wood.png" />
+    <None Include="Assets\Pictures\Textures\32\barrel.png" />
+    <None Include="Assets\Pictures\Textures\32\bluestone.png" />
+    <None Include="Assets\Pictures\Textures\32\colorstone.png" />
+    <None Include="Assets\Pictures\Textures\32\eagle.png" />
+    <None Include="Assets\Pictures\Textures\32\greenlight.png" />
+    <None Include="Assets\Pictures\Textures\32\greystone.png" />
+    <None Include="Assets\Pictures\Textures\32\mossy.png" />
+    <None Include="Assets\Pictures\Textures\32\pillar.png" />
+    <None Include="Assets\Pictures\Textures\32\purplestone.png" />
+    <None Include="Assets\Pictures\Textures\32\redbrick.png" />
+    <None Include="Assets\Pictures\Textures\32\wood.png" />
     <Content Include="Assets\Pictures\UI\Background.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
