@@ -17,7 +17,32 @@ namespace RayCastEngine.GameComponents {
     // Temporary Engine Variables
     private int texWidth = 64;
     private int texHeight = 64;
-    private int[,] worldMap;
+    private int[,] worldMap = new int[,] {
+      { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+      { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5 }
+    };
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
     private double[] ZBuffer;
     private DirectBitmap buffer;
@@ -40,33 +65,6 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.barrel));
       textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.pillar));
       textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greenlight));
-      // Load World Map
-      worldMap = new int[,] {
-        { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-        { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5 }
-      };
       // Load Sprites
       sprites = new Sprite[]{
         new Sprite(20.5, 11.5, Texture.GreenLight), //green light in front of playerstart
@@ -194,10 +192,15 @@ namespace RayCastEngine.GameComponents {
       //move forward if no wall in front of you
       int intPosX = (int)position.x;
       int intPosY = (int)position.y;
+      // TODO: The Floor And Roof Are Symetrical so we only need to run through half the screen though we need to deal with occlusion when you are not looking forward
+      // TODO: we may be able to optimize this by precomputing more stuff
       //FLOOR CASTING
+      int currentTileSection = (int)(screenHeight2 + direction.z);
+      double floorStepXBase = (rayDirX1 - rayDirX0) / screenWidth;
+      double floorStepYBase = (rayDirY1 - rayDirY0) / screenWidth;
       for (int y = 0; y < screenHeight; y++) {
         // whether this section is floor or ceiling
-        bool is_floor = y > screenHeight2 + direction.z;
+        bool is_floor = y > currentTileSection;
         // Current y position compared to the center of the screen (the horizon)
         int p = (int)(is_floor ? (y - screenHeight2 - direction.z) : (screenHeight2 - y + direction.z));
         // Vertical position of the camera.
@@ -223,11 +226,13 @@ namespace RayCastEngine.GameComponents {
         double rowDistance = camZ / p;
         // calculate the real world step vector we have to add for each x (parallel to camera plane)
         // adding step by step avoids multiplications with a weight in the inner loop
-        double floorStepX = rowDistance * (rayDirX1 - rayDirX0) / screenWidth;
-        double floorStepY = rowDistance * (rayDirY1 - rayDirY0) / screenWidth;
+        double floorStepX = rowDistance * floorStepXBase;
+        double floorStepY = rowDistance * floorStepYBase;
         // real world coordinates of the leftmost column. This will be updated as we step to the right.
         double floorX = position.x + rowDistance * rayDirX0;
         double floorY = position.y + rowDistance * rayDirY0;
+        // choose texture and draw the pixel
+        const Texture ceilingtexture = Texture.WoodWall;
         for (int x = 0; x < screenWidth; x++) {
           // the cell coord is simply got from the integer parts of floorX and floorY
           int cellX = (int)floorX;
@@ -237,9 +242,7 @@ namespace RayCastEngine.GameComponents {
           int ty = (int)(texHeight * (floorY - cellY)) & (texHeight - 1);
           floorX += floorStepX;
           floorY += floorStepY;
-          // choose texture and draw the pixel
           Texture floortexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
-          Texture ceilingtexture = Texture.WoodWall;
           Color pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixel(tx, ty);
           buffer.setPixelRGB(
             x,
@@ -266,21 +269,19 @@ namespace RayCastEngine.GameComponents {
         double sideDistX;
         double sideDistY;
         //what direction to step in x or y-direction (either +1 or -1)
-        int stepX;
-        int stepY;
+        int stepX = 1;
+        int stepY = 1;
         //calculate step and initial sideDist
         if (rayDirX < 0) {
           stepX = -1;
           sideDistX = (position.x - mapX) * deltaDistX;
         } else {
-          stepX = 1;
           sideDistX = (mapX + 1.0 - position.x) * deltaDistX;
         }
         if (rayDirY < 0) {
           stepY = -1;
           sideDistY = (position.y - mapY) * deltaDistY;
         } else {
-          stepY = 1;
           sideDistY = (mapY + 1.0 - position.y) * deltaDistY;
         }
         bool hit = false; //was there a wall hit?
@@ -338,7 +339,6 @@ namespace RayCastEngine.GameComponents {
       }
       //SPRITE CASTING
       //sort sprites from far to close
-      // TODO: instead of sorting by distance why dont we use the ZBuffer
       for (int i = 0; i < sprites.Length; i++) {
         sprites[i].distance = ((position.x - sprites[i].x) * (position.x - sprites[i].x) + (position.y - sprites[i].y) * (position.y - sprites[i].y));
       }
@@ -364,7 +364,7 @@ namespace RayCastEngine.GameComponents {
         int vMoveScreen = (int)((int)(vMove / transformY) + direction.z + position.z / transformY);
         //calculate height of the sprite on screen
         int spriteHeight = Math.Abs((int)(screenHeight / transformY)) / vDiv; //using "transformY" instead of the real distance prevents fisheye
-                                                                              //calculate lowest and highest pixel to fill in current stripe
+        //calculate lowest and highest pixel to fill in current stripe
         int drawStartY = -spriteHeight / 2 + screenHeight2 + vMoveScreen;
         if (drawStartY < 0) drawStartY = 0;
         int drawEndY = spriteHeight / 2 + screenHeight2 + vMoveScreen;
