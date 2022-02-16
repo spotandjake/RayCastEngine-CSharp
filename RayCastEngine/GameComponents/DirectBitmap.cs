@@ -46,8 +46,12 @@ namespace RayCastEngine.GameComponents {
 
     public Color GetPixel(int x, int y) {
       int index = x + (y * Width);
-      int col = Bits[index];
-      return Color.FromArgb(col); ;
+      try {
+        int col = Bits[index];
+        return Color.FromArgb(col); ;
+      } catch (Exception err) {
+        return Color.Black;
+      }
     }
     public void Dispose() {
       if (Disposed) return;

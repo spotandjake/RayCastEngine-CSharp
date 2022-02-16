@@ -227,8 +227,8 @@ namespace RayCastEngine.GameComponents {
         double rowDistance = camZ / p;
         // calculate the real world step vector we have to add for each x (parallel to camera plane)
         // adding step by step avoids multiplications with a weight in the inner loop
-        double floorStepX = rowDistance * floorStepXBase;
-        double floorStepY = rowDistance * floorStepYBase;
+        double floorStepX = rowDistance * floorStepXBase * interlaceAmmount;
+        double floorStepY = rowDistance * floorStepYBase * interlaceAmmount;
         // real world coordinates of the leftmost column. This will be updated as we step to the right.
         double floorX = position.x + rowDistance * rayDirX0;
         double floorY = position.y + rowDistance * rayDirY0;
@@ -241,8 +241,8 @@ namespace RayCastEngine.GameComponents {
           // get the texture coordinate from the fractional part
           int tx = (int)(texWidth * (floorX - cellX)) & (texWidth - 1);
           int ty = (int)(texHeight * (floorY - cellY)) & (texHeight - 1);
-          floorX += floorStepX * interlaceAmmount;
-          floorY += floorStepY * interlaceAmmount;
+          floorX += floorStepX;
+          floorY += floorStepY;
           Texture floortexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
           Color pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixel(tx, ty);
           if (interlaceAmmount == 1) {
