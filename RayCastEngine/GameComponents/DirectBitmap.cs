@@ -24,7 +24,11 @@ namespace RayCastEngine.GameComponents {
       BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
       Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, BitsHandle.AddrOfPinnedObject());
     }
-
+    public void fillColor(Color colour) {
+      for (int index = 0; index < Width * Height; index++) {
+        Bits[index] = colour.ToArgb();
+      }
+    }
     public void SetPixel(int x, int y, Color colour) {
       int index = x + (y * Width);
       int col = colour.ToArgb();
@@ -45,7 +49,6 @@ namespace RayCastEngine.GameComponents {
       int col = Bits[index];
       return Color.FromArgb(col); ;
     }
-
     public void Dispose() {
       if (Disposed) return;
       Disposed = true;

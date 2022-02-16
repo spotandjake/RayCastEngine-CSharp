@@ -15,7 +15,10 @@ namespace RayCastEngine.Views {
   public partial class Game : Form {
     // Properties
     private Dictionary<int, bool> keys = new Dictionary<int, bool>();
-    private Boolean Running = false;
+    private bool Running = false;
+    private bool RanLastFrame = false;
+    private int interlaceOffset = 0;
+    private int interlaceAmmount = 2;
     private GameType currentGameType;
     private Engine currentEngine;
     // Form Entry
@@ -64,9 +67,15 @@ namespace RayCastEngine.Views {
         // Check if the state changed
         if (currentEngine.GameStateChanged) {
           // Update The Screen
-          currentEngine.UpdateScreen(GameTime);
+          currentEngine.UpdateScreen(GameTime, interlaceAmmount, interlaceOffset);
+          if (interlaceOffset >= interlaceAmmount) interlaceOffset = -1;
+          interlaceOffset++;
           // Set The Update Cycle To False
+          RanLastFrame = true;
           currentEngine.GameStateChanged = false;
+        } else if (RanLastFrame) {
+          currentEngine.UpdateScreen(GameTime, 1, 0);
+          RanLastFrame = false;
         }
         currentEngine.Draw(gfx, GameTime);
         // Update Game at 120fps

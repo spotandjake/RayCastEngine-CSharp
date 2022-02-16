@@ -179,7 +179,8 @@ namespace RayCastEngine.GameComponents {
         GameStateChanged = true;
       }
     }
-    public void UpdateScreen(TimeSpan gameTime) {
+    public void UpdateScreen(TimeSpan gameTime, int interlaceAmmount, int interlaceOffset) {
+      buffer.fillColor(Color.Black);
       // Set Cached Vars
       int screenWidth = Resolution.Width;
       int screenHeight = Resolution.Height;
@@ -198,7 +199,7 @@ namespace RayCastEngine.GameComponents {
       int currentTileSection = (int)(screenHeight2 + direction.z);
       double floorStepXBase = (rayDirX1 - rayDirX0) / screenWidth;
       double floorStepYBase = (rayDirY1 - rayDirY0) / screenWidth;
-      for (int y = 0; y < screenHeight; y++) {
+      for (int y = interlaceOffset; y < screenHeight; y += interlaceAmmount) {
         // whether this section is floor or ceiling
         bool is_floor = y > currentTileSection;
         // Current y position compared to the center of the screen (the horizon)
@@ -233,28 +234,30 @@ namespace RayCastEngine.GameComponents {
         double floorY = position.y + rowDistance * rayDirY0;
         // choose texture and draw the pixel
         const Texture ceilingtexture = Texture.WoodWall;
-        for (int x = 0; x < screenWidth; x++) {
+        for (int x = interlaceOffset; x < screenWidth; x += interlaceAmmount) {
           // the cell coord is simply got from the integer parts of floorX and floorY
           int cellX = (int)floorX;
           int cellY = (int)floorY;
           // get the texture coordinate from the fractional part
           int tx = (int)(texWidth * (floorX - cellX)) & (texWidth - 1);
           int ty = (int)(texHeight * (floorY - cellY)) & (texHeight - 1);
-          floorX += floorStepX;
-          floorY += floorStepY;
+          floorX += floorStepX * interlaceAmmount;
+          floorY += floorStepY * interlaceAmmount;
           Texture floortexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
           Color pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixel(tx, ty);
-          buffer.setPixelRGB(
+          if (interlaceAmmount == 1) {
+            buffer.setPixelRGB(
             x,
             y,
             (byte)((pixel.R >> 1) & 8355711),
             (byte)((pixel.G >> 1) & 8355711),
             (byte)((pixel.B >> 1) & 8355711)
           );
+          } else buffer.SetPixel(x, y, pixel);
         }
       }
       // WALL CASTING
-      for (int x = 0; x < screenWidth; x++) {
+      for (int x = 0; x < screenWidth; x ++) {
         //calculate ray position and direction
         double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
         double rayDirX = direction.x + plane.x * cameraX;
@@ -386,7 +389,7 @@ namespace RayCastEngine.GameComponents {
               3) it's on the screen (right)
               4) ZBuffer, with perpendicular distance
             */
-            for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
+            for (int y = drawStartY; y < drawEndY; y ++) {//for every pixel of the current stripe
               // Displaying Code
               int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
               int texY = ((d * texHeight) / spriteHeight) / 256;
