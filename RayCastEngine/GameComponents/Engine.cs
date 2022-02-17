@@ -17,31 +17,59 @@ namespace RayCastEngine.GameComponents {
     // Temporary Engine Variables
     private int texWidth = 64;
     private int texHeight = 64;
-    private int[,] worldMap = new int[,] {
-      { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
-      { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5 }
+    private int[,,] worldMap = new int[,,] {
+      {
+        { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5 }
+      },
+      {
+        { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
+        { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5 }
+      }
     };
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
     private double[] ZBuffer;
@@ -50,6 +78,7 @@ namespace RayCastEngine.GameComponents {
     private Vector3 direction = new Vector3(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
     private Vector3 plane = new Vector3(0.0, 0.66, 0.0); // planeX, planeY
     private Sprite[] sprites;
+    private int level = 0;
     // Methods
     public void Load(GameType gameType) {
       // Initialize
@@ -97,6 +126,7 @@ namespace RayCastEngine.GameComponents {
     public void Update(TimeSpan gameTime) {
       Vector3 oldPosition = position.copy();
       Vector3 oldDirection = direction.copy();
+      Vector3 Velocity = new Vector3(0, 0, 0);
       int intPosX = (int)position.x;
       int intPosY = (int)position.y;
       // No need to clear the screen here, since everything is overdrawn with floor and ceiling
@@ -107,36 +137,34 @@ namespace RayCastEngine.GameComponents {
       double rotSpeed = frameTime * 2; //the constant value is in radians/second
       // TODO: We should do the math on the movement both forward and backward and then check if it works
       if (keyIsDown(87)) {
-        double projectedX = position.x + direction.x * moveSpeed;
-        double projectedY = position.y + direction.y * moveSpeed;
-        if (worldMap[(int)projectedX, intPosY] == 0) position.setX(projectedX);
-        if (worldMap[intPosX, (int)projectedY] == 0) position.setY(projectedY);
+        Velocity.addX(direction.x * moveSpeed);
+        Velocity.addY(direction.y * moveSpeed);
       }
       //move backwards if no wall behind you
       if (keyIsDown(83)) {
-        double projectedX = position.x - direction.x * moveSpeed;
-        double projectedY = position.y - direction.y * moveSpeed;
-        if (worldMap[(int)projectedX, intPosY] == 0) position.setX(projectedX);
-        if (worldMap[intPosX, (int)projectedY] == 0) position.setY(projectedY);
+        Velocity.subX(direction.x * moveSpeed);
+        Velocity.subY(direction.y * moveSpeed);
       }
-      // Strafe Left
-      // if (keyIsDown(68)) {
-      //   let projectedX = position.x + (dirX + 1) * moveSpeed;
-      //   let projectedY = position.y + (dirY - 1) * moveSpeed;
-      //   if (worldMap[Math.trunc(projectedX)] == undefined) projectedX = mapWidth-1;
-      //   if (worldMap[Math.trunc(projectedX)][Math.trunc(projectedY)] == undefined) projectedY = mapHeight-1;
-      //   if (worldMap[Math.trunc(projectedX)][intPosY] == 0) position.setX(projectedX);
-      //   if (worldMap[intPosX][Math.trunc(projectedY)] == 0) position.setY(projectedY);
-      // }
-      // // Strafe Right
-      // if (keyIsDown(65)) {
-      //   let projectedX = position.x + (dirX + 1) * moveSpeed;
-      //   let projectedY = position.y + (dirY + 1) * moveSpeed;
-      //   if (worldMap[Math.trunc(projectedX)] == undefined) projectedX = mapWidth-1;
-      //   if (worldMap[Math.trunc(projectedX)][Math.trunc(projectedY)] == undefined) projectedY = mapHeight-1;
-      //   if (worldMap[Math.trunc(projectedX)][intPosY] == 0) position.setX(projectedX);
-      //   if (worldMap[intPosX][Math.trunc(projectedY)] == 0) position.setY(projectedY);
-      // }
+      // Strafe Right
+      if (keyIsDown(68)) {
+        double theta = Math.Atan2(direction.x, direction.y) + Math.PI / 2;
+        double dirX = Math.Sin(theta);
+        double dirY = Math.Cos(theta);
+        double projectedX = position.x + dirX * moveSpeed;
+        double projectedY = position.y + dirY * moveSpeed;
+        if (worldMap[level, (int)projectedX, intPosY] == 0) position.setX(projectedX);
+        if (worldMap[level, intPosX, (int)projectedY] == 0) position.setY(projectedY);
+      }
+      //// Strafe Left
+      if (keyIsDown(65)) {
+        double theta = Math.Atan2(direction.x, direction.y) - Math.PI / 2;
+        double dirX = Math.Sin(theta);
+        double dirY = Math.Cos(theta);
+        double projectedX = position.x + dirX * moveSpeed;
+        double projectedY = position.y + dirY * moveSpeed;
+        if (worldMap[level, (int)projectedX, intPosY] == 0) position.setX(projectedX);
+        if (worldMap[level, intPosX, (int)projectedY] == 0) position.setY(projectedY);
+      }
       // TODO: We Want To Use The Mouse
       double cosRotSpeed = Math.Cos(rotSpeed);
       double sinRotSpeed = Math.Sin(rotSpeed);
@@ -159,6 +187,13 @@ namespace RayCastEngine.GameComponents {
         double oldPlaneX = plane.x;
         plane.setX(plane.x * cosRotSpeed - plane.y * sinRotSpeed);
         plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
+      }
+      // Determine projected Move
+      if (!Velocity.equals(new Vector3(0, 0, 0))) {
+        double projectedX = position.x + Velocity.x;
+        double projectedY = position.y + Velocity.y;
+        if (worldMap[level, (int)projectedX, intPosY] == 0) position.setX(projectedX);
+        if (worldMap[level, intPosX, (int)projectedY] == 0) position.setY(projectedY);
       }
       // Very simple demonstration jump/pitch controls
       // look up
@@ -259,8 +294,9 @@ namespace RayCastEngine.GameComponents {
           }
         }
       }
+      #region WallCasting
       // WALL CASTING
-      for (int x = 0; x < screenWidth; x += interlaceAmmount) {
+      for (int x = 0; x < screenWidth; x++) {
         //calculate ray position and direction
         double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
         double rayDirX = direction.x + plane.x * cameraX;
@@ -305,10 +341,10 @@ namespace RayCastEngine.GameComponents {
             side1 = true;
           }
           //Check if ray has hit a wall
-          if (worldMap[mapX, mapY] != 0) hit = true;
+          if (worldMap[level, mapX, mapY] != 0) hit = true;
         }
         // texturing calculations
-        Texture texNum = (Texture)worldMap[mapX, mapY];
+        Texture texNum = (Texture)worldMap[level, mapX, mapY];
         if (texNum == Texture.Air) continue;
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
         double perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
@@ -342,10 +378,27 @@ namespace RayCastEngine.GameComponents {
             int pixel = textures[texNum].GetPixelInteger(texX, texY);
             buffer.SetPixel(x, y, pixel);
           }
+          // buffer.SetPixel(x, y, -65536);
         }
+        //int drawDistance = drawEnd - drawStart;
+        //for (int y = drawStart; y < drawStart + drawDistance / 2; y++) {
+        //  // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
+        //  int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
+        //  texPos += step;
+        //  //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+        //  //if (side1) {
+        //  //  Color pixel = textures[texNum].GetPixel(texX, texY);
+        //  //  buffer.SetPixel(x, y, (byte)((pixel.R >> 1) & 8355711), (byte)((pixel.G >> 1) & 8355711), (byte)((pixel.B >> 1) & 8355711));
+        //  //} else {
+        //  //  int pixel = textures[texNum].GetPixelInteger(texX, texY);
+        //  //  buffer.SetPixel(x, y, pixel);
+        //  //}
+        //  buffer.SetPixel(x, y, -16776961);
+        //}
         //SET THE ZBUFFER FOR THE SPRITE CASTING
         ZBuffer[x] = perpWallDist; //perpendicular distance is used
       }
+      #endregion
       //SPRITE CASTING
       //sort sprites from far to close
       for (int i = 0; i < sprites.Length; i++) {
@@ -420,7 +473,8 @@ namespace RayCastEngine.GameComponents {
       double frameTime = gameTime.Milliseconds / 1000.0;
       return (
 $@"frameRate: {(int)(1 / frameTime)}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}
-pitch: { Math.Round(direction.z, 3)}, dir: { Math.Atan2(direction.x, direction.y) * 180 / Math.PI}"
+pitch: { Math.Round(direction.z, 3)}, dir: { Math.Atan2(direction.x, direction.y) * 180 / Math.PI}
+dirX: {direction.x}, dirY: {direction.y}"
       );
     }
   }

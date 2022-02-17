@@ -33,22 +33,17 @@ namespace RayCastEngine.GameComponents {
       }
     }
     public void SetPixel(int x, int y, Color colour) {
-      int index = x + (y * Width);
-      int col = colour.ToArgb();
-      Bits[index] = col;
-    }
-    public void SetPixel(int x, int y, int colour) {
-      int index = x + (y * Width);
-      Bits[index] = colour;
+      SetPixel(x, y, colour.ToArgb());
     }
     public void SetPixel(int x, int y, byte red, byte green, byte blue) {
       SetPixel(x, y, 255, red, green, blue);
     }
     public void SetPixel(int x, int y, byte alpha, byte red, byte green, byte blue) {
-      int index = x + (y * Width);
       byte[] bytes = new byte[] { blue, green, red, alpha };
-      int col = BitConverter.ToInt32(bytes, 0);
-      Bits[index] = col;
+      SetPixel(x, y, BitConverter.ToInt32(bytes, 0));
+    }
+    public void SetPixel(int x, int y, int colour) {
+      Bits[x + (y * Width)] = colour;
     }
     public Color GetPixel(int x, int y) {
       int index = x + (y * Width);
