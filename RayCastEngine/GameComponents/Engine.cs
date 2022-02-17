@@ -179,8 +179,8 @@ namespace RayCastEngine.GameComponents {
         GameStateChanged = true;
       }
     }
-    public void UpdateScreen(TimeSpan gameTime, int interlaceAmmount, int interlaceOffset) {
-      buffer.fillColor(Color.Black);
+    public void UpdateScreen(TimeSpan gameTime, int interlaceAmmount) {
+      buffer.fillColor(-16777216);
       // Set Cached Vars
       int screenWidth = Resolution.Width;
       int screenHeight = Resolution.Height;
@@ -199,7 +199,7 @@ namespace RayCastEngine.GameComponents {
       int currentTileSection = (int)(screenHeight2 + direction.z);
       double floorStepXBase = (rayDirX1 - rayDirX0) / screenWidth;
       double floorStepYBase = (rayDirY1 - rayDirY0) / screenWidth;
-      for (int y = interlaceOffset; y < screenHeight; y += interlaceAmmount) {
+      for (int y = 0; y < screenHeight; y += interlaceAmmount) {
         // whether this section is floor or ceiling
         bool is_floor = y > currentTileSection;
         // Current y position compared to the center of the screen (the horizon)
@@ -234,7 +234,7 @@ namespace RayCastEngine.GameComponents {
         double floorY = position.y + rowDistance * rayDirY0;
         // choose texture and draw the pixel
         const Texture ceilingtexture = Texture.WoodWall;
-        for (int x = interlaceOffset; x < screenWidth; x += interlaceAmmount) {
+        for (int x = 0; x < screenWidth; x += interlaceAmmount) {
           // the cell coord is simply got from the integer parts of floorX and floorY
           int cellX = (int)floorX;
           int cellY = (int)floorY;
@@ -244,20 +244,23 @@ namespace RayCastEngine.GameComponents {
           floorX += floorStepX;
           floorY += floorStepY;
           Texture floortexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
-          Color pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixel(tx, ty);
           if (interlaceAmmount == 1) {
-            buffer.setPixelRGB(
-            x,
-            y,
-            (byte)((pixel.R >> 1) & 8355711),
-            (byte)((pixel.G >> 1) & 8355711),
-            (byte)((pixel.B >> 1) & 8355711)
-          );
-          } else buffer.SetPixel(x, y, pixel);
+            Color pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixel(tx, ty);
+            buffer.SetPixel(
+              x,
+              y,
+              (byte)((pixel.R >> 1) & 8355711),
+              (byte)((pixel.G >> 1) & 8355711),
+              (byte)((pixel.B >> 1) & 8355711)
+            );
+          } else {
+            int pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixelInteger(tx, ty);
+            buffer.SetPixel(x, y, pixel);
+          }
         }
       }
       // WALL CASTING
-      for (int x = 0; x < screenWidth; x ++) {
+      for (int x = 0; x < screenWidth; x += interlaceAmmount) {
         //calculate ray position and direction
         double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
         double rayDirX = direction.x + plane.x * cameraX;
@@ -331,11 +334,14 @@ namespace RayCastEngine.GameComponents {
           // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
           int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
           texPos += step;
-          Color pixel = textures[texNum].GetPixel(texX, texY);
           //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
           if (side1) {
-            buffer.setPixelRGB(x, y, (byte)((pixel.R >> 1) & 8355711), (byte)((pixel.G >> 1) & 8355711), (byte)((pixel.B >> 1) & 8355711));
-          } else buffer.SetPixel(x, y, pixel);
+            Color pixel = textures[texNum].GetPixel(texX, texY);
+            buffer.SetPixel(x, y, (byte)((pixel.R >> 1) & 8355711), (byte)((pixel.G >> 1) & 8355711), (byte)((pixel.B >> 1) & 8355711));
+          } else {
+            int pixel = textures[texNum].GetPixelInteger(texX, texY);
+            buffer.SetPixel(x, y, pixel);
+          }
         }
         //SET THE ZBUFFER FOR THE SPRITE CASTING
         ZBuffer[x] = perpWallDist; //perpendicular distance is used
@@ -366,14 +372,15 @@ namespace RayCastEngine.GameComponents {
         int spriteScreenX = (int)((screenWidth / 2) * (1 + transformX / transformY));
         int vMoveScreen = (int)((int)(vMove / transformY) + direction.z + position.z / transformY);
         //calculate height of the sprite on screen
-        int spriteHeight = Math.Abs((int)(screenHeight / transformY)) / vDiv; //using "transformY" instead of the real distance prevents fisheye
+        int spriteScale = Math.Abs((int)(screenHeight / transformY));
+        int spriteHeight = spriteScale / vDiv; //using "transformY" instead of the real distance prevents fisheye
         //calculate lowest and highest pixel to fill in current stripe
         int drawStartY = -spriteHeight / 2 + screenHeight2 + vMoveScreen;
         if (drawStartY < 0) drawStartY = 0;
         int drawEndY = spriteHeight / 2 + screenHeight2 + vMoveScreen;
         if (drawEndY >= screenHeight) drawEndY = screenHeight - 1;
         //calculate width of the sprite
-        int spriteWidth = Math.Abs((int)(screenHeight / transformY)) / uDiv;
+        int spriteWidth = spriteScale / uDiv;
         int drawStartX = -spriteWidth / 2 + spriteScreenX;
         if (drawStartX < 0) drawStartX = 0;
         int drawEndX = spriteWidth / 2 + spriteScreenX;
@@ -389,13 +396,12 @@ namespace RayCastEngine.GameComponents {
               3) it's on the screen (right)
               4) ZBuffer, with perpendicular distance
             */
-            for (int y = drawStartY; y < drawEndY; y ++) {//for every pixel of the current stripe
+            for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
               // Displaying Code
               int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
               int texY = ((d * texHeight) / spriteHeight) / 256;
-              Color pixel = textures[currentSprite.texture].GetPixel(texX, texY);
-              if (pixel.A == 0) continue;
-              buffer.SetPixel(stripe, y, pixel); //paint pixel if it isn't black, black is the invisible color
+              int pixel = textures[currentSprite.texture].GetPixelInteger(texX, texY);
+              if (pixel != 0) buffer.SetPixel(stripe, y, pixel); //paint pixel if it is visible
             }
           }
         }
@@ -408,13 +414,14 @@ namespace RayCastEngine.GameComponents {
       Bitmap frameBuffer = buffer.Bitmap;
       // Draw UI
       // Draw Game
-      gfx.CompositingMode = CompositingMode.SourceCopy;
       gfx.DrawImage(frameBuffer, new Point(0, 0));
-      // Draw Text Info
-      gfx.CompositingMode = CompositingMode.SourceOver;
+    }
+    public string getDataText(TimeSpan gameTime) {
       double frameTime = gameTime.Milliseconds / 1000.0;
-      gfx.DrawString($"frameRate: {1 / frameTime}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 0);
-      gfx.DrawString($"pitch: {Math.Round(direction.z, 3)}, dir: {Math.Atan2(direction.x, direction.y) * 180 / Math.PI}", new Font("Arial", 16), new SolidBrush(Color.White), 0, 16);
+      return (
+$@"frameRate: {(int)(1 / frameTime)}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}
+pitch: { Math.Round(direction.z, 3)}, dir: { Math.Atan2(direction.x, direction.y) * 180 / Math.PI}"
+      );
     }
   }
 }

@@ -17,7 +17,6 @@ namespace RayCastEngine.Views {
     private Dictionary<int, bool> keys = new Dictionary<int, bool>();
     private bool Running = false;
     private bool RanLastFrame = false;
-    private int interlaceOffset = 0;
     private int interlaceAmmount = 2;
     private GameType currentGameType;
     private Engine currentEngine;
@@ -42,6 +41,7 @@ namespace RayCastEngine.Views {
     public async void Start() {
       Graphics gfx = this.CreateGraphics();
       // Optimize Rendering Speed
+      gfx.CompositingMode = CompositingMode.SourceCopy;
       gfx.InterpolationMode = InterpolationMode.NearestNeighbor;
       // Make Sure We Load A Game
       if (currentEngine == null)
@@ -67,24 +67,24 @@ namespace RayCastEngine.Views {
         // Check if the state changed
         if (currentEngine.GameStateChanged) {
           // Update The Screen
-          currentEngine.UpdateScreen(GameTime, interlaceAmmount, interlaceOffset);
-          if (interlaceOffset >= interlaceAmmount) interlaceOffset = -1;
-          interlaceOffset++;
+          currentEngine.UpdateScreen(GameTime, interlaceAmmount);
+          currentEngine.Draw(gfx, GameTime);
           // Set The Update Cycle To False
           RanLastFrame = true;
           currentEngine.GameStateChanged = false;
         } else if (RanLastFrame) {
-          currentEngine.UpdateScreen(GameTime, 1, 0);
+          currentEngine.UpdateScreen(GameTime, 1);
+          currentEngine.Draw(gfx, GameTime);
           RanLastFrame = false;
         }
-        currentEngine.Draw(gfx, GameTime);
+        DataView.Text = currentEngine.getDataText(GameTime);
         // Update Game at 120fps
         await Task.Delay(1000 / 240);
       }
     }
     // Close Window
     private void Game_FormClosed(object sender, FormClosedEventArgs e) {
-      System.Windows.Forms.Application.Exit();
+      Application.Exit();
     }
     // Keys
     private void Game_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e) {

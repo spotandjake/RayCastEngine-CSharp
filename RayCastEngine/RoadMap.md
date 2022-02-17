@@ -1,5 +1,5 @@
 # RoadMap
-
+- [ ] Determine how to darken the AARRGGBB int32 color because we lose a lot of perf in the conversions
 - [ ] Responsive Menu's
 - [ ] Game Controller Support
 - [ ] Add Global Application State
