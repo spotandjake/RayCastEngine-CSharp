@@ -150,20 +150,16 @@ namespace RayCastEngine.GameComponents {
         double theta = Math.Atan2(direction.x, direction.y) + Math.PI / 2;
         double dirX = Math.Sin(theta);
         double dirY = Math.Cos(theta);
-        double projectedX = position.x + dirX * moveSpeed;
-        double projectedY = position.y + dirY * moveSpeed;
-        if (worldMap[level, (int)projectedX, intPosY] == 0) position.setX(projectedX);
-        if (worldMap[level, intPosX, (int)projectedY] == 0) position.setY(projectedY);
+        Velocity.addX(dirX * moveSpeed);
+        Velocity.addY(dirY * moveSpeed);
       }
       //// Strafe Left
       if (keyIsDown(65)) {
         double theta = Math.Atan2(direction.x, direction.y) - Math.PI / 2;
         double dirX = Math.Sin(theta);
         double dirY = Math.Cos(theta);
-        double projectedX = position.x + dirX * moveSpeed;
-        double projectedY = position.y + dirY * moveSpeed;
-        if (worldMap[level, (int)projectedX, intPosY] == 0) position.setX(projectedX);
-        if (worldMap[level, intPosX, (int)projectedY] == 0) position.setY(projectedY);
+        Velocity.addX(dirX * moveSpeed);
+        Velocity.addY(dirY * moveSpeed);
       }
       // TODO: We Want To Use The Mouse
       double cosRotSpeed = Math.Cos(rotSpeed);
