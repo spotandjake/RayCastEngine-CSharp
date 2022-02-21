@@ -1,0 +1,933 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio\2019\community\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="16.0">
+ <Targets>
+  <Target Name="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\bin\Debug\RayCastEngine.exe">
+   <Modules>
+    <Module Name="raycastengine.exe">
+     <Messages>
+      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+       <Issue Name="NoStrongName" Certainty="95" Level="CriticalError">Sign 'RayCastEngine.exe' with a strong name key.</Issue>
+      </Message>
+      <Message TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+       <Issue Certainty="95" Level="Error">Mark 'RayCastEngine.exe' with CLSCompliant(true) because it exposes externally visible types.</Issue>
+      </Message>
+      <Message TypeName="MarkAssembliesWithNeutralResourcesLanguage" Category="Microsoft.Performance" CheckId="CA1824" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+       <Issue Certainty="95" Level="Warning">Because assembly 'RayCastEngine.exe' contains a ResX-based resource file, mark it with the NeutralResourcesLanguage attribute, specifying the language of the resources within the assembly. This could improve lookup performance the first time a resource is retrieved.</Issue>
+      </Message>
+     </Messages>
+     <Namespaces>
+      <Namespace Name="RayCastEngine">
+       <Types>
+        <Type Name="Menu" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#InitializeComponent()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message Id="System.Windows.Forms.Control.set_Text(System.String)" TypeName="Do not pass literals as localized parameters" Category="Microsoft.Globalization" CheckId="CA1303" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="DependsOnFix">
+             <Issue Name="KnownValue" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Menu.Designer.cs" Line="95">Method 'Menu.InitializeComponent()' passes a literal string as parameter 'value' of a call to 'Control.Text.set(string)'. Retrieve the following string(s) from a resource table instead: "Credits".</Issue>
+             <Issue Name="KnownValue" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Menu.Designer.cs" Line="115">Method 'Menu.InitializeComponent()' passes a literal string as parameter 'value' of a call to 'Control.Text.set(string)'. Retrieve the following string(s) from a resource table instead: "Exit".</Issue>
+             <Issue Name="KnownValue" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Menu.Designer.cs" Line="148">Method 'Menu.InitializeComponent()' passes a literal string as parameter 'value' of a call to 'Control.Text.set(string)'. Retrieve the following string(s) from a resource table instead: "Form1".</Issue>
+             <Issue Name="KnownValue" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Menu.Designer.cs" Line="105">Method 'Menu.InitializeComponent()' passes a literal string as parameter 'value' of a call to 'Control.Text.set(string)'. Retrieve the following string(s) from a resource table instead: "MapMaker".</Issue>
+             <Issue Name="KnownValue" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Menu.Designer.cs" Line="75">Method 'Menu.InitializeComponent()' passes a literal string as parameter 'value' of a call to 'Control.Text.set(string)'. Retrieve the following string(s) from a resource table instead: "Multiplayer".</Issue>
+             <Issue Name="KnownValue" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Menu.Designer.cs" Line="85">Method 'Menu.InitializeComponent()' passes a literal string as parameter 'value' of a call to 'Control.Text.set(string)'. Retrieve the following string(s) from a resource table instead: "Settings".</Issue>
+             <Issue Name="KnownValue" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Menu.Designer.cs" Line="64">Method 'Menu.InitializeComponent()' passes a literal string as parameter 'value' of a call to 'Control.Text.set(string)'. Retrieve the following string(s) from a resource table instead: "SinglePlayer".</Issue>
+            </Message>
+            <Message Id="SinglePlayer" TypeName="Literals should be spelled correctly" Category="Microsoft.Naming" CheckId="CA2204" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Menu.Designer.cs" Line="64">Correct the spelling of the unrecognized token 'SinglePlayer' in the literal '"SinglePlayer"'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Menu_SinglePlayer(System.Object,System.EventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="DependsOnFix">
+             <Issue Name="NonExceptionEdge" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Menu.cs" Line="37">In method 'Menu.Menu_SinglePlayer(object, EventArgs)', call System.IDisposable.Dispose on object 'game' before all references to it are out of scope.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Program" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="StaticHolderTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1053" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+           <Issue Name="CSharp2_0" Certainty="90" Level="Error">Because type 'Program' contains only 'static' members, mark it as 'static' to prevent the compiler from adding a default public constructor.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+       </Types>
+      </Namespace>
+      <Namespace Name="RayCastEngine.GameComponents">
+       <Types>
+        <Type Name="DirectBitmap" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+           <Issue Name="ProvideDisposeBool" Certainty="95" Level="Error">Provide an overridable implementation of Dispose(bool) on 'DirectBitmap' or mark the type as sealed. A call to Dispose(false) should only clean up native resources. A call to Dispose(true) should clean up both managed and native resources.</Issue>
+          </Message>
+         </Messages>
+         <Members>
+          <Member Name="#.ctor(System.Int32,System.Int32)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="width*4" TypeName="OperationsShouldNotOverflow" Category="Microsoft.Usage" CheckId="CA2233" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="25">Correct the potential overflow in the operation 'width*4' in 'DirectBitmap.DirectBitmap(int, int)'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Bits" Kind="Property" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Certainty="50" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="13">Change 'DirectBitmap.Bits' to return a collection or make it a method.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Dispose()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Name="NotCalled" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="66">Change 'DirectBitmap.Dispose()' to call 'GC.SuppressFinalize(object)'. This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.</Issue>
+            </Message>
+            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="DisposeImplementation" Certainty="95" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="66">Modify 'DirectBitmap.Dispose()' so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), and then returns.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#fillColor(System.Drawing.Color)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="fill" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="28">Correct the casing of 'fill' in member name 'DirectBitmap.fillColor(Color)' by changing it to 'Fill'.</Issue>
+            </Message>
+            <Message Id="colour" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="28">In method 'DirectBitmap.fillColor(Color)', correct the spelling of 'colour' in parameter name 'colour' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#fillColor(System.Int32)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="fill" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="31">Correct the casing of 'fill' in member name 'DirectBitmap.fillColor(int)' by changing it to 'Fill'.</Issue>
+            </Message>
+            <Message Id="colour" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="31">In method 'DirectBitmap.fillColor(int)', correct the spelling of 'colour' in parameter name 'colour' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#fromBitmap(System.Drawing.Bitmap)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="bitMap" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterShouldBeDiscreteTerm" Certainty="80" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="75">In member 'DirectBitmap.fromBitmap(Bitmap)', the compound word 'bitMap' in parameter name 'bitMap' exists as a discrete term. If your usage is intended to be single word, case it as 'bitmap' or strip the first token entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="DependsOnFix">
+             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="75">In method 'DirectBitmap.fromBitmap(Bitmap)', object 'directBitMap' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'directBitMap' before all references to it are out of scope.</Issue>
+            </Message>
+            <Message Id="from" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="75">Correct the casing of 'from' in member name 'DirectBitmap.fromBitmap(Bitmap)' by changing it to 'From'.</Issue>
+            </Message>
+            <Message Id="0" TypeName="Validate arguments of public methods" Category="Microsoft.Design" CheckId="CA1062" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="75">In externally visible method 'DirectBitmap.fromBitmap(Bitmap)', validate parameter 'bitMap' before using it.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#GetPixel(System.Int32,System.Int32)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="CriticalError" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="53">Modify 'DirectBitmap.GetPixel(int, int)' to catch a more specific exception than 'Exception' or rethrow the exception.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="49">In method 'DirectBitmap.GetPixel(int, int)', consider providing a more meaningful name than parameter name 'x'.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="49">In method 'DirectBitmap.GetPixel(int, int)', consider providing a more meaningful name than parameter name 'y'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#GetPixelInteger(System.Int32,System.Int32)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="CriticalError" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="61">Modify 'DirectBitmap.GetPixelInteger(int, int)' to catch a more specific exception than 'Exception' or rethrow the exception.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="58">In method 'DirectBitmap.GetPixelInteger(int, int)', consider providing a more meaningful name than parameter name 'x'.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="58">In method 'DirectBitmap.GetPixelInteger(int, int)', consider providing a more meaningful name than parameter name 'y'.</Issue>
+            </Message>
+            <Message Id="integer" TypeName="IdentifiersShouldNotContainTypeNames" Category="Microsoft.Naming" CheckId="CA1720" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="LanguageSpecificMember" Certainty="75" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="58">Consider replacing the language-specific data type identifier 'Integer' in member name 'DirectBitmap.GetPixelInteger(int, int)' with either a language-independent equivalent or a more generic term, such as 'value'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#SetPixel(System.Int32,System.Int32,System.Byte,System.Byte,System.Byte)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="39">In method 'DirectBitmap.SetPixel(int, int, byte, byte, byte)', consider providing a more meaningful name than parameter name 'x'.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="39">In method 'DirectBitmap.SetPixel(int, int, byte, byte, byte)', consider providing a more meaningful name than parameter name 'y'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#SetPixel(System.Int32,System.Int32,System.Byte,System.Byte,System.Byte,System.Byte)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="42">In method 'DirectBitmap.SetPixel(int, int, byte, byte, byte, byte)', consider providing a more meaningful name than parameter name 'x'.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="42">In method 'DirectBitmap.SetPixel(int, int, byte, byte, byte, byte)', consider providing a more meaningful name than parameter name 'y'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#SetPixel(System.Int32,System.Int32,System.Drawing.Color)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="colour" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="36">In method 'DirectBitmap.SetPixel(int, int, Color)', correct the spelling of 'colour' in parameter name 'colour' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="36">In method 'DirectBitmap.SetPixel(int, int, Color)', consider providing a more meaningful name than parameter name 'x'.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="36">In method 'DirectBitmap.SetPixel(int, int, Color)', consider providing a more meaningful name than parameter name 'y'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#SetPixel(System.Int32,System.Int32,System.Int32)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="colour" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="46">In method 'DirectBitmap.SetPixel(int, int, int)', correct the spelling of 'colour' in parameter name 'colour' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="46">In method 'DirectBitmap.SetPixel(int, int, int)', consider providing a more meaningful name than parameter name 'x'.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameterMoreMeaningfulName" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="DirectBitmap.cs" Line="46">In method 'DirectBitmap.SetPixel(int, int, int)', consider providing a more meaningful name than parameter name 'y'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Engine" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
+         <Messages>
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+           <Issue Name="NonBreaking" Certainty="95" Level="CriticalError">Implement IDisposable on 'Engine' because it creates members of the following IDisposable types: 'DirectBitmap'.</Issue>
+          </Message>
+         </Messages>
+         <Members>
+          <Member Name="#Draw(System.Drawing.Graphics,System.TimeSpan)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message Id="gameTime" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Engine.cs" Line="467">Parameter 'gameTime' of 'Engine.Draw(Graphics, TimeSpan)' is never used. Remove the parameter or use it in the method body.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#getDataText(System.TimeSpan)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message Id="System.String.Format(System.String,System.Object[])" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Name="IFormatProviderAlternateString" Certainty="95" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Engine.cs" Line="474">Because the behavior of 'string.Format(string, params object[])' could vary based on the current user's locale settings, replace this call in 'Engine.getDataText(TimeSpan)' with a call to 'string.Format(IFormatProvider, string, params object[])'. If the result of 'string.Format(IFormatProvider, string, params object[])' will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Load(RayCastEngine.Views.GameType)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message Id="gameType" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Engine.cs" Line="86">Parameter 'gameType' of 'Engine.Load(GameType)' is never used. Remove the parameter or use it in the method body.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(System.TimeSpan)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Engine.cs" Line="127">'Engine.Update(TimeSpan)' has a cyclomatic complexity of 26. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#UpdateScreen(System.TimeSpan,System.Int32)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Engine.cs" Line="218">'Engine.UpdateScreen(TimeSpan, int)' has a cyclomatic complexity of 43. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+            <Message TypeName="AvoidExcessiveLocals" Category="Microsoft.Performance" CheckId="CA1809" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Name="Compiler" Certainty="95" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Engine.cs" Line="218">'Engine.UpdateScreen(TimeSpan, int)' has 80 local variables, 1 of which were generated by the compiler. Refactor 'Engine.UpdateScreen(TimeSpan, int)' so that it uses fewer than 64 local variables.</Issue>
+            </Message>
+            <Message Id="gameTime" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="NonBreaking">
+             <Issue Certainty="95" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Engine.cs" Line="218">Parameter 'gameTime' of 'Engine.UpdateScreen(TimeSpan, int)' is never used. Remove the parameter or use it in the method body.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#worldMap" Kind="Field" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message Id="Member" TypeName="PreferJaggedArraysOverMultidimensional" Category="Microsoft.Performance" CheckId="CA1814" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Certainty="25" Level="Warning">'Engine.worldMap' is a multidimensional array. Replace it with a jagged array if possible.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Sprite" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.ctor(System.Double,System.Double,RayCastEngine.GameComponents.Texture)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="Pos" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Sprite.cs" Line="15">In method 'Sprite.Sprite(double, double, Texture)', correct the spelling of 'Pos' in parameter name 'xPos' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Sprite.cs" Line="15">In method 'Sprite.Sprite(double, double, Texture)', correct the spelling of 'Pos' in parameter name 'yPos' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Sprite.cs" Line="15">In method 'Sprite.Sprite(double, double, Texture)', correct the spelling of 'x' in parameter name 'xPos' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Sprite.cs" Line="15">In method 'Sprite.Sprite(double, double, Texture)', correct the spelling of 'y' in parameter name 'yPos' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#distance" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Certainty="90" Level="Error">Because field 'Sprite.distance' is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#texture" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Certainty="90" Level="Error">Because field 'Sprite.texture' is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#x" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Certainty="90" Level="Error">Because field 'Sprite.x' is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberMoreMeaningfulName" Certainty="75" Level="CriticalWarning">Consider providing a more meaningful name than member name 'Sprite.x'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#y" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Certainty="90" Level="Error">Because field 'Sprite.y' is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberMoreMeaningfulName" Certainty="75" Level="CriticalWarning">Consider providing a more meaningful name than member name 'Sprite.y'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Texture" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#BlueStoneWall" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="BlueStone" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberShouldBeDiscreteTerm" Certainty="80" Level="Error">The compound word 'BlueStone' in member name 'Texture.BlueStoneWall' exists as a discrete term. If your usage is intended to be single word, case it as 'Bluestone' or strip the first token entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="StoneWall" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberShouldBeDiscreteTerm" Certainty="80" Level="Error">The compound word 'StoneWall' in member name 'Texture.BlueStoneWall' exists as a discrete term. If your usage is intended to be single word, case it as 'Stonewall' or strip the first token entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#ColorStoneWall" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="StoneWall" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberShouldBeDiscreteTerm" Certainty="80" Level="Error">The compound word 'StoneWall' in member name 'Texture.ColorStoneWall' exists as a discrete term. If your usage is intended to be single word, case it as 'Stonewall' or strip the first token entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#GreyStoneWall" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="StoneWall" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberShouldBeDiscreteTerm" Certainty="80" Level="Error">The compound word 'StoneWall' in member name 'Texture.GreyStoneWall' exists as a discrete term. If your usage is intended to be single word, case it as 'Stonewall' or strip the first token entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#PurpleStoneWall" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="StoneWall" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberShouldBeDiscreteTerm" Certainty="80" Level="Error">The compound word 'StoneWall' in member name 'Texture.PurpleStoneWall' exists as a discrete term. If your usage is intended to be single word, case it as 'Stonewall' or strip the first token entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#RedBrickWall" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="RedBrick" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberShouldBeDiscreteTerm" Certainty="80" Level="Error">The compound word 'RedBrick' in member name 'Texture.RedBrickWall' exists as a discrete term. If your usage is intended to be single word, case it as 'Redbrick' or strip the first token entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="Vector3" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.ctor(System.Double,System.Double,System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="14">In method 'Vector3.Vector3(double, double, double)', correct the spelling of 'Val' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="14">In method 'Vector3.Vector3(double, double, double)', correct the spelling of 'Val' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="14">In method 'Vector3.Vector3(double, double, double)', correct the spelling of 'Val' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="14">In method 'Vector3.Vector3(double, double, double)', correct the spelling of 'x' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="14">In method 'Vector3.Vector3(double, double, double)', correct the spelling of 'y' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="14">In method 'Vector3.Vector3(double, double, double)', correct the spelling of 'z' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#add(RayCastEngine.GameComponents.Vector3)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="add" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="37">Correct the casing of 'add' in member name 'Vector3.add(Vector3)' by changing it to 'Add'.</Issue>
+            </Message>
+            <Message Id="vec" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="37">In method 'Vector3.add(Vector3)', correct the spelling of 'vec' in parameter name 'vec' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="0" TypeName="Validate arguments of public methods" Category="Microsoft.Design" CheckId="CA1062" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning">In externally visible method 'Vector3.add(Vector3)', validate parameter 'vec' before using it.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#addX(System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="add" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="47">Correct the casing of 'add' in member name 'Vector3.addX(double)' by changing it to 'Add'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="47">In method 'Vector3.addX(double)', correct the spelling of 'Val' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="47">In method 'Vector3.addX(double)', correct the spelling of 'x' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#addXYZ(System.Double,System.Double,System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="XYZ" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="42">Correct the casing of 'XYZ' in member name 'Vector3.addXYZ(double, double, double)' by changing it to 'Xyz'.</Issue>
+            </Message>
+            <Message Id="add" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="42">Correct the casing of 'add' in member name 'Vector3.addXYZ(double, double, double)' by changing it to 'Add'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="42">In method 'Vector3.addXYZ(double, double, double)', correct the spelling of 'Val' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="42">In method 'Vector3.addXYZ(double, double, double)', correct the spelling of 'Val' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="42">In method 'Vector3.addXYZ(double, double, double)', correct the spelling of 'Val' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="42">In method 'Vector3.addXYZ(double, double, double)', correct the spelling of 'x' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="42">In method 'Vector3.addXYZ(double, double, double)', correct the spelling of 'y' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="42">In method 'Vector3.addXYZ(double, double, double)', correct the spelling of 'z' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#addY(System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="add" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="50">Correct the casing of 'add' in member name 'Vector3.addY(double)' by changing it to 'Add'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="50">In method 'Vector3.addY(double)', correct the spelling of 'Val' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="50">In method 'Vector3.addY(double)', correct the spelling of 'y' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#addZ(System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="add" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="53">Correct the casing of 'add' in member name 'Vector3.addZ(double)' by changing it to 'Add'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="53">In method 'Vector3.addZ(double)', correct the spelling of 'Val' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="53">In method 'Vector3.addZ(double)', correct the spelling of 'z' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#copy()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="copy" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="30">Correct the casing of 'copy' in member name 'Vector3.copy()' by changing it to 'Copy'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#equals(RayCastEngine.GameComponents.Vector3)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="equals" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="34">Correct the casing of 'equals' in member name 'Vector3.equals(Vector3)' by changing it to 'Equals'.</Issue>
+            </Message>
+            <Message Id="vec" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="34">In method 'Vector3.equals(Vector3)', correct the spelling of 'vec' in parameter name 'vec' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="0" TypeName="Validate arguments of public methods" Category="Microsoft.Design" CheckId="CA1062" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning">In externally visible method 'Vector3.equals(Vector3)', validate parameter 'vec' before using it.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#setX(System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="21">Correct the casing of 'set' in member name 'Vector3.setX(double)' by changing it to 'Set'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="21">In method 'Vector3.setX(double)', correct the spelling of 'Val' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="21">In method 'Vector3.setX(double)', correct the spelling of 'x' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#setY(System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="24">Correct the casing of 'set' in member name 'Vector3.setY(double)' by changing it to 'Set'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="24">In method 'Vector3.setY(double)', correct the spelling of 'Val' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="24">In method 'Vector3.setY(double)', correct the spelling of 'y' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#setZ(System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="set" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="27">Correct the casing of 'set' in member name 'Vector3.setZ(double)' by changing it to 'Set'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="27">In method 'Vector3.setZ(double)', correct the spelling of 'Val' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="27">In method 'Vector3.setZ(double)', correct the spelling of 'z' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#sub(RayCastEngine.GameComponents.Vector3)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="sub" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="56">Correct the casing of 'sub' in member name 'Vector3.sub(Vector3)' by changing it to 'Sub'.</Issue>
+            </Message>
+            <Message Id="vec" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="56">In method 'Vector3.sub(Vector3)', correct the spelling of 'vec' in parameter name 'vec' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="0" TypeName="Validate arguments of public methods" Category="Microsoft.Design" CheckId="CA1062" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="DependsOnFix">
+             <Issue Certainty="75" Level="Warning">In externally visible method 'Vector3.sub(Vector3)', validate parameter 'vec' before using it.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#subX(System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="sub" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="66">Correct the casing of 'sub' in member name 'Vector3.subX(double)' by changing it to 'Sub'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="66">In method 'Vector3.subX(double)', correct the spelling of 'Val' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="66">In method 'Vector3.subX(double)', correct the spelling of 'x' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#subXYZ(System.Double,System.Double,System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="XYZ" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="61">Correct the casing of 'XYZ' in member name 'Vector3.subXYZ(double, double, double)' by changing it to 'Xyz'.</Issue>
+            </Message>
+            <Message Id="sub" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="61">Correct the casing of 'sub' in member name 'Vector3.subXYZ(double, double, double)' by changing it to 'Sub'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="61">In method 'Vector3.subXYZ(double, double, double)', correct the spelling of 'Val' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="61">In method 'Vector3.subXYZ(double, double, double)', correct the spelling of 'Val' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="61">In method 'Vector3.subXYZ(double, double, double)', correct the spelling of 'Val' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="61">In method 'Vector3.subXYZ(double, double, double)', correct the spelling of 'x' in parameter name 'xVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="61">In method 'Vector3.subXYZ(double, double, double)', correct the spelling of 'y' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="61">In method 'Vector3.subXYZ(double, double, double)', correct the spelling of 'z' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#subY(System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="sub" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="69">Correct the casing of 'sub' in member name 'Vector3.subY(double)' by changing it to 'Sub'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="69">In method 'Vector3.subY(double)', correct the spelling of 'Val' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="69">In method 'Vector3.subY(double)', correct the spelling of 'y' in parameter name 'yVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#subZ(System.Double)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="sub" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="72">Correct the casing of 'sub' in member name 'Vector3.subZ(double)' by changing it to 'Sub'.</Issue>
+            </Message>
+            <Message Id="Val" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="72">In method 'Vector3.subZ(double)', correct the spelling of 'Val' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberParameter" Certainty="75" Level="CriticalWarning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="72">In method 'Vector3.subZ(double)', correct the spelling of 'z' in parameter name 'zVal' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#toArray()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="to" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\GameComponents" File="Vector3.cs" Line="76">Correct the casing of 'to' in member name 'Vector3.toArray()' by changing it to 'To'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#x" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Certainty="90" Level="Error">Because field 'Vector3.x' is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Issue>
+            </Message>
+            <Message Id="x" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberMoreMeaningfulName" Certainty="75" Level="CriticalWarning">Consider providing a more meaningful name than member name 'Vector3.x'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#y" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Certainty="90" Level="Error">Because field 'Vector3.y' is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Issue>
+            </Message>
+            <Message Id="y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberMoreMeaningfulName" Certainty="75" Level="CriticalWarning">Consider providing a more meaningful name than member name 'Vector3.y'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#z" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Certainty="90" Level="Error">Because field 'Vector3.z' is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Issue>
+            </Message>
+            <Message Id="z" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberMoreMeaningfulName" Certainty="75" Level="CriticalWarning">Consider providing a more meaningful name than member name 'Vector3.z'.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+      <Namespace Name="RayCastEngine.Views">
+       <Types>
+        <Type Name="Game" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#InitializeComponent()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message Id="System.Windows.Forms.Control.set_Text(System.String)" TypeName="Do not pass literals as localized parameters" Category="Microsoft.Globalization" CheckId="CA1303" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="DependsOnFix">
+             <Issue Name="KnownValue" Certainty="75" Level="Warning" Path="C:\Users\Spota\Source\Repos\spotandjake\RayCastEngine-CSharp\RayCastEngine\Views" File="Game.Designer.cs" Line="48">Method 'Game.InitializeComponent()' passes a literal string as parameter 'value' of a call to 'Control.Text.set(string)'. Retrieve the following string(s) from a resource table instead: "Game".</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="GameType" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#MultiPlayer" Kind="Field" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message Id="MultiPlayer" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="MemberShouldBeDiscreteTerm" Certainty="80" Level="Error">The compound word 'MultiPlayer' in member name 'GameType.MultiPlayer' exists as a discrete term. If your usage is intended to be single word, case it as 'Multiplayer' or strip the first token entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+            <Message Id="Multi" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Status="Active" Created="2022-02-21 04:06:19Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="75" Level="CriticalWarning">Correct the spelling of 'Multi' in member name 'GameType.MultiPlayer' or remove it entirely if it represents any sort of Hungarian notation.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
+   <Name>Assemblies should have valid strong names</Name>
+   <Description>Either the assembly has no strong name, an invalid one, or the strong name is valid only because of the computer configuration. The assembly should not be deployed in this state. The most common causes of this are: 1) The assembly's contents were modified after it was signed. 2) The signing process failed. 3) The assembly was delay-signed. 4) A registry key existed that allowed the check to pass (where it would not have otherwise).</Description>
+   <Resolution Name="NoStrongName">Sign {0} with a strong name key.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182127.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="designrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502">
+   <Name>Avoid excessive complexity</Name>
+   <Description>Method implementations that are exceedingly complex increase the challenge of understanding and maintaining code.</Description>
+   <Resolution Name="Default">{0} has a cyclomatic complexity of {1}. Rewrite or refactor the method to reduce complexity to {2}.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182212.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Warning</MessageLevel>
+   <File Name="maintainabilityrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="AvoidExcessiveLocals" Category="Microsoft.Performance" CheckId="CA1809">
+   <Name>Avoid excessive locals</Name>
+   <Description>Method implementations should not contain more than 64 local variables. In order for the run-time to enregister local variables most efficiently, there should be 64 or fewer of them. Enregistering based on flow analysis will not occur for locals in excess of 64, which may result in slower performance.</Description>
+   <Resolution Name="Compiler">{0} has {1} local variables, {2} of which were generated by the compiler. Refactor {0} so that it uses fewer than 64 local variables.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182263.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816">
+   <Name>Call GC.SuppressFinalize correctly</Name>
+   <Description>Call GC.SuppressFinalize to suppress finalization of your instance once Dispose has been called. Objects that implement IDisposable should call SuppressFinalize from the IDisposable.Dispose method to prevent the garbage collector from calling Object.Finalize on an object that does not require it.</Description>
+   <Resolution Name="NotCalled">Change {0} to call {1}. This will prevent derived types that introduce a finalizer from needing to re-implement 'IDisposable' to call it.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182269.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+   <File Name="usagerules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702">
+   <Name>Compound words should be cased correctly</Name>
+   <Description>Avoid creating compound words from terms which exist in the dictionary as discrete terms. Do not create a compound word such as 'StopWatch' or 'PopUp'. These terms are recognized in the dictionary and should be cased as 'Stopwatch' and 'Popup'.</Description>
+   <Resolution Name="MemberParameterShouldBeDiscreteTerm">In member {0}, the compound word '{1}' in parameter name {2} exists as a discrete term. If your usage is intended to be single word, case it as '{3}' or strip the first token entirely if it represents any sort of Hungarian notation.</Resolution>
+   <Resolution Name="MemberShouldBeDiscreteTerm">The compound word '{0}' in member name {1} exists as a discrete term. If your usage is intended to be single word, case it as '{2}' or strip the first token entirely if it represents any sort of Hungarian notation.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb264474.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="80">Error</MessageLevel>
+   <File Name="namingrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000">
+   <Name>Dispose objects before losing scope</Name>
+   <Description>If a disposable object is not explicitly disposed before all references to it are out of scope, the object will be disposed at some indeterminate time when the garbage collector runs the finalizer of the object. Because an exceptional event might occur that will prevent the finalizer of the object from running, the object should be explicitly disposed instead.</Description>
+   <Resolution Name="ExceptionEdge">In method {0}, object {1} is not disposed along all exception paths. Call System.IDisposable.Dispose on object {1} before all references to it are out of scope.</Resolution>
+   <Resolution Name="NonExceptionEdge">In method {0}, call System.IDisposable.Dispose on object {1} before all references to it are out of scope.</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182289.aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="Do not pass literals as localized parameters" Category="Microsoft.Globalization" CheckId="CA1303">
+   <Name>Do not pass literals as localized parameters</Name>
+   <Description>Literal strings that are embedded in source code are difficult to localize. Avoid passing literal strings as arguments in circumstances where a localized string is generally expected.</Description>
+   <Resolution Name="KnownValue">Method {0} passes a literal string as parameter '{1}' of a call to {2}. Retrieve the following string(s) from a resource table instead: {3}.</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182187.aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
+   <Name>Do not catch general exception types</Name>
+   <Description>You should not catch Exception or SystemException. Catching generic exception types can hide run-time problems from the library user, and can complicate debugging. You should catch only those exceptions that you can handle gracefully.</Description>
+   <Resolution Name="Default">Modify {0} to catch a more specific exception than {1} or rethrow the exception.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182137.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="designrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051">
+   <Name>Do not declare visible instance fields</Name>
+   <Description>Instance fields that are visible outside of the type that declares them, limit your ability to change the implementation details for those data items. Use properties instead. They do not compromise usability or performance and they do provide flexibility in that they conceal the implementation details of the underlying data.</Description>
+   <Resolution Name="Default">Because field {0} is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182141.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Error</MessageLevel>
+   <File Name="designrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709">
+   <Name>Identifiers should be cased correctly</Name>
+   <Description>Type, namespace, and member identifiers are Pascal-cased. Parameter identifiers are camel-cased. Two letter acronyms within these identifiers should be upper-cased, for example, use System.IO instead of System.Io. Acronyms of three or more letters should be Pascal-cased, for example, use System.Xml instead of System.XML. The pascal-casing convention capitalizes the first letter of each word, as in BackColor. The camel-casing convention formats the first letter of the first word in lowercase and capitalizes the first letter of all subsequent words, as in backgroundColor. Although it may be common practice for some two letter acronyms to not be fully capitalized, violations of this rule should not be excluded for this reason. For example, 'DbConnection', is common but incorrect; use DBConnection. A violation of this rule might be required for compatibility with existing, non-managed symbol schemes. In general, however, these symbols should not be visible outside the assembly that uses them.</Description>
+   <Resolution Name="Member">Correct the casing of '{0}' in member name {1} by changing it to '{2}'.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182240.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="85">Error</MessageLevel>
+   <File Name="namingrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+   <Name>Identifiers should be spelled correctly</Name>
+   <Description>The individual words that make up an identifier should not be abbreviated and should be spelled correctly. If this rule generates a false positive on a term that should be recognized, add the word to the FxCop custom dictionary.</Description>
+   <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+   <Resolution Name="MemberMoreMeaningfulName">Consider providing a more meaningful name than member name {0}.</Resolution>
+   <Resolution Name="MemberParameter">In method {0}, correct the spelling of '{1}' in parameter name {2} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+   <Resolution Name="MemberParameterMoreMeaningfulName">In method {0}, consider providing a more meaningful name than parameter name {1}.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb264492.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+   <File Name="namingrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="IdentifiersShouldNotContainTypeNames" Category="Microsoft.Naming" CheckId="CA1720">
+   <Name>Identifiers should not contain type names</Name>
+   <Description>Avoid using language-specific types name in parameters and members and data type identifiers in parameters. Types names might not be intuitive for all developers. It is recommended that you select a generic name, such as 'value', instead. If this is not sufficient, be sure to use the type name as it is defined in the .NET Framework Library and avoid language-specific type names completely. Some examples of C#-specific type names are 'float' (use 'Single' if a generic name is not sufficient), and 'ulong' (use 'UInt64' if a generic name is not sufficient).</Description>
+   <Resolution Name="LanguageSpecificMember">Consider replacing the language-specific data type identifier '{0}' in member name {1} with either a language-independent equivalent or a more generic term, such as 'value'.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb531486.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="75">Error</MessageLevel>
+   <File Name="namingrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063">
+   <Name>Implement IDisposable correctly</Name>
+   <Description>All IDisposable types should implement the Dispose pattern correctly.</Description>
+   <Resolution Name="DisposeImplementation">Modify {0} so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), and then returns.</Resolution>
+   <Resolution Name="ProvideDisposeBool">Provide an overridable implementation of Dispose(bool) on {0} or mark the type as sealed. A call to Dispose(false) should only clean up native resources. A call to Dispose(true) should clean up both managed and native resources.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms244737.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="designrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="Literals should be spelled correctly" Category="Microsoft.Naming" CheckId="CA2204">
+   <Name>Literals should be spelled correctly</Name>
+   <Description>This rule parses the literal string into words, tokenizing compound words, and checks the spelling of each word/token.</Description>
+   <Resolution Name="Default">Correct the spelling of the unrecognized token '{0}' in the literal '{1}'.</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/bb264488.aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014">
+   <Name>Mark assemblies with CLSCompliantAttribute</Name>
+   <Description>Assemblies should explicitly state their CLS compliance using the CLSCompliant attribute. An assembly without this attribute is not CLS-compliant. Assemblies, modules, and types can be CLS-compliant even if some parts of the assembly, module, or type are not CLS-compliant. The following rules apply: 1) If the element is marked CLSCompliant, any noncompliant members must have the CLSCompliant attribute present with its argument set to false. 2) A comparable CLS-compliant alternative member must be supplied for each member that is not CLS-compliant.</Description>
+   <Resolution Name="Default">Mark {0} with CLSCompliant(true) because it exposes externally visible types.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182156.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="designrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="MarkAssembliesWithNeutralResourcesLanguage" Category="Microsoft.Performance" CheckId="CA1824">
+   <Name>Mark assemblies with NeutralResourcesLanguageAttribute</Name>
+   <Description>The NeutralResourcesLanguage attribute informs the ResourceManager of the language used to render the neutral culture's resources for an assembly. When looking up resources in the same culture as the neutral resources language, the ResourceManager automatically uses the resources located in the main assembly, instead of searching for a satellite assembly with the current user interface culture for the current thread. This will improve lookup performance for the first resource you load and can reduce your working set.</Description>
+   <Resolution Name="Default">Because assembly {0} contains a ResX-based resource file, mark it with the NeutralResourcesLanguage attribute, specifying the language of the resources within the assembly. This could improve lookup performance the first time a resource is retrieved.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb385967.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="OperationsShouldNotOverflow" Category="Microsoft.Usage" CheckId="CA2233">
+   <Name>Operations should not overflow</Name>
+   <Description>Arithmetic operations should not be done without first validating the operands to prevent overflow.</Description>
+   <Resolution Name="Default">Correct the potential overflow in the operation '{0}' in {1}.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182354.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="75">CriticalWarning</MessageLevel>
+   <File Name="usagerules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="PreferJaggedArraysOverMultidimensional" Category="Microsoft.Performance" CheckId="CA1814">
+   <Name>Prefer jagged arrays over multidimensional</Name>
+   <Description>Multidimensional arrays can have a negative impact on performance. Use a jagged array if possible.</Description>
+   <Resolution Name="Default">{0} is a multidimensional array. Replace it with a jagged array if possible.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182277.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="25">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819">
+   <Name>Properties should not return arrays</Name>
+   <Description>Properties that return arrays are prone to code inefficiencies. Consider using a collection or making this a method. See the design guidelines for more information.</Description>
+   <Resolution Name="Default">Change {0} to return a collection or make it a method.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/0fss9skc.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="50">Warning</MessageLevel>
+   <File Name="performancerules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
+   <Name>Review unused parameters</Name>
+   <Description>Review parameters in non-virtual methods that are not used in the method body to ensure no correctness exists around failure to access them. Unused parameters incur maintenance and performance costs. Sometimes a violation of this rule can point to an implementation bug in the method (i.e. the parameter should actually have been used in the method body). Exclude warnings of this rule if the parameter has to exist because of backward compatibility.</Description>
+   <Resolution Name="Default">Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182268.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Warning</MessageLevel>
+   <File Name="usagerules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+   <Name>Specify IFormatProvider</Name>
+   <Description>If an overload exists that takes an IFormatProvider argument, it should always be called in favor of an overload that does not. Some methods in the runtime convert a value to or from a string representation and take a string parameter that contains one or more characters, called format specifiers, which indicate how the value is to be converted. If the meaning of the format specifier varies by culture, a formatting object supplies the actual characters used in the string representation. In scenarios where sorting and comparison behavior should never change between cultures, specify CultureInfo.InvariantCulture, otherwise, specify CultureInfo.CurrentCulture.</Description>
+   <Resolution Name="IFormatProviderAlternateString">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify {3} as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify {4}.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182190.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">Error</MessageLevel>
+   <File Name="globalizationrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="StaticHolderTypesShouldNotHaveConstructors" Category="Microsoft.Design" CheckId="CA1053">
+   <Name>Static holder types should not have constructors</Name>
+   <Description>Instances of types that define only static members do not need to be created. Many compilers will automatically add a public default constructor if no constructor is specified. To prevent this, adding an empty private constructor may be required.</Description>
+   <Resolution Name="CSharp2_0">Because type {0} contains only 'static' members, mark it as 'static' to prevent the compiler from adding a default public constructor.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182169.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Error</MessageLevel>
+   <File Name="designrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
+   <Name>Types that own disposable fields should be disposable</Name>
+   <Description>Types that declare disposable members should also implement IDisposable. If the type does not own any unmanaged resources, do not implement a finalizer on it.</Description>
+   <Resolution Name="NonBreaking">Implement IDisposable on {0} because it creates members of the following IDisposable types: {1}.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182172.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="designrules.dll" Version="16.0.0.0" />
+  </Rule>
+  <Rule TypeName="Validate arguments of public methods" Category="Microsoft.Design" CheckId="CA1062">
+   <Name>Validate arguments of public methods</Name>
+   <Description>All reference arguments passed to externally visible methods should be checked against null (Nothing in VB). If appropriate, throw a System.ArgumentNullException when the argument is null.</Description>
+   <Resolution Name="Default">In externally visible method {0}, validate parameter '{1}' before using it.</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182182.aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="16.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Category</String>
+  <String Key="Certainty">Certainty</String>
+  <String Key="CollapseAll">Collapse All</String>
+  <String Key="CheckId">Check Id</String>
+  <String Key="Error">Error</String>
+  <String Key="Errors">error(s)</String>
+  <String Key="ExpandAll">Expand All</String>
+  <String Key="Help">Help</String>
+  <String Key="Line">Line</String>
+  <String Key="Messages">message(s)</String>
+  <String Key="LocationNotStoredInPdb">[Location not stored in Pdb]</String>
+  <String Key="Project">Project</String>
+  <String Key="Resolution">Resolution</String>
+  <String Key="Rule">Rule</String>
+  <String Key="RuleFile">Rule File</String>
+  <String Key="RuleDescription">Rule Description</String>
+  <String Key="Source">Source</String>
+  <String Key="Status">Status</String>
+  <String Key="Target">Target</String>
+  <String Key="Warning">Warning</String>
+  <String Key="Warnings">warning(s)</String>
+  <String Key="ReportTitle">Code Analysis Report</String>
+ </Localized>
+</FxCopReport>

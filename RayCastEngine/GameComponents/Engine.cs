@@ -284,9 +284,9 @@ namespace RayCastEngine.GameComponents {
             buffer.SetPixel(
               x,
               y,
-              (byte)((pixel.R >> 1) & 8355711),
-              (byte)((pixel.G >> 1) & 8355711),
-              (byte)((pixel.B >> 1) & 8355711)
+              (byte)(pixel.R / 3),
+              (byte)(pixel.G / 3),
+              (byte)(pixel.B / 3)
             );
           } else {
             int pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixelInteger(tx, ty);
@@ -378,23 +378,7 @@ namespace RayCastEngine.GameComponents {
             int pixel = textures[texNum].GetPixelInteger(texX, texY);
             buffer.SetPixel(x, y, pixel);
           }
-          // buffer.SetPixel(x, y, -65536);
         }
-        //int drawDistance = drawEnd - drawStart;
-        //for (int y = drawStart; y < drawStart + drawDistance / 2; y++) {
-        //  // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
-        //  int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
-        //  texPos += step;
-        //  //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-        //  //if (side1) {
-        //  //  Color pixel = textures[texNum].GetPixel(texX, texY);
-        //  //  buffer.SetPixel(x, y, (byte)((pixel.R >> 1) & 8355711), (byte)((pixel.G >> 1) & 8355711), (byte)((pixel.B >> 1) & 8355711));
-        //  //} else {
-        //  //  int pixel = textures[texNum].GetPixelInteger(texX, texY);
-        //  //  buffer.SetPixel(x, y, pixel);
-        //  //}
-        //  buffer.SetPixel(x, y, -16776961);
-        //}
         //SET THE ZBUFFER FOR THE SPRITE CASTING
         ZBuffer[x] = perpWallDist; //perpendicular distance is used
       }
