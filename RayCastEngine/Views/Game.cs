@@ -30,8 +30,6 @@ namespace RayCastEngine.Views {
       WindowState = FormWindowState.Maximized;
       // Create Game
       currentEngine = new Engine();
-      Rectangle resolution = Screen.PrimaryScreen.Bounds;
-      currentEngine.Resolution = new Size(resolution.Width, resolution.Height);
       // Start
       Start();
     }
@@ -49,12 +47,14 @@ namespace RayCastEngine.Views {
 
       // Load game content
       currentEngine.Load(currentGameType);
-
+      // Load Size
+      currentEngine.Resize(Width, Height);
       // Set gameloop state
       Running = true;
 
       // Set previous game time
       DateTime _previousGameTime = DateTime.Now;
+      currentEngine.GameStateChanged = true;
       while (Running) {
         // Calculate the time elapsed since the last game loop cycle
         TimeSpan GameTime = DateTime.Now - _previousGameTime;
@@ -81,6 +81,11 @@ namespace RayCastEngine.Views {
         // Update Game at 120fps
         await Task.Delay(1000 / 240);
       }
+    }
+    // Deal With Resize
+    private void Game_Resize(object sender, EventArgs e) {
+      // Load Size
+      currentEngine.Resize(Width, Height);
     }
     // Close Window
     private void Game_FormClosed(object sender, FormClosedEventArgs e) {

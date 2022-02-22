@@ -49,6 +49,7 @@
       this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Game_FormClosed);
       this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Game_KeyDown);
       this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Game_KeyUp);
+      this.Resize += new System.EventHandler(this.Game_Resize);
       this.ResumeLayout(false);
       this.PerformLayout();
 

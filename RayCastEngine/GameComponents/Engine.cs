@@ -12,7 +12,7 @@ namespace RayCastEngine.GameComponents {
   class Engine {
     // Properties
     public bool GameStateChanged = true;
-    public Size Resolution { get; set; }
+    public Size Resolution;
     public Dictionary<int, bool> keys = new Dictionary<int, bool>();
     // Temporary Engine Variables
     private int texWidth = 64;
@@ -119,9 +119,14 @@ namespace RayCastEngine.GameComponents {
         new Sprite(10.0, 15.1, Texture.BarrelEntity),
         new Sprite(10.5, 15.8, Texture.BarrelEntity)
       };
+    }
+    public void Resize(int width, int height) {
+      Resolution = new Size(width, height);
       // Create Our Buffer
-      ZBuffer = new double[Resolution.Width];
-      buffer = new DirectBitmap(Resolution.Width, Resolution.Height);
+      ZBuffer = new double[width];
+      buffer = new DirectBitmap(width, height);
+      // Say Game Has Updated
+      GameStateChanged = true;
     }
     public void Update(TimeSpan gameTime) {
       Vector3 oldPosition = position.copy();
@@ -280,9 +285,9 @@ namespace RayCastEngine.GameComponents {
             buffer.SetPixel(
               x,
               y,
-              (byte)(pixel.R / 3),
-              (byte)(pixel.G / 3),
-              (byte)(pixel.B / 3)
+              (byte)(pixel.R / 2),
+              (byte)(pixel.G / 2),
+              (byte)(pixel.B / 2)
             );
           } else {
             int pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixelInteger(tx, ty);
