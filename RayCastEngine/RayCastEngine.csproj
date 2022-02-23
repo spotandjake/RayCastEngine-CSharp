@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GameComponents\DungeonGenerator.cs" />
     <Compile Include="GameComponents\Engine.cs" />
     <Compile Include="GameComponents\DirectBitmap.cs" />
     <Compile Include="GameComponents\Vector3.cs" />
