@@ -16,8 +16,8 @@ namespace RayCastEngine.GameComponents {
     // Temporary Engine Variables
     private int texWidth = 64;
     private int texHeight = 64;
-    private static int worldSizeX = 240;
-    private static int worldSizeY = 240;
+    private static int worldSizeX = 150;
+    private static int worldSizeY = 150;
     //private int[,] worldMap = new int[,] {
     //    { 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 },
     //    { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
@@ -44,7 +44,7 @@ namespace RayCastEngine.GameComponents {
     //    { 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8 },
     //    { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5 }
     //};
-    private int[,] worldMap;
+    private Texture[,] worldMap;
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
     private double[] ZBuffer;
     private DirectBitmap buffer;
@@ -58,6 +58,7 @@ namespace RayCastEngine.GameComponents {
       // Load Map
       DungeonGenerator dungeonBuilder = new DungeonGenerator(worldSizeX, worldSizeY);
       worldMap = dungeonBuilder.exportMap();
+      sprites = dungeonBuilder.getEntityPositions();
       position = dungeonBuilder.getStartPosition();
       // Load Images
       textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.eagle));
@@ -72,30 +73,30 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.pillar));
       textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greenlight));
       // Load Sprites
-      sprites = new Sprite[]{
-        new Sprite(20.5, 11.5, Texture.GreenLight), //green light in front of playerstart
-        //green lights in every room
-        new Sprite(18.5, 4.5, Texture.GreenLight),
-        new Sprite(10.0, 4.5, Texture.GreenLight),
-        new Sprite(10.0, 12.5, Texture.GreenLight),
-        new Sprite(3.5, 6.5, Texture.GreenLight),
-        new Sprite(3.5, 20.5, Texture.GreenLight),
-        new Sprite(3.5, 14.5, Texture.GreenLight),
-        new Sprite(14.5, 20.5, Texture.GreenLight),
-        //row of pillars in front of wall: fisheye test
-        new Sprite(18.5, 10.5, Texture.PillarEntity),
-        new Sprite(18.5, 11.5, Texture.PillarEntity),
-        new Sprite(18.5, 12.5, Texture.PillarEntity),
-        //some barrels around the map
-        new Sprite(21.5, 1.5,  Texture.BarrelEntity),
-        new Sprite(15.5, 1.5,  Texture.BarrelEntity),
-        new Sprite(16.0, 1.8,  Texture.BarrelEntity),
-        new Sprite(16.2, 1.2,  Texture.BarrelEntity),
-        new Sprite(3.5,  2.5,  Texture.BarrelEntity),
-        new Sprite(9.5,  15.5, Texture.BarrelEntity),
-        new Sprite(10.0, 15.1, Texture.BarrelEntity),
-        new Sprite(10.5, 15.8, Texture.BarrelEntity)
-      };
+    //  sprites = new Sprite[]{
+    //    new Sprite(20.5, 11.5, Texture.GreenLight), //green light in front of playerstart
+    //    //green lights in every room
+    //    new Sprite(18.5, 4.5, Texture.GreenLight),
+    //    new Sprite(10.0, 4.5, Texture.GreenLight),
+    //    new Sprite(10.0, 12.5, Texture.GreenLight),
+    //    new Sprite(3.5, 6.5, Texture.GreenLight),
+    //    new Sprite(3.5, 20.5, Texture.GreenLight),
+    //    new Sprite(3.5, 14.5, Texture.GreenLight),
+    //    new Sprite(14.5, 20.5, Texture.GreenLight),
+    //    //row of pillars in front of wall: fisheye test
+    //    new Sprite(18.5, 10.5, Texture.PillarEntity),
+    //    new Sprite(18.5, 11.5, Texture.PillarEntity),
+    //    new Sprite(18.5, 12.5, Texture.PillarEntity),
+    //    //some barrels around the map
+    //    new Sprite(21.5, 1.5,  Texture.BarrelEntity),
+    //    new Sprite(15.5, 1.5,  Texture.BarrelEntity),
+    //    new Sprite(16.0, 1.8,  Texture.BarrelEntity),
+    //    new Sprite(16.2, 1.2,  Texture.BarrelEntity),
+    //    new Sprite(3.5,  2.5,  Texture.BarrelEntity),
+    //    new Sprite(9.5,  15.5, Texture.BarrelEntity),
+    //    new Sprite(10.0, 15.1, Texture.BarrelEntity),
+    //    new Sprite(10.5, 15.8, Texture.BarrelEntity)
+    //  };
     }
     public void Resize(int width, int height) {
       Resolution = new Size(width, height);
@@ -170,8 +171,8 @@ namespace RayCastEngine.GameComponents {
       if (!Velocity.equals(new Vector3(0, 0, 0))) {
         double projectedX = position.x + Velocity.x;
         double projectedY = position.y + Velocity.y;
-        if (worldMap[(int)projectedX, intPosY] == 0) position.setX(projectedX);
-        if (worldMap[intPosX, (int)projectedY] == 0) position.setY(projectedY);
+        if (worldMap[(int)projectedX, intPosY] == Texture.Air) position.setX(projectedX);
+        if (worldMap[intPosX, (int)projectedY] == Texture.Air) position.setY(projectedY);
       }
       // Very simple demonstration jump/pitch controls
       // look up
@@ -319,10 +320,10 @@ namespace RayCastEngine.GameComponents {
             side1 = true;
           }
           //Check if ray has hit a wall
-          if (worldMap[mapX, mapY] != 0) hit = true;
+          if (worldMap[mapX, mapY] != Texture.Air) hit = true;
         }
         // texturing calculations
-        Texture texNum = (Texture)worldMap[mapX, mapY];
+        Texture texNum = worldMap[mapX, mapY];
         if (texNum == Texture.Air) continue;
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
         double perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
@@ -384,7 +385,10 @@ namespace RayCastEngine.GameComponents {
         double invDet = 1.0 / (plane.x * direction.y - direction.x * plane.y); //required for correct matrix multiplication
         double transformX = invDet * (direction.y * spriteX - direction.x * spriteY);
         double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
+        // If the sprite position is equal to the player position we are dividing by zero must fix
         int spriteScreenX = (int)((screenWidth / 2) * (1 + transformX / transformY));
+        double test2 = (int)(vMove / transformY) + direction.z + position.z / transformY;
+        Console.WriteLine(test2);
         int vMoveScreen = (int)((int)(vMove / transformY) + direction.z + position.z / transformY);
         //calculate height of the sprite on screen
         int spriteScale = Math.Abs((int)(screenHeight / transformY));
@@ -426,10 +430,19 @@ namespace RayCastEngine.GameComponents {
       return keys.ContainsKey(keycode) && keys[keycode] == true;
     }
     public void Draw(Graphics gfx, TimeSpan gameTime) {
-      Bitmap frameBuffer = buffer.Bitmap;
       // Draw UI
+      for (int x = 0; x < worldSizeX; x++) {
+        for (int y = 0; y < worldSizeX; y++) {
+          buffer.SetPixel(Resolution.Width - x, y, worldMap[x, y] == Texture.Air ? Color.White : Color.Green);
+        }
+      }
+      for (int x = -1; x < 2; x++) {
+        for (int y = -1; y < 2; y++) {
+          buffer.SetPixel(Resolution.Width - (int)position.x - x, (int)position.y - y, Color.Red);
+        }
+      }
       // Draw Game
-      gfx.DrawImage(frameBuffer, new Point(0, 0));
+      gfx.DrawImage(buffer.Bitmap, new Point(0, 0));
     }
     public string getDataText(TimeSpan gameTime) {
       double frameTime = gameTime.Milliseconds / 1000.0;

@@ -17,7 +17,7 @@ namespace RayCastEngine.GameComponents {
       this.y = (y - 1); //row
       w = width; //width
       h = height; //height
-      center = new Vector3(this.x + width / 2, this.y + height / 2, 0); //center
+      center = new Vector3(this.x + width / 2.0f, this.y + height / 2.0f, 0); //center
     }
   }
   // Cell Class
@@ -32,10 +32,10 @@ namespace RayCastEngine.GameComponents {
     public void carve(List<Room> rooms) {
       for (int i = 0; i < rooms.Count; i++) {
         if (
-          x >= rooms[i].y &&
-          x < rooms[i].y + rooms[i].h &&
-          y >= rooms[i].x &&
-          y < rooms[i].x + rooms[i].w
+          y >= rooms[i].y &&
+          y < rooms[i].y + rooms[i].h &&
+          x >= rooms[i].x &&
+          x < rooms[i].x + rooms[i].w
         ) {
           empty = true;
         }
@@ -81,13 +81,25 @@ namespace RayCastEngine.GameComponents {
       createRooms();
     }
     // Export Map
-    public int[,] exportMap() {
-      int[,] map = new int[width,height];
+    public Texture[,] exportMap() {
+      Texture[,] map = new Texture[width,height];
       for (int i = 0; i < grid.Length; i++) {
         Cell currentCell = grid[i];
-        map[currentCell.x, currentCell.y] = currentCell.isEmpty() ? 0 : 1;
+        map[currentCell.x, currentCell.y] = currentCell.isEmpty() ? Texture.Air : Texture.ColorStoneWall;
       }
       return map;
+    }
+    public Sprite[] getEntityPositions() {
+      List<Sprite> sprites = new List<Sprite>();
+      // Generate Light Positions
+      for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
+        Vector3 roomCenter = rooms[roomIndex].center;
+        sprites.Add(new Sprite(roomCenter.x, roomCenter.y, Texture.GreenLight));
+      }
+      // Generate Barrel Positions
+      // Generate Column Positions
+      return sprites.ToArray();
+
     }
     public Vector3 getStartPosition() {
       return rooms[0].center;
@@ -98,42 +110,24 @@ namespace RayCastEngine.GameComponents {
         const int sizeMin = 5;
         const int ammount = 20; // Number of rooms
         for (int i = 0; i < ammount; i++) {
+          int roomWidth = RandomNumberGenerator.Next(sizeMin, size);
+          int roomHeight = RandomNumberGenerator.Next(sizeMin, size);
           Room room = new Room(
-            RandomNumberGenerator.Next(0, width),
-            RandomNumberGenerator.Next(0, height),
-            RandomNumberGenerator.Next(sizeMin, size),
-            RandomNumberGenerator.Next(sizeMin, size)
+            RandomNumberGenerator.Next(1, width - roomWidth - 1),
+            RandomNumberGenerator.Next(1, height - roomHeight - 1),
+            roomWidth,
+            roomHeight
           );
           bool collide = false; // They are not colliding
           if (i > 0) { // If Not The First Room
-                       // TODO: Remove this possibility
-            if (
-              rooms[0].x + rooms[0].w >= width ||
-              rooms[0].x <= 0 ||
-              rooms[0].y + rooms[0].h >= height ||
-              rooms[0].y <= 0
-            ) { // If the first room is outside the canvas
-              rooms = new List<Room>(); // Restart
-              createRooms();
-              break;
-            }
-            for (int e = 0; e < rooms.Count; e++) { // For all prevous rooms
+            for (int e = 0; e < rooms.Count; e++) { // For all rooms
               if (
                 room.x <= rooms[e].x + rooms[e].w &&
                 room.x + room.w >= rooms[e].x &&
                 room.y <= rooms[e].y + rooms[e].h &&
                 room.y + room.h >= rooms[e].y
-              ) { // If colliding with teh prevous room
-                collide = true; // kill Room
-                i--;
-                break;
-              } else if (
-                room.x + room.w >= width ||
-                room.x <= 0 ||
-                room.y + room.h >= height ||
-                room.y <= 0
-              ) { // If outside of canvas
-                collide = true;
+              ) { // If colliding with another room
+                collide = true; // Then this room is invalid
                 i--;
                 break;
               }
