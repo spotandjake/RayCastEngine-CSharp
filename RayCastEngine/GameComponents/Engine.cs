@@ -26,6 +26,8 @@ namespace RayCastEngine.GameComponents {
     private Vector3 direction = new Vector3(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
     private Vector3 plane = new Vector3(0.0, 0.66, 0.0); // planeX, planeY
     private Sprite[] sprites;
+    private List<Enemy> enemys;
+    private List<Player> players;
     // Methods
     public void Load(GameType gameType) {
       // Initialize
@@ -33,6 +35,7 @@ namespace RayCastEngine.GameComponents {
       DungeonGenerator dungeonBuilder = new DungeonGenerator(worldSizeX, worldSizeY);
       worldMap = dungeonBuilder.exportMap();
       sprites = dungeonBuilder.getEntityPositions();
+      enemys = dungeonBuilder.getEnemyPositions();
       position = dungeonBuilder.getStartPosition();
       // Load Images
       textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.eagle));
@@ -46,31 +49,6 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.barrel));
       textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.pillar));
       textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greenlight));
-      // Load Sprites
-    //  sprites = new Sprite[]{
-    //    new Sprite(20.5, 11.5, Texture.GreenLight), //green light in front of playerstart
-    //    //green lights in every room
-    //    new Sprite(18.5, 4.5, Texture.GreenLight),
-    //    new Sprite(10.0, 4.5, Texture.GreenLight),
-    //    new Sprite(10.0, 12.5, Texture.GreenLight),
-    //    new Sprite(3.5, 6.5, Texture.GreenLight),
-    //    new Sprite(3.5, 20.5, Texture.GreenLight),
-    //    new Sprite(3.5, 14.5, Texture.GreenLight),
-    //    new Sprite(14.5, 20.5, Texture.GreenLight),
-    //    //row of pillars in front of wall: fisheye test
-    //    new Sprite(18.5, 10.5, Texture.PillarEntity),
-    //    new Sprite(18.5, 11.5, Texture.PillarEntity),
-    //    new Sprite(18.5, 12.5, Texture.PillarEntity),
-    //    //some barrels around the map
-    //    new Sprite(21.5, 1.5,  Texture.BarrelEntity),
-    //    new Sprite(15.5, 1.5,  Texture.BarrelEntity),
-    //    new Sprite(16.0, 1.8,  Texture.BarrelEntity),
-    //    new Sprite(16.2, 1.2,  Texture.BarrelEntity),
-    //    new Sprite(3.5,  2.5,  Texture.BarrelEntity),
-    //    new Sprite(9.5,  15.5, Texture.BarrelEntity),
-    //    new Sprite(10.0, 15.1, Texture.BarrelEntity),
-    //    new Sprite(10.5, 15.8, Texture.BarrelEntity)
-    //  };
     }
     public void Resize(int width, int height) {
       Resolution = new Size(width, height);

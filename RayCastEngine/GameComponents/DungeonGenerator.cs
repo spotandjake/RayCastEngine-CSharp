@@ -5,6 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RayCastEngine.GameComponents {
+  // Room Types
+  enum RoomTypes {
+    Unknown,
+    Empty,
+    Spawn,
+    Loot,
+    NormalFight,
+    Boss
+  }
   // Room Class
   class Room {
     public int x;
@@ -12,6 +21,7 @@ namespace RayCastEngine.GameComponents {
     public int w;
     public int h;
     public Vector3 center;
+    public RoomTypes RoomType = RoomTypes.Unknown;
     public Room(int x, int y, int width, int height) {
       this.x = (x - 1); //column
       this.y = (y - 1); //row
@@ -128,7 +138,7 @@ namespace RayCastEngine.GameComponents {
       // Generate Barrel Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Room currentRoom = rooms[roomIndex];
-        if (currentRoom.w == 9 && currentRoom.h == 9) {
+        if (currentRoom.RoomType == RoomTypes.Loot) {
           sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.center.y - 1, Texture.BarrelEntity));
           sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.center.y, Texture.BarrelEntity));
           sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.center.y + 1, Texture.BarrelEntity));
@@ -149,65 +159,102 @@ namespace RayCastEngine.GameComponents {
           sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.y + currentRoom.h - 1, Texture.PillarEntity));
         }
       }
-      // Spawn Enemys
       // Return The Sprites As An Array
       return sprites.ToArray();
 
+    }
+    // Spawn Enemys
+    public List<Enemy> getEnemyPositions() {
+      List<Enemy> enemys = new List<Enemy>();
+      // Set Enemy Positions
+      for (int roomIndex = 1; roomIndex < rooms.Count; roomIndex++) { // We Start at 1 because the spawn room should be safe
+        Room currentRoom = rooms[roomIndex];
+        // Spawn Stuff Based On Room Type
+        if (currentRoom.RoomType == RoomTypes.NormalFight) {
+          const Texture EnemyTexture = Texture.PillarEntity; // TODO: Add Enemy Texture
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + 1, currentRoom.y + 1, 0), new Vector3(0, 0, 0), EnemyTexture));
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + 1, 0), new Vector3(0, 0, 0), EnemyTexture));
+
+          enemys.Add(new Enemy(new Vector3(currentRoom.center.x, currentRoom.center.y, 0), new Vector3(0, 0, 0), EnemyTexture));
+
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + 1, currentRoom.y + currentRoom.h - 1, 0), new Vector3(0, 0, 0), EnemyTexture));
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + currentRoom.h - 1, 0), new Vector3(0, 0, 0), EnemyTexture));
+        }
+      }
+      // Return Enemys
+      return enemys;
     }
     public Vector3 getStartPosition() {
       return rooms[0].center;
     }
     // Methods
     private void createRooms() { // Create The Rooms
-        const int size = 20;  //the actuall size will be a number bettween 5 and 10 | e.g: size+sizeMin
-        const int sizeMin = 5;
-        const int ammount = 50; // Number of rooms
-        for (int i = 0; i < ammount; i++) {
-          int roomWidth = RandomNumberGenerator.Next(sizeMin, size);
-          int roomHeight = RandomNumberGenerator.Next(sizeMin, size);
-          Room room = new Room(
-            RandomNumberGenerator.Next(1, width - roomWidth - 1),
-            RandomNumberGenerator.Next(1, height - roomHeight - 1),
-            roomWidth,
-            roomHeight
-          );
-          bool collide = false; // They are not colliding
-          if (i > 0) { // If Not The First Room
-            for (int e = 0; e < rooms.Count; e++) { // For all rooms
-              if (
-                room.x <= rooms[e].x + rooms[e].w &&
-                room.x + room.w >= rooms[e].x &&
-                room.y <= rooms[e].y + rooms[e].h &&
-                room.y + room.h >= rooms[e].y
-              ) { // If colliding with another room
-                collide = true; // Then this room is invalid
-                i--;
-                break;
-              }
-            }
-          }
-          if (!collide) {
-          rooms.Add(room); // Add room to the array
-            if (i > 0) { // Make Corridors
-              hCorridor(
-                (int)rooms[i - 1].center.x,
-                (int)room.center.x,
-                (int)rooms[i - 1].center.y,
-                (int)room.center.y
-              );
-              vCorridor(
-                (int)rooms[i - 1].center.x,
-                (int)room.center.x,
-                (int)rooms[i - 1].center.y,
-                (int)room.center.y
-              );
+      const int size = 20;  //the actuall size will be a number bettween 5 and 10 | e.g: size+sizeMin
+      const int sizeMin = 5;
+      const int ammount = 50; // Number of rooms
+      int BossRoomCount = 0;
+      for (int i = 0; i < ammount; i++) {
+        int roomWidth = RandomNumberGenerator.Next(sizeMin, size);
+        int roomHeight = RandomNumberGenerator.Next(sizeMin, size);
+        Room room = new Room(
+          RandomNumberGenerator.Next(1, width - roomWidth - 1),
+          RandomNumberGenerator.Next(1, height - roomHeight - 1),
+          roomWidth,
+          roomHeight
+        );
+        // Determine Room Type
+        // TODO: Work On These Values A Little So The Map Is Fair
+        int RoomProbability = RandomNumberGenerator.Next(0, 10);
+        if (i == 0) {
+          room.RoomType = RoomTypes.Spawn;
+        } else if (RoomProbability < 3 && roomWidth < 8 && roomHeight < 8) {
+          room.RoomType = RoomTypes.Loot;
+        } else if (BossRoomCount < 5 && RoomProbability < 8 && roomWidth > 8 && roomHeight > 8) {
+          BossRoomCount++;
+          room.RoomType = RoomTypes.Boss;
+        } else if (RoomProbability < 9 && roomWidth > 6 && roomHeight > 6) {
+          room.RoomType = RoomTypes.NormalFight;
+        } else {
+          room.RoomType = RoomTypes.Empty;
+        }
+        // Check If Room Is Valid
+        bool collide = false; // They are not colliding
+        if (i > 0) { // If Not The First Room
+          for (int e = 0; e < rooms.Count; e++) { // For all rooms
+            if (
+              room.x <= rooms[e].x + rooms[e].w &&
+              room.x + room.w >= rooms[e].x &&
+              room.y <= rooms[e].y + rooms[e].h &&
+              room.y + room.h >= rooms[e].y
+            ) { // If colliding with another room
+              collide = true; // Then this room is invalid
+              i--;
+              break;
             }
           }
         }
-        for (int i = 0; i < grid.Length; i++) {
-          grid[i].carve(rooms);//carve out the rooms
+        if (!collide) {
+        rooms.Add(room); // Add room to the array
+          if (i > 0) { // Make Corridors
+            hCorridor(
+              (int)rooms[i - 1].center.x,
+              (int)room.center.x,
+              (int)rooms[i - 1].center.y,
+              (int)room.center.y
+            );
+            vCorridor(
+              (int)rooms[i - 1].center.x,
+              (int)room.center.x,
+              (int)rooms[i - 1].center.y,
+              (int)room.center.y
+            );
+          }
         }
       }
+      for (int i = 0; i < grid.Length; i++) {
+        grid[i].carve(rooms);//carve out the rooms
+      }
+    }
     private void hCorridor(int x1, int x2, int y1, int y2) {//horizontal corridor creator
       if (x1 > x2) { //if the first room is further towards the right then the second one
         disX = x1 - x2; //find the distance between rooms
