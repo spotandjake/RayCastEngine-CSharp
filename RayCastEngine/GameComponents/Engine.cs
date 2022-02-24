@@ -16,8 +16,8 @@ namespace RayCastEngine.GameComponents {
     // Temporary Engine Variables
     private int texWidth = 64;
     private int texHeight = 64;
-    private static int worldSizeX = 150;
-    private static int worldSizeY = 150;
+    private static int worldSizeX = 300;
+    private static int worldSizeY = 300;
     private Texture[,] worldMap;
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
     private double[] ZBuffer;
@@ -351,6 +351,7 @@ namespace RayCastEngine.GameComponents {
         //translate sprite position relative to camera
         double spriteX = currentSprite.x - position.x;
         double spriteY = currentSprite.y - position.y;
+        if (spriteX == 0 || spriteY == 0) continue;
         // transform sprite with the inverse camera matrix
         // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
         // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
@@ -358,7 +359,6 @@ namespace RayCastEngine.GameComponents {
         double invDet = 1.0 / (plane.x * direction.y - direction.x * plane.y); //required for correct matrix multiplication
         double transformX = invDet * (direction.y * spriteX - direction.x * spriteY);
         double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
-        // If the sprite position is equal to the player position we are dividing by zero must fix
         int spriteScreenX = (int)((screenWidth / 2) * (1 + transformX / transformY));
         double test2 = (int)(vMove / transformY) + direction.z + position.z / transformY;
         Console.WriteLine(test2);

@@ -24,35 +24,64 @@ namespace RayCastEngine.GameComponents {
   class Cell {
     public int x;
     public int y;
-    public bool empty = false; // Is this cell empty
+    public Texture texture = Texture.ColorStoneWall; // Is this cell empty
     public Cell(int xPos, int yPos) {
       x = xPos; //x coord
       y = yPos; //y coord
     }
     public void carve(List<Room> rooms) {
       for (int i = 0; i < rooms.Count; i++) {
+        Room room = rooms[i];
         if (
-          y >= rooms[i].y &&
-          y < rooms[i].y + rooms[i].h &&
-          x >= rooms[i].x &&
-          x < rooms[i].x + rooms[i].w
+          y >= room.y &&
+          y < room.y + room.h &&
+          x >= room.x &&
+          x < room.x + room.w
         ) {
-          empty = true;
+          texture = Texture.Air;
+        } else if (
+          y >= room.y - 1 &&
+          y < room.y + room.h + 1 &&
+          x >= room.x - 1 &&
+          x < room.x + room.w + 1 &&
+          texture != Texture.Air
+         ) {
+          texture = Texture.RedBrickWall;
+          if (
+            (
+              x % 2 == 0 &&
+              x == (int)room.center.x
+            ) ||
+            (
+              y % 2 == 0 &&
+              y == (int)room.center.y
+            )
+          ) {
+            texture = Texture.EagleWall;
+          }
         }
       }
     }
-    public void carveH(int dis, int x, int y) {
+    public void carveH(Random randomGenerator, int dis, int x, int y) {
       if (this.x >= x && this.x < x + dis && this.y < y + 1 && this.y > y - 1) {
-        empty = true;
+        texture = Texture.Air;
+      } else if (randomGenerator.Next(0, 10) == 1 && texture != Texture.Air) {
+        texture = Texture.MossyWall;
+      } else if (randomGenerator.Next(0, 10) != 1 && texture != Texture.Air) {
+        texture = Texture.ColorStoneWall;
       }
     }
-    public void carveV(int dis, int x, int y) {
+    public void carveV(Random randomGenerator, int dis, int x, int y) {
       if (this.y >= y && this.y < y + dis && this.x < x + 1 && this.x > x - 1) {
-        empty = true;
+        texture = Texture.Air;
+      } else if (randomGenerator.Next(0, 10) == 1 && texture != Texture.Air) {
+        texture = Texture.MossyWall;
+      } else if (randomGenerator.Next(0, 10) != 1 && texture != Texture.Air) {
+        texture = Texture.ColorStoneWall;
       }
     }
     public bool isEmpty() {
-      return empty;
+      return texture == Texture.Air;
     }
   }
   // Main Generator
@@ -85,7 +114,7 @@ namespace RayCastEngine.GameComponents {
       Texture[,] map = new Texture[width,height];
       for (int i = 0; i < grid.Length; i++) {
         Cell currentCell = grid[i];
-        map[currentCell.x, currentCell.y] = currentCell.isEmpty() ? Texture.Air : Texture.ColorStoneWall;
+        map[currentCell.x, currentCell.y] = currentCell.texture;
       }
       return map;
     }
@@ -97,7 +126,31 @@ namespace RayCastEngine.GameComponents {
         sprites.Add(new Sprite(roomCenter.x, roomCenter.y, Texture.GreenLight));
       }
       // Generate Barrel Positions
+      for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
+        Room currentRoom = rooms[roomIndex];
+        if (currentRoom.w == 9 && currentRoom.h == 9) {
+          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.center.y - 1, Texture.BarrelEntity));
+          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.center.y, Texture.BarrelEntity));
+          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.center.y + 1, Texture.BarrelEntity));
+
+          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.center.y - 1, Texture.BarrelEntity));
+          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.center.y, Texture.BarrelEntity));
+          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.center.y + 1, Texture.BarrelEntity));
+        }
+      }
       // Generate Column Positions
+      for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
+        Room currentRoom = rooms[roomIndex];
+        if (currentRoom.w >= 8 && currentRoom.h >= 8) {
+          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.y + 1, Texture.PillarEntity));
+          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.y + 1, Texture.PillarEntity));
+
+          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.y + currentRoom.h - 1, Texture.PillarEntity));
+          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.y + currentRoom.h - 1, Texture.PillarEntity));
+        }
+      }
+      // Spawn Enemys
+      // Return The Sprites As An Array
       return sprites.ToArray();
 
     }
@@ -106,9 +159,9 @@ namespace RayCastEngine.GameComponents {
     }
     // Methods
     private void createRooms() { // Create The Rooms
-        const int size = 10;  //the actuall size will be a number bettween 5 and 10 | e.g: size+sizeMin
+        const int size = 20;  //the actuall size will be a number bettween 5 and 10 | e.g: size+sizeMin
         const int sizeMin = 5;
-        const int ammount = 20; // Number of rooms
+        const int ammount = 50; // Number of rooms
         for (int i = 0; i < ammount; i++) {
           int roomWidth = RandomNumberGenerator.Next(sizeMin, size);
           int roomHeight = RandomNumberGenerator.Next(sizeMin, size);
@@ -156,35 +209,33 @@ namespace RayCastEngine.GameComponents {
         }
       }
     private void hCorridor(int x1, int x2, int y1, int y2) {//horizontal corridor creator
-        if (x1 > x2) {//if the first room is further towards the right then the second one
-          disX = x1 - x2; //find the distance between rooms
-          disX += 1;
-          for (int i = 0; i < grid.Length; i++) {
-          grid[i].carveH(disX, x2, y2); //carve out the corridor
-          }
-        } else {//if the second room is further towards the right then the first one
-          disX = x2 - x1; //find the distance between rooms
-          disX += 1;
-          for (int i = 0; i < grid.Length; i++) {
-            grid[i].carveH(disX, x1, y1); //carve out corridor
-          }
+      if (x1 > x2) { //if the first room is further towards the right then the second one
+        disX = x1 - x2; //find the distance between rooms
+        disX += 1;
+        for (int i = 0; i < grid.Length; i++) {
+          grid[i].carveH(RandomNumberGenerator, disX, x2, y2); //carve out the corridor
+        }
+      } else { //if the second room is further towards the right then the first one
+        disX = x2 - x1; //find the distance between rooms
+        disX += 1;
+        for (int i = 0; i < grid.Length; i++) {
+          grid[i].carveH(RandomNumberGenerator, disX, x1, y1); //carve out corridor
         }
       }
+    }
 
     private void vCorridor(int x1, int x2, int y1, int y2) {//vertical corridor creator
         int x;
         if (y1 > y2) { //if the first room is further towards the bottom then the second one
           int disY = y1 - y2; //find the distance between rooms
           disY += 1;
-
           if (x2 + (disX - 1) > x1 + (disX - 1)) {//find the correct x coord
             x = x2;
           } else {
             x = x2 + (disX - 1);
           }
-
           for (var i = 0; i < grid.Length; i++) {
-            grid[i].carveV(disY, x, y2); //carve out corridor
+            grid[i].carveV(RandomNumberGenerator, disY, x, y2); //carve out corridor
           }
         } else {//if the second room is further towards the bottom then the first one
           int disY = y2 - y1; //find the distance between rooms
@@ -195,7 +246,7 @@ namespace RayCastEngine.GameComponents {
             x = x1 + (disX - 1);
           }
           for (int i = 0; i < grid.Length; i++) {
-            grid[i].carveV(disY, x, y1); //carve out corridor
+            grid[i].carveV(RandomNumberGenerator, disY, x, y1); //carve out corridor
           }
         }
       }
