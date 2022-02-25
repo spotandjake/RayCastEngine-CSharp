@@ -71,6 +71,25 @@ namespace RayCastEngine.GameComponents {
     public void subZ(double zVal) {
       z -= zVal;
     }
+    // Non Modifying Functions
+    public Vector3 getAdd(Vector3 vec) {
+      return new Vector3(x + vec.x, y + vec.y, z + vec.z);
+    }
+    public Vector3 getAddXYZ(double xVal, double yVal, double zVal) {
+      return new Vector3(x + xVal, y + yVal, z + zVal);
+    }
+    public Vector3 getSub(Vector3 vec) {
+      return new Vector3(x - vec.x, y - vec.y, z - vec.z);
+    }
+    public Vector3 getSubXYZ(double xVal, double yVal, double zVal) {
+      return new Vector3(x - xVal, y - yVal, z - zVal);
+    }
+    public double length() {
+      return Math.Sqrt(x * x + y * y + z * z);
+    }
+    public double distance(Vector3 target) {
+      return getSub(target).length();
+    }
     // Functions
     public double[] toArray() {
       return new double[] { x, y, z };

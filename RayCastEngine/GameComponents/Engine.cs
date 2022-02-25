@@ -147,6 +147,11 @@ namespace RayCastEngine.GameComponents {
       if (position.z > 0) position.setZ(Math.Max(0, position.z - 100 * moveSpeed));
       if (position.z < 0) position.setZ(Math.Min(0, position.z + 100 * moveSpeed));
       // TODO: Calculate Enemy Movements
+      List<Player> tempPlayers = players.ToList();
+      tempPlayers.Add(new Player(position, direction, Texture.Air));
+      for (int enemyIndex= 0; enemyIndex < enemys.Count; enemyIndex++) {
+        enemys[enemyIndex].Update(worldMap, players);
+      }
       // Determine if game has updated
       if (!oldPosition.equals(position) || !oldDirection.equals(direction)) {
         GameStateChanged = true;
