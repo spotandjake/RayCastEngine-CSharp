@@ -26,8 +26,8 @@ namespace RayCastEngine.GameComponents {
     private Vector3 direction = new Vector3(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
     private Vector3 plane = new Vector3(0.0, 0.66, 0.0); // planeX, planeY
     private Sprite[] sprites;
-    private List<Enemy> enemys;
-    private List<Player> players;
+    private List<Enemy> enemys = new List<Enemy>();
+    private List<Player> players = new List<Player>();
     // Methods
     public void Load(GameType gameType) {
       // Initialize
@@ -49,6 +49,14 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.barrel));
       textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.pillar));
       textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greenlight));
+      // Load Enemy Sprites
+      textures.Add(Texture.Enemy_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Enemy_1));
+      // Boss Textures
+      textures.Add(Texture.Boss_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_1));
+      textures.Add(Texture.Boss_2, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_2));
+      textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_3));
+      // Boss Minions
+      textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_3_Minion_1));
     }
     public void Resize(int width, int height) {
       Resolution = new Size(width, height);
@@ -314,18 +322,35 @@ namespace RayCastEngine.GameComponents {
       }
       #endregion
       //SPRITE CASTING
-      //sort sprites from far to close
+      List<Sprite> spritePool = new List<Sprite>();
+      // Add Sprites To List
       for (int i = 0; i < sprites.Length; i++) {
-        sprites[i].distance = ((position.x - sprites[i].x) * (position.x - sprites[i].x) + (position.y - sprites[i].y) * (position.y - sprites[i].y));
+        spritePool.Add(sprites[i]);
       }
-      Array.Sort(sprites, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
+      // Add Enemys To List
+      for (int i = 0; i < enemys.Count; i++) {
+        Enemy currentEnemy = enemys[i];
+        spritePool.Add(new Sprite(currentEnemy.Position.x, currentEnemy.Position.y, currentEnemy.Texture));
+      }
+      // Add Players To List
+      for (int i = 0; i < players.Count; i++) {
+        Player currentPlayer = players[i];
+        spritePool.Add(new Sprite(currentPlayer.Position.x, currentPlayer.Position.y, currentPlayer.Texture));
+      }
+      // TODO: Add Magic Effects
+      Sprite[] spriteBuffer = spritePool.ToArray();
+      //sort sprites from far to close
+      for (int i = 0; i < spriteBuffer.Length; i++) {
+        spriteBuffer[i].distance = ((position.x - spriteBuffer[i].x) * (position.x - spriteBuffer[i].x) + (position.y - spriteBuffer[i].y) * (position.y - spriteBuffer[i].y));
+      }
+      Array.Sort(spriteBuffer, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
       //parameters for scaling and moving the sprites
       const int uDiv = 1;
       const int vDiv = 1;
       const float vMove = 0.0f;
       //after sorting the sprites, do the projection and draw them
-      for (int i = 0; i < sprites.Length; i++) {
-        Sprite currentSprite = sprites[i];
+      for (int i = 0; i < spriteBuffer.Length; i++) {
+        Sprite currentSprite = spriteBuffer[i];
         //translate sprite position relative to camera
         double spriteX = currentSprite.x - position.x;
         double spriteY = currentSprite.y - position.y;
@@ -338,8 +363,6 @@ namespace RayCastEngine.GameComponents {
         double transformX = invDet * (direction.y * spriteX - direction.x * spriteY);
         double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
         int spriteScreenX = (int)((screenWidth / 2) * (1 + transformX / transformY));
-        double test2 = (int)(vMove / transformY) + direction.z + position.z / transformY;
-        Console.WriteLine(test2);
         int vMoveScreen = (int)((int)(vMove / transformY) + direction.z + position.z / transformY);
         //calculate height of the sprite on screen
         int spriteScale = Math.Abs((int)(screenHeight / transformY));

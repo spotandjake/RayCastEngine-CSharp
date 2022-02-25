@@ -24,12 +24,14 @@ namespace RayCastEngine.GameComponents {
     public Vector3 Position;
     public Vector3 Direction;
     public Texture Texture;
+    public bool Boss;
     // Constructor
-    public Enemy(Vector3 position, Vector3 direction, Texture texture) {
+    public Enemy(Vector3 position, Vector3 direction, Texture texture, bool boss) {
       // Set Props
-      position = Position;
-      direction = Direction;
+      Position = position;
+      Direction = direction;
       Texture = texture;
+      Boss = boss;
     }
     public void Update() {
       // TODO: Implement Update

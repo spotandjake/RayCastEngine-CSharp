@@ -124,11 +124,26 @@
   <data name="bluestone" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Pictures\Textures\64\bluestone.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Boss_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Assets\Pictures\Textures\64\Enemys\Boss1\Boss.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Boss_2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Assets\Pictures\Textures\64\Enemys\Boss2\Boss.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Boss_3" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Assets\Pictures\Textures\64\Enemys\Boss3\Boss.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Boss_3_Minion_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Assets\Pictures\Textures\64\Enemys\Boss3\Minion1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="colorstone" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Pictures\Textures\64\colorstone.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="eagle" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Pictures\Textures\64\eagle.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Enemy_1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Assets\Pictures\Textures\64\Enemys\Boss1\Minion-1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="greenlight" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Assets\Pictures\Textures\64\greenlight.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

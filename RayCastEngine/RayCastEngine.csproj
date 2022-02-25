@@ -144,6 +144,11 @@
     <None Include="Assets\Pictures\Textures\32\purplestone.png" />
     <None Include="Assets\Pictures\Textures\32\redbrick.png" />
     <None Include="Assets\Pictures\Textures\32\wood.png" />
+    <None Include="Assets\Pictures\Textures\64\Enemys\Boss1\Boss.png" />
+    <None Include="Assets\Pictures\Textures\64\Enemys\Boss1\Minion-1.png" />
+    <None Include="Assets\Pictures\Textures\64\Enemys\Boss2\Boss.png" />
+    <None Include="Assets\Pictures\Textures\64\Enemys\Boss3\Boss.png" />
+    <None Include="Assets\Pictures\Textures\64\Enemys\Boss3\Minion1.png" />
     <Content Include="Assets\Pictures\UI\Background.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

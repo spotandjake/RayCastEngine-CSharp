@@ -171,14 +171,33 @@ namespace RayCastEngine.GameComponents {
         Room currentRoom = rooms[roomIndex];
         // Spawn Stuff Based On Room Type
         if (currentRoom.RoomType == RoomTypes.NormalFight) {
-          const Texture EnemyTexture = Texture.PillarEntity; // TODO: Add Enemy Texture
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + 1, currentRoom.y + 1, 0), new Vector3(0, 0, 0), EnemyTexture));
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + 1, 0), new Vector3(0, 0, 0), EnemyTexture));
+          // TODO: Work On Enemy Spawn pattern
+          const Texture EnemyTexture = Texture.Boss_1; // TODO: Add Enemy Texture
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + 3, currentRoom.y + 3, 0), new Vector3(0, 0, 0), EnemyTexture, false));
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, 0), new Vector3(0, 0, 0), EnemyTexture, false));
 
-          enemys.Add(new Enemy(new Vector3(currentRoom.center.x, currentRoom.center.y, 0), new Vector3(0, 0, 0), EnemyTexture));
+          enemys.Add(new Enemy(new Vector3(currentRoom.center.x, currentRoom.center.y, 0), new Vector3(0, 0, 0), EnemyTexture, false));
 
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + 1, currentRoom.y + currentRoom.h - 1, 0), new Vector3(0, 0, 0), EnemyTexture));
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + currentRoom.h - 1, 0), new Vector3(0, 0, 0), EnemyTexture));
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, 0), new Vector3(0, 0, 0), EnemyTexture, false));
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, 0), new Vector3(0, 0, 0), EnemyTexture, false));
+        } else if (currentRoom.RoomType == RoomTypes.Boss) {
+          Texture EnemyTexture;
+          int RoomProbability = RandomNumberGenerator.Next(0, 2);
+          if (RoomProbability == 1) {
+            EnemyTexture = Texture.Boss_2;
+          } else if (RoomProbability == 2) {
+            EnemyTexture = Texture.Boss_3;
+          } else {
+            EnemyTexture = Texture.Boss_1;
+          }
+          // TODO: Work On Enemy Spawn pattern
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + 3, currentRoom.y + 3, 0), new Vector3(0, 0, 0), Texture.Boss_3_Minion_1, false));
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, 0), new Vector3(0, 0, 0), Texture.Boss_3_Minion_1, false));
+
+          enemys.Add(new Enemy(new Vector3(currentRoom.center.x, currentRoom.center.y, 0), new Vector3(0, 0, 0), EnemyTexture, true));
+
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, 0), new Vector3(0, 0, 0), Texture.Boss_3_Minion_1, false));
+          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, 0), new Vector3(0, 0, 0), Texture.Boss_3_Minion_1, false));
         }
       }
       // Return Enemys
@@ -205,14 +224,14 @@ namespace RayCastEngine.GameComponents {
         // Determine Room Type
         // TODO: Work On These Values A Little So The Map Is Fair
         int RoomProbability = RandomNumberGenerator.Next(0, 10);
-        if (i == 0) {
+        if (i == 0 || i < 1) {
           room.RoomType = RoomTypes.Spawn;
         } else if (RoomProbability < 3 && roomWidth < 8 && roomHeight < 8) {
           room.RoomType = RoomTypes.Loot;
-        } else if (BossRoomCount < 5 && RoomProbability < 8 && roomWidth > 8 && roomHeight > 8) {
+        } else if (BossRoomCount < 20 && RoomProbability < 10 && roomWidth > 7 && roomHeight > 7) {
           BossRoomCount++;
           room.RoomType = RoomTypes.Boss;
-        } else if (RoomProbability < 9 && roomWidth > 6 && roomHeight > 6) {
+        } else if (RoomProbability < 9 && roomWidth > 5 && roomHeight > 5) {
           room.RoomType = RoomTypes.NormalFight;
         } else {
           room.RoomType = RoomTypes.Empty;

@@ -19,6 +19,14 @@ namespace RayCastEngine.GameComponents {
     // Entity Texture
     BarrelEntity = 9,
     PillarEntity = 10,
-    GreenLight = 11
+    GreenLight = 11,
+    // Enemy Texture
+    Enemy_1 = 12,
+    // Boss Texture
+    Boss_1 = 13,
+    Boss_2 = 14,
+    Boss_3 = 15,
+    // Boss Minion Texture
+    Boss_3_Minion_1 = 16
   }
 }

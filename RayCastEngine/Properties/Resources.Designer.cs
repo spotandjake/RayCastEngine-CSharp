@@ -83,6 +83,46 @@ namespace RayCastEngine.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Boss_1 {
+            get {
+                object obj = ResourceManager.GetObject("Boss_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Boss_2 {
+            get {
+                object obj = ResourceManager.GetObject("Boss_2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Boss_3 {
+            get {
+                object obj = ResourceManager.GetObject("Boss_3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Boss_3_Minion_1 {
+            get {
+                object obj = ResourceManager.GetObject("Boss_3_Minion_1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap colorstone {
             get {
                 object obj = ResourceManager.GetObject("colorstone", resourceCulture);
@@ -96,6 +136,16 @@ namespace RayCastEngine.Properties {
         internal static System.Drawing.Bitmap eagle {
             get {
                 object obj = ResourceManager.GetObject("eagle", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Enemy_1 {
+            get {
+                object obj = ResourceManager.GetObject("Enemy_1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
