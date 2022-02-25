@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RayCastEngine.GameComponents {
   // Room Types
@@ -110,7 +107,7 @@ namespace RayCastEngine.GameComponents {
       width = mapWidth;
       height = mapHeight;
       // Create Our World Grid
-      grid = new Cell[mapWidth* mapHeight];
+      grid = new Cell[mapWidth * mapHeight];
       for (int x = 0; x < mapWidth; x++) {
         for (int y = 0; y < mapHeight; y++) {
           grid[x * mapHeight + y] = new Cell(x, y); // TODO: Verify this index formula
@@ -121,7 +118,7 @@ namespace RayCastEngine.GameComponents {
     }
     // Export Map
     public Texture[,] exportMap() {
-      Texture[,] map = new Texture[width,height];
+      Texture[,] map = new Texture[width, height];
       for (int i = 0; i < grid.Length; i++) {
         Cell currentCell = grid[i];
         map[currentCell.x, currentCell.y] = currentCell.texture;
@@ -173,13 +170,13 @@ namespace RayCastEngine.GameComponents {
         if (currentRoom.RoomType == RoomTypes.NormalFight) {
           // TODO: Work On Enemy Spawn pattern
           const Texture EnemyTexture = Texture.Boss_1; // TODO: Add Enemy Texture
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + 3, currentRoom.y + 3, 0), new Vector3(0, 0, 0), EnemyTexture, false));
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, 0), new Vector3(0, 0, 0), EnemyTexture, false));
+          enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + 3, EnemyTexture, false));
+          enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, EnemyTexture, false));
 
-          enemys.Add(new Enemy(new Vector3(currentRoom.center.x, currentRoom.center.y, 0), new Vector3(0, 0, 0), EnemyTexture, false));
+          enemys.Add(new Enemy((int)currentRoom.center.x, (int)currentRoom.center.y, EnemyTexture, false));
 
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, 0), new Vector3(0, 0, 0), EnemyTexture, false));
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, 0), new Vector3(0, 0, 0), EnemyTexture, false));
+          enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, EnemyTexture, false));
+          enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, EnemyTexture, false));
         } else if (currentRoom.RoomType == RoomTypes.Boss) {
           Texture EnemyTexture;
           int RoomProbability = RandomNumberGenerator.Next(0, 2);
@@ -191,13 +188,13 @@ namespace RayCastEngine.GameComponents {
             EnemyTexture = Texture.Boss_1;
           }
           // TODO: Work On Enemy Spawn pattern
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + 3, currentRoom.y + 3, 0), new Vector3(0, 0, 0), Texture.Boss_3_Minion_1, false));
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, 0), new Vector3(0, 0, 0), Texture.Boss_3_Minion_1, false));
+          enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + 3, Texture.Boss_3_Minion_1, false));
+          enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, Texture.Boss_3_Minion_1, false));
 
-          enemys.Add(new Enemy(new Vector3(currentRoom.center.x, currentRoom.center.y, 0), new Vector3(0, 0, 0), EnemyTexture, true));
+          enemys.Add(new Enemy((int)currentRoom.center.x, (int)currentRoom.center.y, EnemyTexture, true));
 
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, 0), new Vector3(0, 0, 0), Texture.Boss_3_Minion_1, false));
-          enemys.Add(new Enemy(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, 0), new Vector3(0, 0, 0), Texture.Boss_3_Minion_1, false));
+          enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, Texture.Boss_3_Minion_1, false));
+          enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, Texture.Boss_3_Minion_1, false));
         }
       }
       // Return Enemys
@@ -222,7 +219,6 @@ namespace RayCastEngine.GameComponents {
           roomHeight
         );
         // Determine Room Type
-        // TODO: Work On These Values A Little So The Map Is Fair
         int RoomProbability = RandomNumberGenerator.Next(0, 10);
         if (i == 0 || i < 1) {
           room.RoomType = RoomTypes.Spawn;
@@ -253,7 +249,7 @@ namespace RayCastEngine.GameComponents {
           }
         }
         if (!collide) {
-        rooms.Add(room); // Add room to the array
+          rooms.Add(room); // Add room to the array
           if (i > 0) { // Make Corridors
             hCorridor(
               (int)rooms[i - 1].center.x,
@@ -275,46 +271,23 @@ namespace RayCastEngine.GameComponents {
       }
     }
     private void hCorridor(int x1, int x2, int y1, int y2) {//horizontal corridor creator
-      if (x1 > x2) { //if the first room is further towards the right then the second one
-        disX = x1 - x2; //find the distance between rooms
-        disX += 1;
-        for (int i = 0; i < grid.Length; i++) {
-          grid[i].carveH(RandomNumberGenerator, disX, x2, y2); //carve out the corridor
-        }
-      } else { //if the second room is further towards the right then the first one
-        disX = x2 - x1; //find the distance between rooms
-        disX += 1;
-        for (int i = 0; i < grid.Length; i++) {
-          grid[i].carveH(RandomNumberGenerator, disX, x1, y1); //carve out corridor
-        }
+      disX = (x1 > x2 ? (x1 - x2) : (x2 - x1)) + 1; //find the distance between rooms
+      int x = x1 > x2 ? x2 : x1;
+      int y = x1 > x2 ? y2 : y1;
+      for (int i = 0; i < grid.Length; i++) {
+        grid[i].carveH(RandomNumberGenerator, disX, x, y); //carve out corridor
       }
     }
 
     private void vCorridor(int x1, int x2, int y1, int y2) {//vertical corridor creator
-        int x;
-        if (y1 > y2) { //if the first room is further towards the bottom then the second one
-          int disY = y1 - y2; //find the distance between rooms
-          disY += 1;
-          if (x2 + (disX - 1) > x1 + (disX - 1)) {//find the correct x coord
-            x = x2;
-          } else {
-            x = x2 + (disX - 1);
-          }
-          for (var i = 0; i < grid.Length; i++) {
-            grid[i].carveV(RandomNumberGenerator, disY, x, y2); //carve out corridor
-          }
-        } else {//if the second room is further towards the bottom then the first one
-          int disY = y2 - y1; //find the distance between rooms
-          disY += 1;
-          if (x1 + (disX - 1) > x2 + (disX - 1)) {//find the correct x coord
-            x = x1;
-          } else {
-            x = x1 + (disX - 1);
-          }
-          for (int i = 0; i < grid.Length; i++) {
-            grid[i].carveV(RandomNumberGenerator, disY, x, y1); //carve out corridor
-          }
-        }
+      int disY = (y1 > y2 ? (y1 - y2) : (y2 - y1)) + 1; //find the distance between rooms
+      int oppsideX = y1 > y2 ? x1 : x2;
+      int x = y1 > y2 ? x2 : x1;
+      int y = y1 > y2 ? y2 : y1;
+      if (!(x + (disX - 1) > oppsideX + (disX - 1))) x += (disX - 1);
+      for (int i = 0; i < grid.Length; i++) {
+        grid[i].carveV(RandomNumberGenerator, disY, x, y); //carve out corridor
       }
     }
+  }
 }

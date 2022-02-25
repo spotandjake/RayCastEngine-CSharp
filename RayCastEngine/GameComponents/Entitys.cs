@@ -21,15 +21,15 @@ namespace RayCastEngine.GameComponents {
   }
   // Enemys
   public class Enemy {
-    public Vector3 Position;
-    public Vector3 Direction;
+    public int x;
+    public int y;
     public Texture Texture;
     public bool Boss;
     // Constructor
-    public Enemy(Vector3 position, Vector3 direction, Texture texture, bool boss) {
+    public Enemy(int xPos, int yPos, Texture texture, bool boss) {
       // Set Props
-      Position = position;
-      Direction = direction;
+      x = xPos;
+      y = yPos;
       Texture = texture;
       Boss = boss;
     }

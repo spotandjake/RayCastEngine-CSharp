@@ -330,7 +330,7 @@ namespace RayCastEngine.GameComponents {
       // Add Enemys To List
       for (int i = 0; i < enemys.Count; i++) {
         Enemy currentEnemy = enemys[i];
-        spritePool.Add(new Sprite(currentEnemy.Position.x, currentEnemy.Position.y, currentEnemy.Texture));
+        spritePool.Add(new Sprite(currentEnemy.x, currentEnemy.y, currentEnemy.Texture));
       }
       // Add Players To List
       for (int i = 0; i < players.Count; i++) {
