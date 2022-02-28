@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
@@ -17,12 +13,12 @@ namespace RayCastEngine.GameComponents {
 
     protected GCHandle BitsHandle { get; private set; }
 
-    public DirectBitmap(int width, int height) {
+    public DirectBitmap(int width, int height, bool doBitMap) {
       Width = width;
       Height = height;
       Bits = new int[width * height];
-      BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
-      Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, BitsHandle.AddrOfPinnedObject());
+      if (doBitMap) BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
+      if (doBitMap) Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, BitsHandle.AddrOfPinnedObject());
     }
     public void fillColor(Color colour) {
       fillColor(colour.ToArgb());
@@ -49,7 +45,7 @@ namespace RayCastEngine.GameComponents {
       int index = x + (y * Width);
       try {
         int col = Bits[index];
-        return Color.FromArgb(col); ;
+        return Color.FromArgb(col);
       } catch (Exception) {
         return Color.Black;
       }
@@ -70,11 +66,10 @@ namespace RayCastEngine.GameComponents {
     }
 
     // Create a Direct BitMap From A Normal Bitmap
-    public static DirectBitmap fromBitmap(Bitmap bitMap) {
+    public static DirectBitmap fromBitmap(Bitmap bitMap, bool doBitMap) {
       // Create New DirectBitMap
-      DirectBitmap directBitMap = new DirectBitmap(bitMap.Width, bitMap.Height);
+      DirectBitmap directBitMap = new DirectBitmap(bitMap.Width, bitMap.Height, doBitMap);
       // Set Data
-      // TODO: Optimize This
       for (int x = 0; x < bitMap.Width; x++) {
         for (int y = 0; y < bitMap.Height; y++) {
           directBitMap.SetPixel(

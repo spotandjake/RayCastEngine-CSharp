@@ -38,31 +38,31 @@ namespace RayCastEngine.GameComponents {
       enemys = dungeonBuilder.getEnemyPositions();
       position = dungeonBuilder.getStartPosition();
       // Load Images
-      textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.eagle));
-      textures.Add(Texture.RedBrickWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.redbrick));
-      textures.Add(Texture.PurpleStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.purplestone));
-      textures.Add(Texture.GreyStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greystone));
-      textures.Add(Texture.BlueStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.bluestone));
-      textures.Add(Texture.MossyWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.mossy));
-      textures.Add(Texture.WoodWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.wood));
-      textures.Add(Texture.ColorStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.colorstone));
-      textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.barrel));
-      textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.pillar));
-      textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greenlight));
+      textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.eagle, false));
+      textures.Add(Texture.RedBrickWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.redbrick, false));
+      textures.Add(Texture.PurpleStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.purplestone, false));
+      textures.Add(Texture.GreyStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greystone, false));
+      textures.Add(Texture.BlueStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.bluestone, false));
+      textures.Add(Texture.MossyWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.mossy, false));
+      textures.Add(Texture.WoodWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.wood, false));
+      textures.Add(Texture.ColorStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.colorstone, false));
+      textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.barrel, false));
+      textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.pillar, false));
+      textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greenlight, false));
       // Load Enemy Sprites
-      textures.Add(Texture.Enemy_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Enemy_1));
+      textures.Add(Texture.Enemy_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Enemy_1, false));
       // Boss Textures
-      textures.Add(Texture.Boss_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_1));
-      textures.Add(Texture.Boss_2, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_2));
-      textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_3));
+      textures.Add(Texture.Boss_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_1, false));
+      textures.Add(Texture.Boss_2, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_2, false));
+      textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_3, false));
       // Boss Minions
-      textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_3_Minion_1));
+      textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_3_Minion_1, false));
     }
     public void Resize(int width, int height) {
       Resolution = new Size(width, height);
       // Create Our Buffer
       ZBuffer = new double[width];
-      buffer = new DirectBitmap(width, height);
+      buffer = new DirectBitmap(width, height, true);
       // Say Game Has Updated
       GameStateChanged = true;
     }
@@ -149,9 +149,9 @@ namespace RayCastEngine.GameComponents {
       // TODO: Calculate Enemy Movements
       List<Player> tempPlayers = players.ToList();
       tempPlayers.Add(new Player(position, direction, Texture.Air));
-      for (int enemyIndex= 0; enemyIndex < enemys.Count; enemyIndex++) {
-        enemys[enemyIndex].Update(worldMap, players);
-      }
+      //for (int enemyIndex= 0; enemyIndex < enemys.Count; enemyIndex++) {
+      //  enemys[enemyIndex].Update(worldMap, players);
+      //}
       // Determine if game has updated
       if (!oldPosition.equals(position) || !oldDirection.equals(direction)) {
         GameStateChanged = true;
@@ -182,26 +182,30 @@ namespace RayCastEngine.GameComponents {
         bool is_floor = y > currentTileSection;
         // Current y position compared to the center of the screen (the horizon)
         int p = (int)(is_floor ? (y - screenHeight2 - direction.z) : (screenHeight2 - y + direction.z));
-        // Vertical position of the camera.
-        // NOTE: with 0.5, it's exactly in the center between floor and ceiling,
-        // matching also how the walls are being raycasted. For different values
-        // than 0.5, a separate loop must be done for ceiling and floor since
-        // they're no longer symmetrical.
+        /*
+         * Vertical position of the camera.
+         * NOTE: with 0.5, it's exactly in the center between floor and ceiling,
+         * matching also how the walls are being raycasted. For different values
+         * than 0.5, a separate loop must be done for ceiling and floor since
+         * they're no longer symmetrical.
+         */
         double camZ = is_floor ? (screenHeight2 + position.z) : (screenHeight2 - position.z);
-        // Horizontal distance from the camera to the floor for the current row.
-        // 0.5 is the z position exactly in the middle between floor and ceiling.
-        // NOTE: this is affine texture mapping, which is not perspective correct
-        // except for perfectly horizontal and vertical surfaces like the floor.
-        // NOTE: this formula is explained as follows: The camera ray goes through
-        // the following two points: the camera itself, which is at a certain
-        // height (posZ), and a point in front of the camera (through an imagined
-        // vertical plane containing the screen pixels) with horizontal distance
-        // 1 from the camera, and vertical position p lower than posZ (posZ - p). When going
-        // through that point, the line has vertically traveled by p units and
-        // horizontally by 1 unit. To hit the floor, it instead needs to travel by
-        // posZ units. It will travel the same ratio horizontally. The ratio was
-        // 1 / p for going through the camera plane, so to go posZ times farther
-        // to reach the floor, we get that the total horizontal distance is posZ / p.
+        /*
+         * Horizontal distance from the camera to the floor for the current row.
+         * 0.5 is the z position exactly in the middle between floor and ceiling.
+         * NOTE: this is affine texture mapping, which is not perspective correct
+         * except for perfectly horizontal and vertical surfaces like the floor.
+         * NOTE: this formula is explained as follows: The camera ray goes through
+         * the following two points: the camera itself, which is at a certain
+         * height (posZ), and a point in front of the camera (through an imagined
+         * vertical plane containing the screen pixels) with horizontal distance
+         * 1 from the camera, and vertical position p lower than posZ (posZ - p). When going
+         * through that point, the line has vertically traveled by p units and
+         * horizontally by 1 unit. To hit the floor, it instead needs to travel by
+         * posZ units. It will travel the same ratio horizontally. The ratio was
+         * 1 / p for going through the camera plane, so to go posZ times farther
+         * to reach the floor, we get that the total horizontal distance is posZ / p.
+         */
         double rowDistance = camZ / p;
         // calculate the real world step vector we have to add for each x (parallel to camera plane)
         // adding step by step avoids multiplications with a weight in the inner loop
@@ -394,7 +398,7 @@ namespace RayCastEngine.GameComponents {
               3) it's on the screen (right)
               4) ZBuffer, with perpendicular distance
             */
-            for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
+        for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
               // Displaying Code
               int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
               int texY = ((d * texHeight) / spriteHeight) / 256;
