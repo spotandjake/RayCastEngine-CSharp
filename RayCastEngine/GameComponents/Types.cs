@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RayCastEngine.GameComponents {
+﻿namespace RayCastEngine.GameComponents {
   public enum Texture {
     // Block Textures
     Air,

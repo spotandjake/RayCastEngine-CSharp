@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using RayCastEngine.Views;
+using System.Threading.Tasks;
+
 namespace RayCastEngine.GameComponents {
   // Our Main Engine
   class Engine {
@@ -30,7 +29,6 @@ namespace RayCastEngine.GameComponents {
     private List<Player> players = new List<Player>();
     // Methods
     public void Load(GameType gameType) {
-      // Initialize
       // Load Map
       DungeonGenerator dungeonBuilder = new DungeonGenerator(worldSizeX, worldSizeY);
       worldMap = dungeonBuilder.exportMap();
@@ -137,7 +135,7 @@ namespace RayCastEngine.GameComponents {
       // look up
       if (keyIsDown(38)) direction.addZ(400 * moveSpeed);
       // look down
-      if (keyIsDown(40)) direction.subZ(400* moveSpeed);
+      if (keyIsDown(40)) direction.subZ(400 * moveSpeed);
       // jump
       if (keyIsDown(32) && position.z == 0) position.setZ(200);
       // crouch
@@ -149,9 +147,6 @@ namespace RayCastEngine.GameComponents {
       // TODO: Calculate Enemy Movements
       List<Player> tempPlayers = players.ToList();
       tempPlayers.Add(new Player(position, direction, Texture.Air));
-      //for (int enemyIndex= 0; enemyIndex < enemys.Count; enemyIndex++) {
-      //  enemys[enemyIndex].Update(worldMap, players);
-      //}
       // Determine if game has updated
       if (!oldPosition.equals(position) || !oldDirection.equals(direction)) {
         GameStateChanged = true;
@@ -173,11 +168,11 @@ namespace RayCastEngine.GameComponents {
       int intPosY = (int)position.y;
       // TODO: The Floor And Roof Are Symetrical so we only need to run through half the screen though we need to deal with occlusion when you are not looking forward
       // TODO: we may be able to optimize this by precomputing more stuff
-      //FLOOR CASTING
+      #region Floor Casting
       int currentTileSection = (int)(screenHeight2 + direction.z);
       double floorStepXBase = (rayDirX1 - rayDirX0) / screenWidth;
       double floorStepYBase = (rayDirY1 - rayDirY0) / screenWidth;
-      for (int y = 0; y < screenHeight; y += interlaceAmmount) {
+      Parallel.For(0, screenHeight, y => {
         // whether this section is floor or ceiling
         bool is_floor = y > currentTileSection;
         // Current y position compared to the center of the screen (the horizon)
@@ -240,10 +235,10 @@ namespace RayCastEngine.GameComponents {
             buffer.SetPixel(x, y, pixel);
           }
         }
-      }
+      });
+      #endregion
       #region WallCasting
-      // WALL CASTING
-      for (int x = 0; x < screenWidth; x++) {
+      Parallel.For(0, screenWidth, x => {
         //calculate ray position and direction
         double cameraX = 2 * x / (double)screenWidth - 1; //x-coordinate in camera space
         double rayDirX = direction.x + plane.x * cameraX;
@@ -273,10 +268,9 @@ namespace RayCastEngine.GameComponents {
         } else {
           sideDistY = (mapY + 1.0 - position.y) * deltaDistY;
         }
-        bool hit = false; //was there a wall hit?
         bool side1 = true; //was a NS or a EW wall hit?
         //perform DDA
-        while (!hit) {
+        while (true) {
           //jump to next map square, either in x-direction, or in y-direction
           if (sideDistX < sideDistY) {
             sideDistX += deltaDistX;
@@ -288,26 +282,26 @@ namespace RayCastEngine.GameComponents {
             side1 = true;
           }
           //Check if ray has hit a wall
-          if (worldMap[mapX, mapY] != Texture.Air) hit = true;
+          if (worldMap[mapX, mapY] != Texture.Air) break;
         }
         // texturing calculations
         Texture texNum = worldMap[mapX, mapY];
-        if (texNum == Texture.Air) continue;
+        if (texNum == Texture.Air) return;
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
         double perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
         // Calculate height of line to draw on screen
         int lineHeight = (int)(screenHeight / perpWallDist);
         // calculate lowest and highest pixel to fill in current stripe
-        int drawStart = (int)(-lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist));
+        int drawBounds = (int)(screenHeight2 + direction.z + (position.z / perpWallDist));
+        int drawStart = -lineHeight / 2 + drawBounds;
         if (drawStart < 0) drawStart = 0;
-        int drawEnd = (int)(lineHeight / 2 + screenHeight2 + direction.z + (position.z / perpWallDist));
+        int drawEnd = lineHeight / 2 + drawBounds;
         if (drawEnd >= screenHeight) drawEnd = screenHeight - 1;
         //calculate value of wallX
         double wallX = (!side1 ? (position.y + perpWallDist * rayDirY) : (position.x + perpWallDist * rayDirX)) % 1; //where exactly the wall was hit
         //x coordinate on the texture
         int texX = (int)(wallX * texWidth);
-        if (!side1 && rayDirX > 0) texX = texWidth - texX - 1;
-        if (side1 && rayDirY < 0) texX = texWidth - texX - 1;
+        if ((!side1 && rayDirX > 0) || (side1 && rayDirY < 0)) texX = texWidth - texX - 1;
         // TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
         // How much to increase the texture coordinate per screen pixel
         double step = 1.0 * texHeight / lineHeight;
@@ -328,29 +322,27 @@ namespace RayCastEngine.GameComponents {
         }
         //SET THE ZBUFFER FOR THE SPRITE CASTING
         ZBuffer[x] = perpWallDist; //perpendicular distance is used
-      }
+      });
       #endregion
       //SPRITE CASTING
       List<Sprite> spritePool = new List<Sprite>();
       // Add Sprites To List
-      for (int i = 0; i < sprites.Length; i++) {
-        spritePool.Add(sprites[i]);
+      foreach (Sprite currentSprite in sprites) {
+        spritePool.Add(currentSprite);
       }
       // Add Enemys To List
-      for (int i = 0; i < enemys.Count; i++) {
-        Enemy currentEnemy = enemys[i];
+      foreach(Enemy currentEnemy in enemys) {
         spritePool.Add(new Sprite(currentEnemy.x, currentEnemy.y, currentEnemy.Texture));
       }
       // Add Players To List
-      for (int i = 0; i < players.Count; i++) {
-        Player currentPlayer = players[i];
+      foreach (Player currentPlayer in players) {
         spritePool.Add(new Sprite(currentPlayer.Position.x, currentPlayer.Position.y, currentPlayer.Texture));
       }
       // TODO: Add Magic Effects
       Sprite[] spriteBuffer = spritePool.ToArray();
       //sort sprites from far to close
-      for (int i = 0; i < spriteBuffer.Length; i++) {
-        spriteBuffer[i].distance = ((position.x - spriteBuffer[i].x) * (position.x - spriteBuffer[i].x) + (position.y - spriteBuffer[i].y) * (position.y - spriteBuffer[i].y));
+      foreach (Sprite currentSprite in spriteBuffer) {
+        currentSprite.distance = ((position.x - currentSprite.x) * (position.x - currentSprite.x) + (position.y - currentSprite.y) * (position.y - currentSprite.y));
       }
       Array.Sort(spriteBuffer, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
       //parameters for scaling and moving the sprites
@@ -358,8 +350,7 @@ namespace RayCastEngine.GameComponents {
       const int vDiv = 1;
       const float vMove = 0.0f;
       //after sorting the sprites, do the projection and draw them
-      for (int i = 0; i < spriteBuffer.Length; i++) {
-        Sprite currentSprite = spriteBuffer[i];
+      foreach (Sprite currentSprite in spriteBuffer) {
         //translate sprite position relative to camera
         double spriteX = currentSprite.x - position.x;
         double spriteY = currentSprite.y - position.y;
@@ -388,24 +379,26 @@ namespace RayCastEngine.GameComponents {
         int drawEndX = spriteWidth / 2 + spriteScreenX;
         if (drawEndX >= screenWidth) drawEndX = screenWidth - 1;
         //loop through every vertical stripe of the sprite on screen
-        for (int stripe = drawStartX; stripe < drawEndX; stripe++) {
-          if (transformY > 0 && stripe > 0 && stripe < screenWidth && transformY < ZBuffer[stripe]) {
-            int texX = (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth;
-            /*
-              the conditions in the if are:
-              1) it's in front of camera plane so you don't see things behind you
-              2) it's on the screen (left)
-              3) it's on the screen (right)
-              4) ZBuffer, with perpendicular distance
-            */
-        for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
-              // Displaying Code
-              int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
-              int texY = ((d * texHeight) / spriteHeight) / 256;
-              int pixel = textures[currentSprite.texture].GetPixelInteger(texX, texY);
-              if (pixel != 0) buffer.SetPixel(stripe, y, pixel); //paint pixel if it is visible
+        if (transformY > 0) {
+          Parallel.For(drawStartX, drawEndX, stripe => {
+            if (stripe > 0 && stripe < screenWidth && transformY < ZBuffer[stripe]) {
+              int texX = (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth;
+              /*
+                the conditions in the if are:
+                1) it's in front of camera plane so you don't see things behind you
+                2) it's on the screen (left)
+                3) it's on the screen (right)
+                4) ZBuffer, with perpendicular distance
+              */
+              for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
+                                                           // Displaying Code
+                int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
+                int texY = ((d * texHeight) / spriteHeight) / 256;
+                int pixel = textures[currentSprite.texture].GetPixelInteger(texX, texY);
+                if (pixel != 0) buffer.SetPixel(stripe, y, pixel); //paint pixel if it is visible
+              }
             }
-          }
+          });
         }
       }
     }
@@ -414,8 +407,8 @@ namespace RayCastEngine.GameComponents {
     }
     public void Draw(Graphics gfx, TimeSpan gameTime) {
       // Draw UI
-      for (int x = 0; x < worldSizeX; x++) {
-        for (int y = 0; y < worldSizeX; y++) {
+      for (int x = 1; x < worldSizeX; x++) {
+        for (int y = 0; y < worldSizeY; y++) {
           buffer.SetPixel(Resolution.Width - x, y, worldMap[x, y] == Texture.Air ? Color.White : Color.Green);
         }
       }

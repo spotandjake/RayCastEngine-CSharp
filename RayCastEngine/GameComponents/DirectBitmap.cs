@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace RayCastEngine.GameComponents {
   public class DirectBitmap : IDisposable {
@@ -24,9 +25,9 @@ namespace RayCastEngine.GameComponents {
       fillColor(colour.ToArgb());
     }
     public void fillColor(int colour) {
-      for (int index = 0; index < Width * Height; index++) {
+      Parallel.For(0, Width * Height, index => {
         Bits[index] = colour;
-      }
+      });
     }
     public void SetPixel(int x, int y, Color colour) {
       SetPixel(x, y, colour.ToArgb());
