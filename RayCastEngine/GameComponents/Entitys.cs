@@ -35,13 +35,14 @@ namespace RayCastEngine.GameComponents {
       Texture = texture;
       Boss = boss;
     }
-    public void Update(Texture[,] worlMap, List<Player> players) {
+    public void Update(Texture[,] worldMap, List<Player> players) {
+      // TODO: Fix Implementation
       Player closestPlayer = null;
-      double closestDistance = double.MaxValue;
+      double closestDistance = 0;
       for (int playerIndex = 0; playerIndex < players.Count; playerIndex++) {
         Player currentPlayer = players[playerIndex];
         double playerDistance = Position.distance(currentPlayer.Position);
-        if (closestDistance > playerDistance) {
+        if (closestDistance == 0 || closestDistance < playerDistance) {
           closestDistance = playerDistance;
           closestPlayer = currentPlayer;
         }

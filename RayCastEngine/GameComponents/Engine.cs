@@ -27,6 +27,7 @@ namespace RayCastEngine.GameComponents {
     private Sprite[] sprites;
     private List<Enemy> enemys = new List<Enemy>();
     private List<Player> players = new List<Player>();
+    private int enemyUpdateIndex = 0;
     // Methods
     public void Load(GameType gameType) {
       // Load Map
@@ -147,6 +148,9 @@ namespace RayCastEngine.GameComponents {
       // TODO: Calculate Enemy Movements
       List<Player> tempPlayers = players.ToList();
       tempPlayers.Add(new Player(position, direction, Texture.Air));
+      //enemys[enemyUpdateIndex].Update(worldMap, players);
+      enemyUpdateIndex++;
+      if (enemyUpdateIndex > enemys.Count) enemyUpdateIndex = 0;
       // Determine if game has updated
       if (!oldPosition.equals(position) || !oldDirection.equals(direction)) {
         GameStateChanged = true;
@@ -320,7 +324,7 @@ namespace RayCastEngine.GameComponents {
         spritePool.Add(currentSprite);
       }
       // Add Enemys To List
-      foreach(Enemy currentEnemy in enemys) {
+      foreach (Enemy currentEnemy in enemys) {
         spritePool.Add(new Sprite(currentEnemy.x, currentEnemy.y, currentEnemy.Texture));
       }
       // Add Players To List
