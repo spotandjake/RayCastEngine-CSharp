@@ -152,7 +152,7 @@ namespace RayCastEngine.GameComponents {
         GameStateChanged = true;
       }
     }
-    public void UpdateScreen(TimeSpan gameTime, int interlaceAmmount) {
+    public void UpdateScreen(TimeSpan gameTime) {
       buffer.fillColor(-16777216);
       // Set Cached Vars
       int screenWidth = Resolution.Width;
@@ -204,14 +204,14 @@ namespace RayCastEngine.GameComponents {
         double rowDistance = camZ / p;
         // calculate the real world step vector we have to add for each x (parallel to camera plane)
         // adding step by step avoids multiplications with a weight in the inner loop
-        double floorStepX = rowDistance * floorStepXBase * interlaceAmmount;
-        double floorStepY = rowDistance * floorStepYBase * interlaceAmmount;
+        double floorStepX = rowDistance * floorStepXBase;
+        double floorStepY = rowDistance * floorStepYBase;
         // real world coordinates of the leftmost column. This will be updated as we step to the right.
         double floorX = position.x + rowDistance * rayDirX0;
         double floorY = position.y + rowDistance * rayDirY0;
         // choose texture and draw the pixel
         const Texture ceilingtexture = Texture.WoodWall;
-        for (int x = 0; x < screenWidth; x += interlaceAmmount) {
+        for (int x = 0; x < screenWidth; x++) {
           // the cell coord is simply got from the integer parts of floorX and floorY
           int cellX = (int)floorX;
           int cellY = (int)floorY;
@@ -221,19 +221,8 @@ namespace RayCastEngine.GameComponents {
           floorX += floorStepX;
           floorY += floorStepY;
           Texture floortexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
-          if (interlaceAmmount == 1) {
-            Color pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixel(tx, ty);
-            buffer.SetPixel(
-              x,
-              y,
-              (byte)(pixel.R / 2),
-              (byte)(pixel.G / 2),
-              (byte)(pixel.B / 2)
-            );
-          } else {
-            int pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixelInteger(tx, ty);
-            buffer.SetPixel(x, y, pixel);
-          }
+          int pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixelInteger(tx, ty);
+          buffer.SetPixel(x, y, pixel);
         }
       });
       #endregion
@@ -281,7 +270,7 @@ namespace RayCastEngine.GameComponents {
             mapY += stepY;
             side1 = true;
           }
-          //Check if ray has hit a wall
+          // Check if ray has hit a wall
           if (worldMap[mapX, mapY] != Texture.Air) break;
         }
         // texturing calculations
@@ -339,18 +328,17 @@ namespace RayCastEngine.GameComponents {
         spritePool.Add(new Sprite(currentPlayer.Position.x, currentPlayer.Position.y, currentPlayer.Texture));
       }
       // TODO: Add Magic Effects
-      Sprite[] spriteBuffer = spritePool.ToArray();
       //sort sprites from far to close
-      foreach (Sprite currentSprite in spriteBuffer) {
+      foreach (Sprite currentSprite in spritePool) {
         currentSprite.distance = ((position.x - currentSprite.x) * (position.x - currentSprite.x) + (position.y - currentSprite.y) * (position.y - currentSprite.y));
       }
-      Array.Sort(spriteBuffer, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
+      spritePool.Sort(new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
       //parameters for scaling and moving the sprites
       const int uDiv = 1;
       const int vDiv = 1;
       const float vMove = 0.0f;
       //after sorting the sprites, do the projection and draw them
-      foreach (Sprite currentSprite in spriteBuffer) {
+      foreach (Sprite currentSprite in spritePool) {
         //translate sprite position relative to camera
         double spriteX = currentSprite.x - position.x;
         double spriteY = currentSprite.y - position.y;
@@ -391,7 +379,7 @@ namespace RayCastEngine.GameComponents {
                 4) ZBuffer, with perpendicular distance
               */
               for (int y = drawStartY; y < drawEndY; y++) {//for every pixel of the current stripe
-                                                           // Displaying Code
+                // Displaying Code
                 int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
                 int texY = ((d * texHeight) / spriteHeight) / 256;
                 int pixel = textures[currentSprite.texture].GetPixelInteger(texX, texY);
