@@ -19,7 +19,7 @@ namespace RayCastEngine.GameComponents {
       Height = height;
       Bits = new int[width * height];
       if (doBitMap) BitsHandle = GCHandle.Alloc(Bits, GCHandleType.Pinned);
-      if (doBitMap) Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppArgb, BitsHandle.AddrOfPinnedObject());
+      if (doBitMap) Bitmap = new Bitmap(width, height, width * 4, PixelFormat.Format32bppPArgb, BitsHandle.AddrOfPinnedObject());
     }
     public void fillColor(Color colour) {
       fillColor(colour.ToArgb());

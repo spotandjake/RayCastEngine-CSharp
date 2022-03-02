@@ -44,9 +44,11 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(1241, 617);
       this.Controls.Add(this.DataView);
+      this.DoubleBuffered = true;
       this.Name = "Game";
       this.Text = "Game";
       this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Game_FormClosed);
+      this.Paint += new System.Windows.Forms.PaintEventHandler(this.Game_onPaint);
       this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Game_KeyDown);
       this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Game_KeyUp);
       this.Resize += new System.EventHandler(this.Game_Resize);

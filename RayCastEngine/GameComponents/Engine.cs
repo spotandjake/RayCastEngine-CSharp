@@ -397,7 +397,7 @@ namespace RayCastEngine.GameComponents {
     private bool keyIsDown(int keycode) {
       return keys.ContainsKey(keycode) && keys[keycode] == true;
     }
-    public void Draw(Graphics gfx, TimeSpan gameTime) {
+    public DirectBitmap Draw(TimeSpan gameTime) {
       // Draw UI
       for (int x = 1; x < worldSizeX; x++) {
         for (int y = 0; y < worldSizeY; y++) {
@@ -410,7 +410,8 @@ namespace RayCastEngine.GameComponents {
         }
       }
       // Draw Game
-      gfx.DrawImage(buffer.Bitmap, new Point(0, 0));
+      return buffer;
+      //gfx.DrawImage(buffer.Bitmap, new Point(0, 0));
     }
     public string getDataText(TimeSpan gameTime) {
       double frameTime = gameTime.Milliseconds / 1000.0;

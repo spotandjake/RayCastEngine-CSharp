@@ -18,6 +18,7 @@ namespace RayCastEngine.Views {
     private bool Running = false;
     private GameType currentGameType;
     private Engine currentEngine;
+    private DirectBitmap buffer;
     // Form Entry
     public Game(GameType gameType) {
       // GameType
@@ -66,7 +67,9 @@ namespace RayCastEngine.Views {
         if (currentEngine.GameStateChanged) {
           // Update The Screen
           currentEngine.UpdateScreen(GameTime);
-          currentEngine.Draw(gfx, GameTime);
+          buffer = currentEngine.Draw(GameTime);
+          Invalidate();
+          Update();
           // Set The Update Cycle To False
           currentEngine.GameStateChanged = false;
         }
@@ -74,6 +77,11 @@ namespace RayCastEngine.Views {
         // Update Game at 120fps
         await Task.Delay(1000 / 240);
       }
+    }
+    // OnPaint
+    private void Game_onPaint(object sender, PaintEventArgs e) {
+      if (buffer != null)
+        e.Graphics.DrawImage(buffer.Bitmap, new Point(0, 0));
     }
     // Deal With Resize
     private void Game_Resize(object sender, EventArgs e) {
