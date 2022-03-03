@@ -10,3 +10,7 @@ C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\Ra
 C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Menu.resources
 C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Properties.Resources.resources
 C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.csproj.GenerateResource.Cache
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\Microsoft.Xna.Framework.dll
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\Microsoft.Xna.Framework.Graphics.dll
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\Microsoft.Xna.Framework.xml
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\Microsoft.Xna.Framework.Graphics.xml

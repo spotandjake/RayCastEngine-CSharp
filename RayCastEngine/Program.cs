@@ -5,18 +5,28 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RayCastEngine {
-  // Main Program
-  public class Program {
+  static class Program {
     /// <summary>
     /// The main entry point for the application.
     /// </summary>
     [STAThread]
     static void Main() {
-      // Initialize The Application
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new Menu());
-      // Setup
+
+      // Create window and show it
+      FullGame game = new FullGame();
+      game.Show();
+
+      // Loop while created
+      while (game.Created) {
+        // If RefreshMode is "always" explicitly call the Render method each pass
+        if (game.RefreshMode == XNAWinForm.eRefreshMode.Always)
+          game.Render();
+
+        // Let windows do it´s magic
+        Application.DoEvents();
+      }
     }
   }
 }
