@@ -23,41 +23,48 @@
     /// the contents of this method with the code editor.
     /// </summary>
     private void InitializeComponent() {
-      this.panel1 = new System.Windows.Forms.Panel();
+      this.DataView = new System.Windows.Forms.Label();
+      this.panelViewport.SuspendLayout();
       this.SuspendLayout();
       // 
       // panelViewport
       // 
       this.panelViewport.BackColor = System.Drawing.Color.SteelBlue;
-      this.panelViewport.Size = new System.Drawing.Size(419, 402);
+      this.panelViewport.Controls.Add(this.DataView);
+      this.panelViewport.Dock = System.Windows.Forms.DockStyle.None;
+      this.panelViewport.Size = new System.Drawing.Size(1109, 590);
       // 
-      // panel1
+      // DataView
       // 
-      this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-      this.panel1.Location = new System.Drawing.Point(419, 0);
-      this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(181, 402);
-      this.panel1.TabIndex = 3;
+      this.DataView.AutoSize = true;
+      this.DataView.BackColor = System.Drawing.Color.Transparent;
+      this.DataView.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.DataView.ForeColor = System.Drawing.SystemColors.ControlText;
+      this.DataView.Location = new System.Drawing.Point(0, 0);
+      this.DataView.Margin = new System.Windows.Forms.Padding(0);
+      this.DataView.Name = "DataView";
+      this.DataView.Size = new System.Drawing.Size(35, 24);
+      this.DataView.TabIndex = 1;
       // 
       // FullGame
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(600, 402);
-      this.Controls.Add(this.panel1);
+      this.ClientSize = new System.Drawing.Size(1111, 592);
       this.Name = "FullGame";
       this.Text = "Game";
       this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Game_KeyDown);
       this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Game_KeyUp);
-      this.Controls.SetChildIndex(this.panel1, 0);
-      this.Controls.SetChildIndex(this.panelViewport, 0);
+      this.Resize += new System.EventHandler(this.Game_Resize);
+      this.panelViewport.ResumeLayout(false);
+      this.panelViewport.PerformLayout();
       this.ResumeLayout(false);
 
     }
 
     #endregion
 
-    private System.Windows.Forms.Panel panel1;
+    private System.Windows.Forms.Label DataView;
   }
 }
 

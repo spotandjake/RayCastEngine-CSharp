@@ -88,7 +88,7 @@ namespace RayCastEngine {
           // Set The Update Cycle To False
           currentEngine.GameStateChanged = false;
         }
-        //DataView.Text = currentEngine.getDataText(GameTime);
+        DataView.Text = currentEngine.getDataText(GameTime);
         // Update Game at 120fps
         await Task.Delay(1000 / 240);
       }
@@ -100,6 +100,7 @@ namespace RayCastEngine {
     //}
     // Deal With Resize
     private void Game_Resize(object sender, EventArgs e) {
+      this.panelViewport.Size = new System.Drawing.Size(Width, Height);
       // Load Size
       currentEngine.Resize(Width, Height);
     }

@@ -48,6 +48,7 @@
       this.Name = "Game";
       this.Text = "Game";
       this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Game_FormClosed);
+      //this.Load += new System.EventHandler(this.Game_Load);
       this.Paint += new System.Windows.Forms.PaintEventHandler(this.Game_onPaint);
       this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Game_KeyDown);
       this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Game_KeyUp);
