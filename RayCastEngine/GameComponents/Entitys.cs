@@ -23,7 +23,7 @@ namespace RayCastEngine.GameComponents {
   public class Enemy {
     public int x;
     public int y;
-    public Vector3 Position;
+    public Vector Position;
     public Texture Texture;
     public bool Boss;
     // Constructor
@@ -31,7 +31,7 @@ namespace RayCastEngine.GameComponents {
       // Set Props
       x = xPos;
       y = yPos;
-      Position = new Vector3(xPos, yPos, 0); 
+      Position = new Vector(xPos, yPos, 0); 
       Texture = texture;
       Boss = boss;
     }
@@ -57,10 +57,10 @@ namespace RayCastEngine.GameComponents {
   }
   // Player
   public class Player {
-    public Vector3 Position;
-    public Vector3 Direction;
+    public Vector Position;
+    public Vector Direction;
     public Texture Texture;
-    public Player(Vector3 position, Vector3 direction, Texture texture) {
+    public Player(Vector position, Vector direction, Texture texture) {
       // TODO: Implement Player Class
       Position = position;
       Direction = direction;

@@ -70,6 +70,7 @@
     <Compile Include="GameComponents\DirectBitmap.cs" />
     <Compile Include="GameComponents\Entitys.cs" />
     <Compile Include="GameComponents\Types.cs" />
+    <Compile Include="GameComponents\Vector.cs" />
     <Compile Include="Views\FullGame.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +98,9 @@
     <Compile Include="XNAWinForm.Designer.cs">
       <DependentUpon>XNAWinForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Views\FullGame.resx">
+      <DependentUpon>FullGame.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Game.resx">
       <DependentUpon>Game.cs</DependentUpon>
     </EmbeddedResource>

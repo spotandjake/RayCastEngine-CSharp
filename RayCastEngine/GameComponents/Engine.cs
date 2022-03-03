@@ -21,9 +21,9 @@ namespace RayCastEngine.GameComponents {
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
     private double[] ZBuffer;
     private DirectBitmap buffer;
-    private Vector3 position = new Vector3(22.0, 11.5, 0.0);
-    private Vector3 direction = new Vector3(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
-    private Vector3 plane = new Vector3(0.0, 0.66, 0.0); // planeX, planeY
+    private Vector position = new Vector(22.0, 11.5, 0.0);
+    private Vector direction = new Vector(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
+    private Vector plane = new Vector(0.0, 0.66, 0.0); // planeX, planeY
     private Sprite[] sprites;
     private List<Enemy> enemys = new List<Enemy>();
     private List<Player> players = new List<Player>();
@@ -66,9 +66,9 @@ namespace RayCastEngine.GameComponents {
       GameStateChanged = true;
     }
     public void Update(TimeSpan gameTime) {
-      Vector3 oldPosition = position.copy();
-      Vector3 oldDirection = direction.copy();
-      Vector3 Velocity = new Vector3(0, 0, 0);
+      Vector oldPosition = position.copy();
+      Vector oldDirection = direction.copy();
+      Vector Velocity = new Vector(0, 0, 0);
       int intPosX = (int)position.x;
       int intPosY = (int)position.y;
       // No need to clear the screen here, since everything is overdrawn with floor and ceiling
@@ -126,7 +126,7 @@ namespace RayCastEngine.GameComponents {
         plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
       }
       // Determine projected Move
-      if (!Velocity.equals(new Vector3(0, 0, 0))) {
+      if (!Velocity.equals(new Vector(0, 0, 0))) {
         double projectedX = position.x + Velocity.x;
         double projectedY = position.y + Velocity.y;
         if (worldMap[(int)projectedX, intPosY] == Texture.Air) position.setX(projectedX);

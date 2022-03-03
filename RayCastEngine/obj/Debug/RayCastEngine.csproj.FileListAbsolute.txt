@@ -14,3 +14,4 @@ C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\Mi
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\Microsoft.Xna.Framework.Graphics.dll
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\Microsoft.Xna.Framework.xml
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\Microsoft.Xna.Framework.Graphics.xml
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.FullGame.resources

@@ -17,14 +17,14 @@ namespace RayCastEngine.GameComponents {
     public int y;
     public int w;
     public int h;
-    public Vector3 center;
+    public Vector center;
     public RoomTypes RoomType = RoomTypes.Unknown;
     public Room(int x, int y, int width, int height) {
       this.x = (x - 1); //column
       this.y = (y - 1); //row
       w = width; //width
       h = height; //height
-      center = new Vector3(this.x + width / 2.0f, this.y + height / 2.0f, 0); //center
+      center = new Vector(this.x + width / 2.0f, this.y + height / 2.0f, 0); //center
     }
   }
   // Cell Class
@@ -129,7 +129,7 @@ namespace RayCastEngine.GameComponents {
       List<Sprite> sprites = new List<Sprite>();
       // Generate Light Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
-        Vector3 roomCenter = rooms[roomIndex].center;
+        Vector roomCenter = rooms[roomIndex].center;
         sprites.Add(new Sprite(roomCenter.x, roomCenter.y, Texture.GreenLight));
       }
       // Generate Barrel Positions
@@ -200,7 +200,7 @@ namespace RayCastEngine.GameComponents {
       // Return Enemys
       return enemys;
     }
-    public Vector3 getStartPosition() {
+    public Vector getStartPosition() {
       return rooms[0].center;
     }
     // Methods

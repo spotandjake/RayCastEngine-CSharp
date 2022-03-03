@@ -24,21 +24,19 @@
     /// </summary>
     private void InitializeComponent() {
       this.panel1 = new System.Windows.Forms.Panel();
-      this.panel1.SuspendLayout();
       this.SuspendLayout();
       // 
       // panelViewport
       // 
       this.panelViewport.BackColor = System.Drawing.Color.SteelBlue;
-      this.panelViewport.Location = new System.Drawing.Point(0, 30);
-      this.panelViewport.Size = new System.Drawing.Size(419, 372);
+      this.panelViewport.Size = new System.Drawing.Size(419, 402);
       // 
       // panel1
       // 
       this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-      this.panel1.Location = new System.Drawing.Point(419, 30);
+      this.panel1.Location = new System.Drawing.Point(419, 0);
       this.panel1.Name = "panel1";
-      this.panel1.Size = new System.Drawing.Size(181, 372);
+      this.panel1.Size = new System.Drawing.Size(181, 402);
       this.panel1.TabIndex = 3;
       // 
       // FullGame
@@ -47,12 +45,12 @@
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(600, 402);
       this.Controls.Add(this.panel1);
-      this.Name = "Game";
+      this.Name = "FullGame";
       this.Text = "Game";
+      this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Game_KeyDown);
+      this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Game_KeyUp);
       this.Controls.SetChildIndex(this.panel1, 0);
       this.Controls.SetChildIndex(this.panelViewport, 0);
-      this.panel1.ResumeLayout(false);
-      this.panel1.PerformLayout();
       this.ResumeLayout(false);
 
     }
