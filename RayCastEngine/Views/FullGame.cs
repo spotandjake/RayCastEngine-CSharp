@@ -94,10 +94,6 @@ namespace RayCastEngine {
       }
     }
     // OnPaint
-    //private void Game_onPaint(object sender, PaintEventArgs e) {
-    //  if (buffer != null)
-    //    e.Graphics.DrawImage(buffer.Bitmap, new Point(0, 0));
-    //}
     // Deal With Resize
     private void Game_Resize(object sender, EventArgs e) {
       this.panelViewport.Size = new System.Drawing.Size(Width, Height);
@@ -129,18 +125,11 @@ namespace RayCastEngine {
       this.mWorldMat = Matrix.CreateRotationY(mRotation);
     }
     void mWinForm_OnFrameRender(GraphicsDevice pDevice) {
-      //mSimpleEffect.World = this.mWorldMat;
-      //mSimpleEffect.View = this.mViewMat;
-      //mSimpleEffect.Projection = this.mProjectionMat;
-      //mSimpleEffect.DiffuseColor = Color.DarkRed.ToVector3();
-      //mSimpleEffect.Techniques[0].Passes[0].Apply();
-      //pDevice.DrawUserPrimitives(PrimitiveType.TriangleList, triVerts, 0, 1);
-      // TODO: Implement Drawing
       if (buffer != null) {
         Texture2D drawing = GetTexture2DFromBitmap(Device, buffer);
         SpriteBatch screen = new SpriteBatch(Device);
         screen.Begin();
-        screen.Draw(drawing, new Rectangle(0, 0, Width, Height), Color.AliceBlue);
+        screen.Draw(drawing, new Rectangle(0, 0, buffer.Width, buffer.Height), Color.AliceBlue);
         screen.End();
       }
     }
