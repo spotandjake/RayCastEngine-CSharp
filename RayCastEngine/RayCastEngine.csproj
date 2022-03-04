@@ -77,12 +77,6 @@
     <Compile Include="Views\FullGame.Designer.cs">
       <DependentUpon>FullGame.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\Game.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Game.Designer.cs">
-      <DependentUpon>Game.cs</DependentUpon>
-    </Compile>
     <Compile Include="Views\Menu.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,9 +94,6 @@
     </Compile>
     <EmbeddedResource Include="Views\FullGame.resx">
       <DependentUpon>FullGame.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Game.resx">
-      <DependentUpon>Game.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Menu.resx">
       <DependentUpon>Menu.cs</DependentUpon>

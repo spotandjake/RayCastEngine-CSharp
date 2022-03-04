@@ -6,7 +6,6 @@ C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\Ra
 C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\RayCastEngine.exe.CodeAnalysisLog.xml
 C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\bin\Debug\RayCastEngine.exe.lastcodeanalysissucceeded
 C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.csprojResolveAssemblyReference.cache
-C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Views.Game.resources
 C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Menu.resources
 C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.Properties.Resources.resources
 C:\Users\s201069801\source\repos\RayCastEngine-CSharp\RayCastEngine\obj\Debug\RayCastEngine.csproj.GenerateResource.Cache

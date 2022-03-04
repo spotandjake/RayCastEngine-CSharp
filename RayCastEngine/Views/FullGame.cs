@@ -17,21 +17,15 @@ namespace RayCastEngine {
     private GameType currentGameType;
     private Engine currentEngine;
     private DirectBitmap buffer;
+    private Texture2D bufferTexture;
+    private SpriteBatch screenSprite;
     // XNA STuff
-    private float mRotation = 0f;
-    private Matrix mViewMat, mWorldMat, mProjectionMat;
-    private BasicEffect mSimpleEffect;
-    VertexPositionColor[] triVerts = new VertexPositionColor[] {
-            new VertexPositionColor(Vector3.Zero*2, Color.Blue),
-            new VertexPositionColor(Vector3.Right*2, Color.Green),
-            new VertexPositionColor(Vector3.Up*2, Color.Red)};
     public FullGame() {
       InitializeComponent();
       this.DeviceResetting += new EmptyEventHandler(mWinForm_DeviceResetting);
       this.DeviceReset += new GraphicsDeviceDelegate(mWinForm_DeviceReset);
       this.OnFrameRender += new GraphicsDeviceDelegate(mWinForm_OnFrameRender);
-      this.OnFrameMove += new GraphicsDeviceDelegate(FullGame_OnFrameMove);
-      mViewMat = mWorldMat = mProjectionMat = Matrix.Identity;
+      // Initialize Stuff
       // Start SinglePlayer
       singlePlayer();
     }
@@ -51,10 +45,6 @@ namespace RayCastEngine {
     /// Start GameLoop
     /// </summary>
     public async void Start() {
-      //Graphics gfx = this.CreateGraphics();
-      // Optimize Rendering Speed
-      //gfx.CompositingMode = CompositingMode.SourceCopy;
-      //gfx.InterpolationMode = InterpolationMode.NearestNeighbor;
       // Make Sure We Load A Game
       if (currentEngine == null)
         throw new ArgumentException("Game not loaded!");
@@ -114,39 +104,21 @@ namespace RayCastEngine {
       else keys.Add((int)e.KeyCode, false);
     }
     // XNA
-    public static Texture2D GetTexture2DFromBitmap(GraphicsDevice device, DirectBitmap bitmap) {
-      Texture2D tex = new Texture2D(device, bitmap.Width, bitmap.Height);
-      // copy our buffer to the texture
-      tex.SetData(bitmap.Bits);
-      return tex;
-    }
-    void FullGame_OnFrameMove(GraphicsDevice pDevice) {
-      mRotation += 0.1f;
-      this.mWorldMat = Matrix.CreateRotationY(mRotation);
-    }
     void mWinForm_OnFrameRender(GraphicsDevice pDevice) {
       if (buffer != null) {
-        Texture2D drawing = GetTexture2DFromBitmap(Device, buffer);
-        SpriteBatch screen = new SpriteBatch(Device);
-        screen.Begin();
-        screen.Draw(drawing, new Rectangle(0, 0, buffer.Width, buffer.Height), Color.AliceBlue);
-        screen.End();
+        bufferTexture = new Texture2D(Device, buffer.Width, buffer.Height);
+        bufferTexture.SetData(buffer.Bits);
+        screenSprite = new SpriteBatch(pDevice);
+        screenSprite.Begin();
+        screenSprite.Draw(bufferTexture, new Rectangle(0, 0, buffer.Width, buffer.Height), Color.White);
+        screenSprite.End();
       }
     }
 
     void mWinForm_DeviceReset(GraphicsDevice pDevice) {
-      mSimpleEffect = new BasicEffect(pDevice);
       pDevice.RasterizerState = RasterizerState.CullNone;
-      mWorldMat = Matrix.Identity;
-      mViewMat = Matrix.CreateLookAt(Vector3.Backward * 10, Vector3.Zero, Vector3.Up);
-      mProjectionMat = Matrix.CreatePerspectiveFieldOfView(MathHelper.Pi / 4.0f,
-              (float)pDevice.PresentationParameters.BackBufferWidth / (float)pDevice.PresentationParameters.BackBufferHeight,
-              1.0f, 100.0f);
     }
     void mWinForm_DeviceResetting() {
-      // Dispose all
-      if (mSimpleEffect != null)
-        mSimpleEffect.Dispose();
     }
   }
 }

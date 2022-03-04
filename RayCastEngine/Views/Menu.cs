@@ -34,8 +34,6 @@ namespace RayCastEngine {
     // Menu Buttons
     // TODO: Implement Other Buttons
     private void Menu_SinglePlayer(Object sender, System.EventArgs e) {
-      Game game = new Game(GameType.SinglePlayer);
-      game.Show();
       this.Hide();
     }
     private void Menu_Exit(Object sender, System.EventArgs e) {

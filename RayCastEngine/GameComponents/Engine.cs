@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Drawing;
+//using System.Drawing;
 using RayCastEngine.Views;
 using System.Threading.Tasks;
+
+using Microsoft.Xna.Framework;
 
 namespace RayCastEngine.GameComponents {
   // Our Main Engine
   class Engine {
     // Properties
     public bool GameStateChanged = true;
-    public Size Resolution;
+    //public Size Resolution;
     public Dictionary<int, bool> keys = new Dictionary<int, bool>();
     // Temporary Engine Variables
     private int texWidth = 64;
@@ -58,10 +60,10 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_3_Minion_1, false));
     }
     public void Resize(int width, int height) {
-      Resolution = new Size(width, height);
+      //Resolution = new Size(width, height);
       // Create Our Buffer
       ZBuffer = new double[width];
-      buffer = new DirectBitmap(width, height, true);
+      buffer = new DirectBitmap(width, height);
       // Say Game Has Updated
       GameStateChanged = true;
     }
@@ -157,10 +159,10 @@ namespace RayCastEngine.GameComponents {
       }
     }
     public void UpdateScreen(TimeSpan gameTime) {
-      buffer.fillColor(-16777216);
+      buffer.fillColor(Color.Black);
       // Set Cached Vars
-      int screenWidth = Resolution.Width;
-      int screenHeight = Resolution.Height;
+      int screenWidth = buffer.Width;
+      int screenHeight = buffer.Height;
       int screenHeight2 = screenHeight / 2;
       // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
       double rayDirX0 = direction.x - plane.x;
@@ -225,7 +227,7 @@ namespace RayCastEngine.GameComponents {
           floorX += floorStepX;
           floorY += floorStepY;
           Texture floortexture = (((cellX + cellY) & 1) == 0) ? Texture.GreyStoneWall : Texture.BlueStoneWall;
-          int pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixelInteger(tx, ty);
+          Color pixel = textures[is_floor ? floortexture : ceilingtexture].GetPixel(tx, ty);
           buffer.SetPixel(x, y, pixel);
         }
       });
@@ -309,7 +311,7 @@ namespace RayCastEngine.GameComponents {
             Color pixel = textures[texNum].GetPixel(texX, texY);
             buffer.SetPixel(x, y, (byte)((pixel.R >> 1) & 8355711), (byte)((pixel.G >> 1) & 8355711), (byte)((pixel.B >> 1) & 8355711));
           } else {
-            int pixel = textures[texNum].GetPixelInteger(texX, texY);
+            Color pixel = textures[texNum].GetPixel(texX, texY);
             buffer.SetPixel(x, y, pixel);
           }
         }
@@ -386,7 +388,7 @@ namespace RayCastEngine.GameComponents {
                 // Displaying Code
                 int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
                 int texY = ((d * texHeight) / spriteHeight) / 256;
-                int pixel = textures[currentSprite.texture].GetPixelInteger(texX, texY);
+                Color pixel = textures[currentSprite.texture].GetPixel(texX, texY);
                 if (pixel != 0) buffer.SetPixel(stripe, y, pixel); //paint pixel if it is visible
               }
             }
@@ -401,12 +403,12 @@ namespace RayCastEngine.GameComponents {
       // Draw UI
       for (int x = 1; x < worldSizeX; x++) {
         for (int y = 0; y < worldSizeY; y++) {
-          buffer.SetPixel(Resolution.Width - x, y, worldMap[x, y] == Texture.Air ? Color.White : Color.Green);
+          buffer.SetPixel(buffer.Width - x, y, worldMap[x, y] == Texture.Air ? Color.White : Color.Green);
         }
       }
       for (int x = -1; x < 2; x++) {
         for (int y = -1; y < 2; y++) {
-          buffer.SetPixel(Resolution.Width - (int)position.x - x, (int)position.y - y, Color.Red);
+          buffer.SetPixel(buffer.Width - (int)position.x - x, (int)position.y - y, Color.Red);
         }
       }
       // Draw Game
