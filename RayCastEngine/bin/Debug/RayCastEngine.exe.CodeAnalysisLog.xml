@@ -10,16 +10,9 @@
        <Types>
         <Type Name="XNAWinForm" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
-          <Member Name="#Dispose(System.Boolean)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
-           <Messages>
-            <Message Id="mDevice" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Status="Active" Created="2022-03-07 16:09:12Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning" Path="C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine" File="XNAWinForm.Designer.cs" Line="13">'XNAWinForm' contains field 'XNAWinForm.mDevice' that is of IDisposable type: 'GraphicsDevice'. Change the Dispose method on 'XNAWinForm' to call Dispose or Close on this field.</Issue>
-            </Message>
-           </Messages>
-          </Member>
           <Member Name="#DeviceReset" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2022-03-07 16:09:12Z" FixCategory="Breaking">
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2022-03-07 20:52:48Z" FixCategory="Breaking">
              <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'XNAWinForm.GraphicsDeviceDelegate' as an object named 'sender'.</Issue>
              <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'XNAWinForm.GraphicsDeviceDelegate' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
             </Message>
@@ -27,7 +20,7 @@
           </Member>
           <Member Name="#DeviceResetting" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2022-03-07 16:09:12Z" FixCategory="Breaking">
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2022-03-07 20:52:48Z" FixCategory="Breaking">
              <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'XNAWinForm.EmptyEventHandler' as an object named 'sender'.</Issue>
              <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'XNAWinForm.EmptyEventHandler' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
             </Message>
@@ -35,7 +28,7 @@
           </Member>
           <Member Name="#OnFrameMove" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2022-03-07 16:09:12Z" FixCategory="Breaking">
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2022-03-07 20:52:48Z" FixCategory="Breaking">
              <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'XNAWinForm.GraphicsDeviceDelegate' as an object named 'sender'.</Issue>
              <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'XNAWinForm.GraphicsDeviceDelegate' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
             </Message>
@@ -43,7 +36,7 @@
           </Member>
           <Member Name="#OnFrameRender" Kind="Event" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2022-03-07 16:09:12Z" FixCategory="Breaking">
+            <Message TypeName="DeclareEventHandlersCorrectly" Category="Microsoft.Design" CheckId="CA1009" Status="Active" Created="2022-03-07 20:52:48Z" FixCategory="Breaking">
              <Issue Name="First" Certainty="95" Level="Error">Declare the first parameter of 'XNAWinForm.GraphicsDeviceDelegate' as an object named 'sender'.</Issue>
              <Issue Name="Second" Certainty="95" Level="Error">Declare the second parameter of 'XNAWinForm.GraphicsDeviceDelegate' as an EventArgs, or an instance of a type that extends EventArgs, named 'e'.</Issue>
             </Message>
@@ -69,16 +62,6 @@
    <Email>[none]</Email>
    <MessageLevel Certainty="95">Error</MessageLevel>
    <File Name="designrules.dll" Version="14.0.0.0" />
-  </Rule>
-  <Rule TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213">
-   <Name>Disposable fields should be disposed</Name>
-   <Description>If a type that implements IDisposable owns fields that also implement IDisposable, the encapsulating type's Dispose() implementation should call Dispose() on each disposable field.</Description>
-   <Resolution Name="Default">{0} contains field {1} that is of IDisposable type: {2}. Change the Dispose method on {0} to call Dispose or Close on this field.</Resolution>
-   <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182328.aspx</Url>
-   <Email>[none]</Email>
-   <MessageLevel Certainty="75">Warning</MessageLevel>
-   <File Name="usagerules.dll" Version="14.0.0.0" />
   </Rule>
  </Rules>
  <Localized>

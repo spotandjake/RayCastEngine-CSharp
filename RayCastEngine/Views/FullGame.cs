@@ -21,19 +21,17 @@ namespace RayCastEngine {
     // XNA STuff
     public FullGame() {
       InitializeComponent();
-      DeviceResetting += new EmptyEventHandler(mWinForm_DeviceResetting);
       DeviceReset += new GraphicsDeviceDelegate(mWinForm_DeviceReset);
       OnFrameRender += new GraphicsDeviceDelegate(mWinForm_OnFrameRender);
       // Initialize Stuff
       // Start SinglePlayer
       singlePlayer();
     }
+    // Draw Menu
     // Menu
     private void singlePlayer() {
       // GameType
       currentGameType = GameType.SinglePlayer;
-      // Lock To FullScreen
-      //WindowState = FormWindowState.Maximized;
       // Create Game
       currentEngine = new Engine();
       // Start
@@ -80,17 +78,14 @@ namespace RayCastEngine {
         await Task.Delay(1000 / 240);
       }
     }
-    // OnPaint
     // Deal With Resize
     private void Game_Resize(object sender, EventArgs e) {
       this.panelViewport.Size = new System.Drawing.Size(Width, Height);
-      // Load Size
-      currentEngine.Resize(Width, Height);
     }
     // Close Window
-    //private void Game_FormClosed(object sender, FormClosedEventArgs e) {
-    //  Application.Exit();
-    //}
+    private void Game_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e) {
+      System.Windows.Forms.Application.Exit();
+    }
     // XNA
     void mWinForm_OnFrameRender(GraphicsDevice pDevice) {
       if (buffer != null) {
@@ -107,8 +102,6 @@ namespace RayCastEngine {
 
     void mWinForm_DeviceReset(GraphicsDevice pDevice) {
       pDevice.RasterizerState = RasterizerState.CullNone;
-    }
-    void mWinForm_DeviceResetting() {
     }
   }
 }

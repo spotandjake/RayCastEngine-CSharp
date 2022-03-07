@@ -35,10 +35,11 @@ namespace RayCastEngine {
     #region Events
     public delegate void GraphicsDeviceDelegate(GraphicsDevice pDevice);
     public delegate void EmptyEventHandler();
-    public event GraphicsDeviceDelegate OnFrameRender = null;
-    public event GraphicsDeviceDelegate OnFrameMove = null;
-    public event EmptyEventHandler DeviceResetting = null;
-    public event GraphicsDeviceDelegate DeviceReset = null;
+    public event GraphicsDeviceDelegate OnFrameRender;
+    public event GraphicsDeviceDelegate OnFrameMove;
+    public event EmptyEventHandler DeviceResetting;
+    public event GraphicsDeviceDelegate DeviceReset;
+
     #endregion
 
     public XNAWinForm() {

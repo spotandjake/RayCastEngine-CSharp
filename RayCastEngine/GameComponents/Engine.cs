@@ -25,6 +25,7 @@ namespace RayCastEngine.GameComponents {
     private Vector position = new Vector(22.0, 11.5, 0.0);
     private Vector direction = new Vector(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
     private Vector plane = new Vector(0.0, 0.66, 0.0); // planeX, planeY
+    private Vector3 NewVelocity = new Vector3();
     private Sprite[] sprites;
     private List<Enemy> enemys = new List<Enemy>();
     private List<Player> players = new List<Player>();
@@ -67,18 +68,19 @@ namespace RayCastEngine.GameComponents {
       GameStateChanged = true;
     }
     public void Update(TimeSpan gameTime) {
-      Vector oldPosition = position.copy();
+      // TODO: Move to using NewVelocity
+      // Cached Values
       Vector oldDirection = direction.copy();
       Vector Velocity = new Vector(0, 0, 0);
-      int intPosX = (int)position.x;
-      int intPosY = (int)position.y;
-      // No need to clear the screen here, since everything is overdrawn with floor and ceiling
-      //timing for input and FPS counter
-      double frameTime = gameTime.Milliseconds / 1000.0; //frametime is the time this frame has taken, in seconds
-      //speed modifiers
+      // We want to normalize movement over time so you move the same distance no matter the fps
+      double frameTime = gameTime.Milliseconds / 1000.0;
+      // Normalized Move Speeds
       double moveSpeed = frameTime * 3; //the constant value is in squares/second
       double rotSpeed = frameTime * 2; //the constant value is in radians/second
+      // Perform Movement
       KeyboardState keys = Keyboard.GetState();
+      #region Walking Movement
+      // Movement
       if (keys.IsKeyDown(Keys.W)) {
         Velocity.addX(direction.x * moveSpeed);
         Velocity.addY(direction.y * moveSpeed);
@@ -104,6 +106,14 @@ namespace RayCastEngine.GameComponents {
         Velocity.addX(dirX * moveSpeed);
         Velocity.addY(dirY * moveSpeed);
       }
+      // jump
+      if (keys.IsKeyDown(Keys.Space) && position.z == 0) Velocity.setZ(200);
+      // crouch
+      if (keys.IsKeyDown(Keys.LeftControl)) Velocity.setZ(-200 - position.z);
+      // Run
+      if (keys.IsKeyDown(Keys.LeftShift)) Velocity.mulScalar(2);
+      #endregion
+      #region Turning
       // TODO: We Want To Use The Mouse
       double cosRotSpeed = Math.Cos(rotSpeed);
       double sinRotSpeed = Math.Sin(rotSpeed);
@@ -127,30 +137,28 @@ namespace RayCastEngine.GameComponents {
         plane.setX(plane.x * cosRotSpeed - plane.y * sinRotSpeed);
         plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
       }
-      // Very simple demonstration jump/pitch controls
+      // TODO: Add Look Limits
       // look up
       if (keys.IsKeyDown(Keys.Up)) direction.addZ(400 * moveSpeed);
       // look down
       if (keys.IsKeyDown(Keys.Down)) direction.subZ(400 * moveSpeed);
-      // jump
-      if (keys.IsKeyDown(Keys.Space) && position.z == 0) Velocity.setZ(200);
-      // crouch
-      if (keys.IsKeyDown(Keys.LeftControl) && position.z == 0) Velocity.setZ(-200);
-      // Run
-      if (keys.IsKeyDown(Keys.LeftShift)) Velocity.mulScalar(2);
+      #endregion
+      #region Physics
+      // Reset Values
+      if (direction.z > 0) direction.setZ(Math.Max(0, direction.z - 100 * moveSpeed));
+      if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
+      if (position.z > 0) Velocity.subZ(100 * moveSpeed);
+      if (position.z < 0) Velocity.addZ(100 * moveSpeed);
       // Determine projected Move
       if (!Velocity.equals(new Vector(0, 0, 0))) {
         double projectedX = position.x + Velocity.x;
         double projectedY = position.y + Velocity.y;
-        if (worldMap[(int)projectedX, intPosY] == Texture.Air) position.setX(projectedX);
-        if (worldMap[intPosX, (int)projectedY] == Texture.Air) position.setY(projectedY);
-        position.setZ(Velocity.z);
+        if (worldMap[(int)projectedX, (int)position.y] == Texture.Air) position.setX(projectedX);
+        if (worldMap[(int)position.x, (int)projectedY] == Texture.Air) position.setY(projectedY);
+        position.addZ(Velocity.z);
+        GameStateChanged = true;
       }
-      // Reset Values
-      if (direction.z > 0) direction.setZ(Math.Max(0, direction.z - 100 * moveSpeed));
-      if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
-      if (position.z > 0) position.setZ(Math.Max(0, position.z - 100 * moveSpeed));
-      if (position.z < 0) position.setZ(Math.Min(0, position.z + 100 * moveSpeed));
+      #endregion
       // TODO: Calculate Enemy Movements
       List<Player> tempPlayers = players.ToList();
       tempPlayers.Add(new Player(position, direction, Texture.Air));
@@ -158,7 +166,7 @@ namespace RayCastEngine.GameComponents {
       enemyUpdateIndex++;
       if (enemyUpdateIndex > enemys.Count) enemyUpdateIndex = 0;
       // Determine if game has updated
-      if (!oldPosition.equals(position) || !oldDirection.equals(direction)) {
+      if (!oldDirection.equals(direction)) {
         GameStateChanged = true;
       }
     }
@@ -252,8 +260,7 @@ namespace RayCastEngine.GameComponents {
         double sideDistX;
         double sideDistY;
         //what direction to step in x or y-direction (either +1 or -1)
-        int stepX = 1;
-        int stepY = 1;
+        int stepX = 1, stepY = 1;
         //calculate step and initial sideDist
         if (rayDirX < 0) {
           stepX = -1;
@@ -379,7 +386,7 @@ namespace RayCastEngine.GameComponents {
         //loop through every vertical stripe of the sprite on screen
         if (transformY > 0) {
           Parallel.For(drawStartX, drawEndX, stripe => {
-            if (stripe > 0 && stripe < screenWidth && transformY < ZBuffer[stripe]) {
+            if (stripe < screenWidth && transformY < ZBuffer[stripe]) {
               int texX = (stripe - (-spriteWidth / 2 + spriteScreenX)) * texWidth / spriteWidth;
               /*
                 the conditions in the if are:

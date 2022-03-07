@@ -45,7 +45,7 @@
       this.DataView.Location = new System.Drawing.Point(0, 0);
       this.DataView.Margin = new System.Windows.Forms.Padding(0);
       this.DataView.Name = "DataView";
-      this.DataView.Size = new System.Drawing.Size(35, 24);
+      this.DataView.Size = new System.Drawing.Size(0, 24);
       this.DataView.TabIndex = 1;
       // 
       // FullGame
@@ -55,6 +55,7 @@
       this.ClientSize = new System.Drawing.Size(1111, 592);
       this.Name = "FullGame";
       this.Text = "Game";
+      this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Game_FormClosed);
       this.Resize += new System.EventHandler(this.Game_Resize);
       this.panelViewport.ResumeLayout(false);
       this.panelViewport.PerformLayout();
