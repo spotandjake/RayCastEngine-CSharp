@@ -106,9 +106,11 @@ namespace RayCastEngine {
     // XNA
     void mWinForm_OnFrameRender(GraphicsDevice pDevice) {
       if (buffer != null) {
-        bufferTexture = new Texture2D(Device, buffer.Width, buffer.Height);
+        if (bufferTexture == null || bufferTexture.Bounds.Width != buffer.Width || bufferTexture.Bounds.Height != buffer.Height)
+          bufferTexture = new Texture2D(Device, buffer.Width, buffer.Height);
+        Device.Textures[0] = null;
         bufferTexture.SetData(buffer.Bits);
-        screenSprite = new SpriteBatch(pDevice);
+        if (screenSprite == null) screenSprite = new SpriteBatch(pDevice);
         screenSprite.Begin();
         screenSprite.Draw(bufferTexture, new Rectangle(0, 0, buffer.Width, buffer.Height), Color.White);
         screenSprite.End();

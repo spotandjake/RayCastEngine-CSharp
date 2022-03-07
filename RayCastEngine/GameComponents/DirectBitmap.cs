@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-
+﻿using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace RayCastEngine.GameComponents {
@@ -20,16 +18,11 @@ namespace RayCastEngine.GameComponents {
       });
     }
     public void SetPixel(int x, int y, Color colour) {
-      //SetPixel(x, y, colour.ToArgb());
       Bits[x + (y * Width)] = colour;
     }
     public Color GetPixel(int x, int y) {
       int index = x + (y * Width);
-      try {
-        return Bits[index];
-      } catch (Exception) {
-        return Color.Black;
-      }
+      return Bits[index];
     }
     // Create a Direct BitMap From A Normal Bitmap
     public static DirectBitmap fromBitmap(System.Drawing.Bitmap bitMap, bool doBitMap) {
@@ -38,10 +31,11 @@ namespace RayCastEngine.GameComponents {
       // Set Data
       for (int x = 0; x < bitMap.Width; x++) {
         for (int y = 0; y < bitMap.Height; y++) {
+          System.Drawing.Color color = bitMap.GetPixel(x, y);
           directBitMap.SetPixel(
             x,
             y,
-            bitMap.GetPixel(x, y)
+            new Color(color.R, color.G, color.B, color.A)
           );
         }
       }

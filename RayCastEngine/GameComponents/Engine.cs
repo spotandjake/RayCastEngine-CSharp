@@ -307,11 +307,11 @@ namespace RayCastEngine.GameComponents {
           int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
           texPos += step;
           //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+          Color pixel = textures[texNum].GetPixel(texX, texY);
           if (side1) {
-            Color pixel = textures[texNum].GetPixel(texX, texY);
-            buffer.SetPixel(x, y, (byte)((pixel.R >> 1) & 8355711), (byte)((pixel.G >> 1) & 8355711), (byte)((pixel.B >> 1) & 8355711));
+            //TODO: Optimze This
+            buffer.SetPixel(x, y, new Color((pixel.R >> 1) & 8355711, (pixel.G >> 1) & 8355711, (pixel.B >> 1) & 8355711, pixel.A));
           } else {
-            Color pixel = textures[texNum].GetPixel(texX, texY);
             buffer.SetPixel(x, y, pixel);
           }
         }
@@ -389,7 +389,8 @@ namespace RayCastEngine.GameComponents {
                 int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
                 int texY = ((d * texHeight) / spriteHeight) / 256;
                 Color pixel = textures[currentSprite.texture].GetPixel(texX, texY);
-                if (pixel != 0) buffer.SetPixel(stripe, y, pixel); //paint pixel if it is visible
+                // TODO: This is not performant
+                if (pixel.A != 0) buffer.SetPixel(stripe, y, pixel); //paint pixel if it is visible
               }
             }
           });
