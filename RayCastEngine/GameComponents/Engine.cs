@@ -6,14 +6,13 @@ using RayCastEngine.Views;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace RayCastEngine.GameComponents {
   // Our Main Engine
   class Engine {
     // Properties
     public bool GameStateChanged = true;
-    //public Size Resolution;
-    public Dictionary<int, bool> keys = new Dictionary<int, bool>();
     // Temporary Engine Variables
     private int texWidth = 64;
     private int texHeight = 64;
@@ -39,25 +38,25 @@ namespace RayCastEngine.GameComponents {
       enemys = dungeonBuilder.getEnemyPositions();
       position = dungeonBuilder.getStartPosition();
       // Load Images
-      textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.eagle, false));
-      textures.Add(Texture.RedBrickWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.redbrick, false));
-      textures.Add(Texture.PurpleStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.purplestone, false));
-      textures.Add(Texture.GreyStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greystone, false));
-      textures.Add(Texture.BlueStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.bluestone, false));
-      textures.Add(Texture.MossyWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.mossy, false));
-      textures.Add(Texture.WoodWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.wood, false));
-      textures.Add(Texture.ColorStoneWall, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.colorstone, false));
-      textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.barrel, false));
-      textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.pillar, false));
-      textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.greenlight, false));
+      textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(Properties.Resources.eagle, false));
+      textures.Add(Texture.RedBrickWall, DirectBitmap.fromBitmap(Properties.Resources.redbrick, false));
+      textures.Add(Texture.PurpleStoneWall, DirectBitmap.fromBitmap(Properties.Resources.purplestone, false));
+      textures.Add(Texture.GreyStoneWall, DirectBitmap.fromBitmap(Properties.Resources.greystone, false));
+      textures.Add(Texture.BlueStoneWall, DirectBitmap.fromBitmap(Properties.Resources.bluestone, false));
+      textures.Add(Texture.MossyWall, DirectBitmap.fromBitmap(Properties.Resources.mossy, false));
+      textures.Add(Texture.WoodWall, DirectBitmap.fromBitmap(Properties.Resources.wood, false));
+      textures.Add(Texture.ColorStoneWall, DirectBitmap.fromBitmap(Properties.Resources.colorstone, false));
+      textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(Properties.Resources.barrel, false));
+      textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(Properties.Resources.pillar, false));
+      textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(Properties.Resources.greenlight, false));
       // Load Enemy Sprites
-      textures.Add(Texture.Enemy_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Enemy_1, false));
+      textures.Add(Texture.Enemy_1, DirectBitmap.fromBitmap(Properties.Resources.Enemy_1, false));
       // Boss Textures
-      textures.Add(Texture.Boss_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_1, false));
-      textures.Add(Texture.Boss_2, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_2, false));
-      textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_3, false));
+      textures.Add(Texture.Boss_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_1, false));
+      textures.Add(Texture.Boss_2, DirectBitmap.fromBitmap(Properties.Resources.Boss_2, false));
+      textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(Properties.Resources.Boss_3, false));
       // Boss Minions
-      textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(RayCastEngine.Properties.Resources.Boss_3_Minion_1, false));
+      textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_3_Minion_1, false));
     }
     public void Resize(int width, int height) {
       //Resolution = new Size(width, height);
@@ -79,25 +78,26 @@ namespace RayCastEngine.GameComponents {
       //speed modifiers
       double moveSpeed = frameTime * 3; //the constant value is in squares/second
       double rotSpeed = frameTime * 2; //the constant value is in radians/second
-      if (keyIsDown(87)) {
+      KeyboardState keys = Keyboard.GetState();
+      if (keys.IsKeyDown(Keys.W)) {
         Velocity.addX(direction.x * moveSpeed);
         Velocity.addY(direction.y * moveSpeed);
       }
       //move backwards if no wall behind you
-      if (keyIsDown(83)) {
+      if (keys.IsKeyDown(Keys.S)) {
         Velocity.subX(direction.x * moveSpeed);
         Velocity.subY(direction.y * moveSpeed);
       }
       // Strafe Right
-      if (keyIsDown(68)) {
+      if (keys.IsKeyDown(Keys.D)) {
         double theta = Math.Atan2(direction.x, direction.y) + Math.PI / 2;
         double dirX = Math.Sin(theta);
         double dirY = Math.Cos(theta);
         Velocity.addX(dirX * moveSpeed);
         Velocity.addY(dirY * moveSpeed);
       }
-      //// Strafe Left
-      if (keyIsDown(65)) {
+      // Strafe Left
+      if (keys.IsKeyDown(Keys.A)) {
         double theta = Math.Atan2(direction.x, direction.y) - Math.PI / 2;
         double dirX = Math.Sin(theta);
         double dirY = Math.Cos(theta);
@@ -108,7 +108,7 @@ namespace RayCastEngine.GameComponents {
       double cosRotSpeed = Math.Cos(rotSpeed);
       double sinRotSpeed = Math.Sin(rotSpeed);
       //rotate to the right
-      if (keyIsDown(39)) {
+      if (keys.IsKeyDown(Keys.Right)) {
         //both camera direction and camera plane must be rotated
         double oldDirX = direction.x;
         direction.setX(direction.x * cosRotSpeed - direction.y * -sinRotSpeed);
@@ -118,7 +118,7 @@ namespace RayCastEngine.GameComponents {
         plane.setY(oldPlaneX * -sinRotSpeed + plane.y * cosRotSpeed);
       }
       //rotate to the left
-      if (keyIsDown(37)) {
+      if (keys.IsKeyDown(Keys.Left)) {
         //both camera direction and camera plane must be rotated
         double oldDirX = direction.x;
         direction.setX(direction.x * cosRotSpeed - direction.y * sinRotSpeed);
@@ -127,22 +127,26 @@ namespace RayCastEngine.GameComponents {
         plane.setX(plane.x * cosRotSpeed - plane.y * sinRotSpeed);
         plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
       }
+      // Very simple demonstration jump/pitch controls
+      // look up
+      if (keys.IsKeyDown(Keys.Up)) direction.addZ(400 * moveSpeed);
+      // look down
+      if (keys.IsKeyDown(Keys.Down)) direction.subZ(400 * moveSpeed);
+      // jump
+      if (keys.IsKeyDown(Keys.Space) && position.z == 0) Velocity.setZ(200);
+      // crouch
+      if (keys.IsKeyDown(Keys.LeftControl) && position.z == 0) Velocity.setZ(-200);
+      // Run
+      if (keys.IsKeyDown(Keys.LeftShift)) Velocity.mulScalar(2);
       // Determine projected Move
       if (!Velocity.equals(new Vector(0, 0, 0))) {
         double projectedX = position.x + Velocity.x;
         double projectedY = position.y + Velocity.y;
         if (worldMap[(int)projectedX, intPosY] == Texture.Air) position.setX(projectedX);
         if (worldMap[intPosX, (int)projectedY] == Texture.Air) position.setY(projectedY);
+        position.setZ(Velocity.z);
       }
-      // Very simple demonstration jump/pitch controls
-      // look up
-      if (keyIsDown(38)) direction.addZ(400 * moveSpeed);
-      // look down
-      if (keyIsDown(40)) direction.subZ(400 * moveSpeed);
-      // jump
-      if (keyIsDown(32) && position.z == 0) position.setZ(200);
-      // crouch
-      if (keyIsDown(16) && position.z == 0) position.setZ(-200);
+      // Reset Values
       if (direction.z > 0) direction.setZ(Math.Max(0, direction.z - 100 * moveSpeed));
       if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
       if (position.z > 0) position.setZ(Math.Max(0, position.z - 100 * moveSpeed));
@@ -388,6 +392,8 @@ namespace RayCastEngine.GameComponents {
                 // Displaying Code
                 int d = (y - vMoveScreen) * 256 - screenHeight * 128 + spriteHeight * 128; //256 and 128 factors to avoid floats
                 int texY = ((d * texHeight) / spriteHeight) / 256;
+                // Protect Agaist out Of Bounds Indexing
+                if (texY < 0) continue;
                 Color pixel = textures[currentSprite.texture].GetPixel(texX, texY);
                 // TODO: This is not performant
                 if (pixel.A != 0) buffer.SetPixel(stripe, y, pixel); //paint pixel if it is visible
@@ -396,9 +402,6 @@ namespace RayCastEngine.GameComponents {
           });
         }
       }
-    }
-    private bool keyIsDown(int keycode) {
-      return keys.ContainsKey(keycode) && keys[keycode] == true;
     }
     public DirectBitmap Draw(TimeSpan gameTime) {
       // Draw UI

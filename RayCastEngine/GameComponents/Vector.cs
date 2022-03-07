@@ -38,6 +38,11 @@ namespace RayCastEngine.GameComponents {
       y += vec.y;
       z += vec.y;
     }
+    public void addScalar(double scalar) {
+      x += scalar;
+      y += scalar;
+      z += scalar;
+    }
     public void addXYZ(double xVal, double yVal, double zVal) {
       x += xVal;
       y += yVal;
@@ -57,6 +62,11 @@ namespace RayCastEngine.GameComponents {
       y -= vec.y;
       z -= vec.y;
     }
+    public void subScalar(double scalar) {
+      x -= scalar;
+      y -= scalar;
+      z -= scalar;
+    }
     public void subXYZ(double xVal, double yVal, double zVal) {
       x -= xVal;
       y -= yVal;
@@ -71,6 +81,54 @@ namespace RayCastEngine.GameComponents {
     public void subZ(double zVal) {
       z -= zVal;
     }
+    public void mul(Vector vec) {
+      x *= vec.x;
+      y *= vec.y;
+      z *= vec.y;
+    }
+    public void mulScalar(double scalar) {
+      x *= scalar;
+      y *= scalar;
+      z *= scalar;
+    }
+    public void mulXYZ(double xVal, double yVal, double zVal) {
+      x *= xVal;
+      y *= yVal;
+      z *= zVal;
+    }
+    public void mulX(double xVal) {
+      x *= xVal;
+    }
+    public void mulY(double yVal) {
+      y *= yVal;
+    }
+    public void mulZ(double zVal) {
+      z *= zVal;
+    }
+    public void div(Vector vec) {
+      x /= vec.x;
+      y /= vec.y;
+      z /= vec.y;
+    }
+    public void divScalar(double scalar) {
+      x /= scalar;
+      y /= scalar;
+      z /= scalar;
+    }
+    public void divXYZ(double xVal, double yVal, double zVal) {
+      x /= xVal;
+      y /= yVal;
+      z /= zVal;
+    }
+    public void divX(double xVal) {
+      x /= xVal;
+    }
+    public void divY(double yVal) {
+      y /= yVal;
+    }
+    public void divZ(double zVal) {
+      z /= zVal;
+    }
     // Non Modifying Functions
     public Vector getAdd(Vector vec) {
       return new Vector(x + vec.x, y + vec.y, z + vec.z);
@@ -83,6 +141,18 @@ namespace RayCastEngine.GameComponents {
     }
     public Vector getSubXYZ(double xVal, double yVal, double zVal) {
       return new Vector(x - xVal, y - yVal, z - zVal);
+    }
+    public Vector getMul(Vector vec) {
+      return new Vector(x * vec.x, y * vec.y, z * vec.z);
+    }
+    public Vector getMulXYZ(double xVal, double yVal, double zVal) {
+      return new Vector(x * xVal, y * yVal, z * zVal);
+    }
+    public Vector getDiv(Vector vec) {
+      return new Vector(x / vec.x, y / vec.y, z / vec.z);
+    }
+    public Vector getDivXYZ(double xVal, double yVal, double zVal) {
+      return new Vector(x / xVal, y / yVal, z / zVal);
     }
     public double length() {
       return Math.Sqrt(x * x + y * y + z * z);

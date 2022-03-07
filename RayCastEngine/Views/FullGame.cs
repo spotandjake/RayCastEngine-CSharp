@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Graphics;
 namespace RayCastEngine {
   public partial class FullGame : XNAWinForm {
     // Temp Props
-    private Dictionary<int, bool> keys = new Dictionary<int, bool>();
     private bool Running = false;
     private GameType currentGameType;
     private Engine currentEngine;
@@ -22,9 +21,9 @@ namespace RayCastEngine {
     // XNA STuff
     public FullGame() {
       InitializeComponent();
-      this.DeviceResetting += new EmptyEventHandler(mWinForm_DeviceResetting);
-      this.DeviceReset += new GraphicsDeviceDelegate(mWinForm_DeviceReset);
-      this.OnFrameRender += new GraphicsDeviceDelegate(mWinForm_OnFrameRender);
+      DeviceResetting += new EmptyEventHandler(mWinForm_DeviceResetting);
+      DeviceReset += new GraphicsDeviceDelegate(mWinForm_DeviceReset);
+      OnFrameRender += new GraphicsDeviceDelegate(mWinForm_OnFrameRender);
       // Initialize Stuff
       // Start SinglePlayer
       singlePlayer();
@@ -64,8 +63,6 @@ namespace RayCastEngine {
         TimeSpan GameTime = DateTime.Now - _previousGameTime;
         // Update the current previous game time
         _previousGameTime = _previousGameTime + GameTime;
-        // Update List Of Keys
-        currentEngine.keys = keys;
         // Update the game
         currentEngine.Update(GameTime);
         // Check if the state changed
@@ -94,15 +91,6 @@ namespace RayCastEngine {
     //private void Game_FormClosed(object sender, FormClosedEventArgs e) {
     //  Application.Exit();
     //}
-    // Keys
-    private void Game_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e) {
-      if (keys.ContainsKey((int)e.KeyCode)) keys[(int)e.KeyCode] = true;
-      else keys.Add((int)e.KeyCode, true);
-    }
-    private void Game_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e) {
-      if (keys.ContainsKey((int)e.KeyCode)) keys[(int)e.KeyCode] = false;
-      else keys.Add((int)e.KeyCode, false);
-    }
     // XNA
     void mWinForm_OnFrameRender(GraphicsDevice pDevice) {
       if (buffer != null) {

@@ -10,8 +10,10 @@
     /// </summary>
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing) {
-      if (disposing && (components != null)) {
-        components.Dispose();
+      if (disposing) {
+        if (components != null) components.Dispose();
+        if (bufferTexture != null) bufferTexture.Dispose();
+        if (screenSprite != null) screenSprite.Dispose();
       }
       base.Dispose(disposing);
     }
@@ -53,8 +55,6 @@
       this.ClientSize = new System.Drawing.Size(1111, 592);
       this.Name = "FullGame";
       this.Text = "Game";
-      this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Game_KeyDown);
-      this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Game_KeyUp);
       this.Resize += new System.EventHandler(this.Game_Resize);
       this.panelViewport.ResumeLayout(false);
       this.panelViewport.PerformLayout();
