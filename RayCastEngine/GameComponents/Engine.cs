@@ -154,9 +154,9 @@ namespace RayCastEngine.GameComponents {
       // TODO: Calculate Enemy Movements
       List<Player> tempPlayers = players.ToList();
       tempPlayers.Add(new Player(position, direction, Texture.Air));
-      //enemys[enemyUpdateIndex].Update(worldMap, players);
+      enemys[enemyUpdateIndex].Update(worldMap, players);
       enemyUpdateIndex++;
-      if (enemyUpdateIndex > enemys.Count) enemyUpdateIndex = 0;
+      if (enemyUpdateIndex >= enemys.Count) enemyUpdateIndex = 0;
       // Determine if game has updated
       if (!oldPosition.equals(position) || !oldDirection.equals(direction)) {
         GameStateChanged = true;
@@ -331,7 +331,7 @@ namespace RayCastEngine.GameComponents {
       }
       // Add Enemys To List
       foreach (Enemy currentEnemy in enemys) {
-        spritePool.Add(new Sprite(currentEnemy.x, currentEnemy.y, currentEnemy.Texture));
+        spritePool.Add(new Sprite(currentEnemy.Position.x, currentEnemy.Position.y, currentEnemy.Texture));
       }
       // Add Players To List
       foreach (Player currentPlayer in players) {
