@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using RayCastEngine.Views;
 using RayCastEngine.GameComponents;
-
-using XNA = Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,9 +12,15 @@ namespace RayCastEngine {
     private bool Running = false;
     private GameType currentGameType;
     private Engine currentEngine;
-    private DirectBitmap buffer;
-    private Texture2D bufferTexture;
     private SpriteBatch screenSprite;
+    // Buffers
+    private DirectBitmap SceneBuffer;
+    private DirectBitmap SpriteBuffer;
+    private DirectBitmap UiBuffer;
+    // Buffer Textures
+    private Texture2D SceneBufferTexture;
+    private Texture2D SpriteBufferTexture;
+    private Texture2D UiBufferTexture;
     // XNA STuff
     public FullGame() {
       InitializeComponent();
@@ -55,23 +58,20 @@ namespace RayCastEngine {
 
       // Set previous game time
       DateTime _previousGameTime = DateTime.Now;
-      currentEngine.GameStateChanged = true;
       while (Running) {
         // Calculate the time elapsed since the last game loop cycle
         TimeSpan GameTime = DateTime.Now - _previousGameTime;
         // Update the current previous game time
         _previousGameTime = _previousGameTime + GameTime;
         // Update the game
-        currentEngine.Update(GameTime);
-        // Check if the state changed
-        if (currentEngine.GameStateChanged) {
-          // Update The Screen
-          currentEngine.UpdateScreen(GameTime);
-          buffer = currentEngine.Draw(GameTime);
+        bool update = currentEngine.Update(GameTime);
+        if (update) {
+          // Check if the state changed
+          SceneBuffer = currentEngine.DrawScene(GameTime);
+          SpriteBuffer = currentEngine.DrawSprites(GameTime);
+          UiBuffer = currentEngine.DrawUi(GameTime);
           Invalidate();
           Update();
-          // Set The Update Cycle To False
-          currentEngine.GameStateChanged = false;
         }
         DataView.Text = currentEngine.getDataText(GameTime);
         // Update Game at 120fps
@@ -88,14 +88,33 @@ namespace RayCastEngine {
     }
     // XNA
     void mWinForm_OnFrameRender(GraphicsDevice pDevice) {
-      if (buffer != null) {
-        if (bufferTexture == null || bufferTexture.Bounds.Width != buffer.Width || bufferTexture.Bounds.Height != buffer.Height)
-          bufferTexture = new Texture2D(Device, buffer.Width, buffer.Height);
+      // If The Game Has Started
+      if (SceneBuffer != null && UiBuffer != null) {
+        // Initialize Our SpriteBatch
+        if (screenSprite == null)
+          screenSprite = new SpriteBatch(pDevice);
+        // If We Need To Resize Our Texture
+        if (SceneBufferTexture == null || SceneBufferTexture.Bounds.Width != SceneBuffer.Width || SceneBufferTexture.Bounds.Height != SceneBuffer.Height)
+          SceneBufferTexture = new Texture2D(pDevice, SceneBuffer.Width, SceneBuffer.Height);
+        if (SpriteBufferTexture == null || SpriteBufferTexture.Bounds.Width != SpriteBuffer.Width || SpriteBufferTexture.Bounds.Height != SpriteBuffer.Height)
+          SpriteBufferTexture = new Texture2D(pDevice, SpriteBuffer.Width, SpriteBuffer.Height);
+        if (UiBufferTexture == null || UiBufferTexture.Bounds.Width != UiBuffer.Width || UiBufferTexture.Bounds.Height != UiBuffer.Height)
+          UiBufferTexture = new Texture2D(pDevice, UiBuffer.Width, UiBuffer.Height);
+        // Draw To Our Textures
         Device.Textures[0] = null;
-        bufferTexture.SetData(buffer.Bits);
-        if (screenSprite == null) screenSprite = new SpriteBatch(pDevice);
+        SceneBufferTexture.SetData(SceneBuffer.Bits);
+        Device.Textures[0] = null;
+        SpriteBufferTexture.SetData(SpriteBuffer.Bits);
+        Device.Textures[0] = null;
+        UiBufferTexture.SetData(UiBuffer.Bits);
+        // Draw our Buffers to the screen
         screenSprite.Begin();
-        screenSprite.Draw(bufferTexture, new Rectangle(0, 0, buffer.Width, buffer.Height), Color.White);
+        // Draw our Scene
+        screenSprite.Draw(SceneBufferTexture, new Rectangle(0, 0, SceneBuffer.Width, SceneBuffer.Height), Color.White);
+        // Draw Our Sprite
+        screenSprite.Draw(SpriteBufferTexture, new Rectangle(0, 0, SpriteBuffer.Width, SpriteBuffer.Height), Color.White);
+        // Draw Our Ui
+        screenSprite.Draw(UiBufferTexture, new Rectangle(0, 0, UiBuffer.Width, UiBuffer.Height), Color.White);
         screenSprite.End();
       }
     }

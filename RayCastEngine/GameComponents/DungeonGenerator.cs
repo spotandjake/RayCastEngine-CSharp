@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Microsoft.Xna.Framework;
+
 namespace RayCastEngine.GameComponents {
   // Room Types
   enum RoomTypes {
@@ -17,14 +19,14 @@ namespace RayCastEngine.GameComponents {
     public int y;
     public int w;
     public int h;
-    public Vector center;
+    public Vector3 center;
     public RoomTypes RoomType = RoomTypes.Unknown;
     public Room(int x, int y, int width, int height) {
       this.x = (x - 1); //column
       this.y = (y - 1); //row
       w = width; //width
       h = height; //height
-      center = new Vector(this.x + width / 2.0f, this.y + height / 2.0f, 0); //center
+      center = new Vector3(this.x + width / 2.0f, this.y + height / 2.0f, 0); //center
     }
   }
   // Cell Class
@@ -57,11 +59,11 @@ namespace RayCastEngine.GameComponents {
           if (
             (
               x % 2 == 0 &&
-              x == (int)room.center.x
+              x == (int)room.center.X
             ) ||
             (
               y % 2 == 0 &&
-              y == (int)room.center.y
+              y == (int)room.center.Y
             )
           ) {
             texture = Texture.EagleWall;
@@ -127,33 +129,35 @@ namespace RayCastEngine.GameComponents {
     }
     public Sprite[] getEntityPositions() {
       List<Sprite> sprites = new List<Sprite>();
+      // TODO: Optimize this
       // Generate Light Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
-        Vector roomCenter = rooms[roomIndex].center;
-        sprites.Add(new Sprite(roomCenter.x, roomCenter.y, Texture.GreenLight));
+        Vector3 roomCenter = rooms[roomIndex].center;
+        sprites.Add(new Sprite(new Vector3(roomCenter.X, roomCenter.Y, 0), Vector3.Zero, Texture.GreenLight)
+        );
       }
       // Generate Barrel Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Room currentRoom = rooms[roomIndex];
         if (currentRoom.RoomType == RoomTypes.Loot) {
-          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.center.y - 1, Texture.BarrelEntity));
-          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.center.y, Texture.BarrelEntity));
-          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.center.y + 1, Texture.BarrelEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity));
 
-          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.center.y - 1, Texture.BarrelEntity));
-          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.center.y, Texture.BarrelEntity));
-          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.center.y + 1, Texture.BarrelEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity));
         }
       }
       // Generate Column Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Room currentRoom = rooms[roomIndex];
         if (currentRoom.w >= 8 && currentRoom.h >= 8) {
-          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.y + 1, Texture.PillarEntity));
-          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.y + 1, Texture.PillarEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.y + 1, 0), Vector3.Zero, Texture.PillarEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + 1, 0), Vector3.Zero, Texture.PillarEntity));
 
-          sprites.Add(new Sprite(currentRoom.x + 1, currentRoom.y + currentRoom.h - 1, Texture.PillarEntity));
-          sprites.Add(new Sprite(currentRoom.x + currentRoom.w - 1, currentRoom.y + currentRoom.h - 1, Texture.PillarEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.y + currentRoom.h - 1, 0), Vector3.Zero, Texture.PillarEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + currentRoom.h - 1, 0), Vector3.Zero, Texture.PillarEntity));
         }
       }
       // Return The Sprites As An Array
@@ -173,7 +177,7 @@ namespace RayCastEngine.GameComponents {
           enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + 3, EnemyTexture, false));
           enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, EnemyTexture, false));
 
-          enemys.Add(new Enemy((int)currentRoom.center.x, (int)currentRoom.center.y, EnemyTexture, false));
+          enemys.Add(new Enemy((int)currentRoom.center.X, (int)currentRoom.center.Y, EnemyTexture, false));
 
           enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, EnemyTexture, false));
           enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, EnemyTexture, false));
@@ -191,7 +195,7 @@ namespace RayCastEngine.GameComponents {
           enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + 3, Texture.Boss_3_Minion_1, false));
           enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, Texture.Boss_3_Minion_1, false));
 
-          enemys.Add(new Enemy((int)currentRoom.center.x, (int)currentRoom.center.y, EnemyTexture, true));
+          enemys.Add(new Enemy((int)currentRoom.center.X, (int)currentRoom.center.Y, EnemyTexture, true));
 
           enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, Texture.Boss_3_Minion_1, false));
           enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, Texture.Boss_3_Minion_1, false));
@@ -200,7 +204,7 @@ namespace RayCastEngine.GameComponents {
       // Return Enemys
       return enemys;
     }
-    public Vector getStartPosition() {
+    public Vector3 getStartPosition() {
       return rooms[0].center;
     }
     // Methods
@@ -252,16 +256,16 @@ namespace RayCastEngine.GameComponents {
           rooms.Add(room); // Add room to the array
           if (i > 0) { // Make Corridors
             hCorridor(
-              (int)rooms[i - 1].center.x,
-              (int)room.center.x,
-              (int)rooms[i - 1].center.y,
-              (int)room.center.y
+              (int)rooms[i - 1].center.X,
+              (int)room.center.X,
+              (int)rooms[i - 1].center.Y,
+              (int)room.center.Y
             );
             vCorridor(
-              (int)rooms[i - 1].center.x,
-              (int)room.center.x,
-              (int)rooms[i - 1].center.y,
-              (int)room.center.y
+              (int)rooms[i - 1].center.X,
+              (int)room.center.X,
+              (int)rooms[i - 1].center.Y,
+              (int)room.center.Y
             );
           }
         }

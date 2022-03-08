@@ -12,8 +12,11 @@
     protected override void Dispose(bool disposing) {
       if (disposing) {
         if (components != null) components.Dispose();
-        if (bufferTexture != null) bufferTexture.Dispose();
         if (screenSprite != null) screenSprite.Dispose();
+        // Cleanup Textures
+        if (SceneBufferTexture != null) SceneBufferTexture.Dispose();
+        if (SpriteBufferTexture != null) SpriteBufferTexture.Dispose();
+        if (UiBufferTexture != null) UiBufferTexture.Dispose();
       }
       base.Dispose(disposing);
     }

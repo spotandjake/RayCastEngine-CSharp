@@ -5,20 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace RayCastEngine.GameComponents {
-  // Sprites
-  public class Sprite {
-    // Properties
-    public double distance;
-    public double x;
-    public double y;
-    public Texture texture;
-    // Constructor
-    public Sprite(double xPos, double yPos, Texture tex) {
-      x = xPos;
-      y = yPos;
-      texture = tex;
-    }
-  }
   // Enemys
   public class Enemy {
     public Vector Position;
