@@ -16,12 +16,12 @@ namespace RayCastEngine.GameComponents {
     private int texHeight = 64;
     private static int worldSizeX = 300;
     private static int worldSizeY = 300;
-    private Texture[,] worldMap;
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
     private Vector position = new Vector(22.0, 11.5, 0.0);
     private Vector direction = new Vector(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
     private Vector plane = new Vector(0.0, 0.66, 0.0); // planeX, planeY
-    private Sprite[] sprites;
+    // World Values
+    private World World;
     // Buffers
     private DirectBitmap SceneBuffer;
     private DirectBitmap SpriteBuffer;
@@ -36,14 +36,6 @@ namespace RayCastEngine.GameComponents {
     private int ScreenHeight;
     // Methods
     public void Load(GameType gameType) {
-      // Load Map
-      DungeonGenerator dungeonBuilder = new DungeonGenerator(worldSizeX, worldSizeY);
-      worldMap = dungeonBuilder.exportMap();
-      sprites = dungeonBuilder.getEntityPositions();
-      //enemys = dungeonBuilder.getEnemyPositions();
-      // TODO: Convert All Vector Vars To Vector3
-      Vector3 pos = dungeonBuilder.getStartPosition();
-      position = new Vector(pos.X, pos.Y, pos.Z);
       // Load Images
       textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(Properties.Resources.eagle, false));
       textures.Add(Texture.RedBrickWall, DirectBitmap.fromBitmap(Properties.Resources.redbrick, false));
@@ -64,6 +56,11 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(Properties.Resources.Boss_3, false));
       // Boss Minions
       textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_3_Minion_1, false));
+      // Generate World
+      World = new World(worldSizeX, worldSizeY);
+      // TODO: Remove These
+      Vector3 pos = World.getSpawn();
+      position = new Vector(pos.X, pos.Y, pos.Z);
     }
     public void Resize(int width, int height) {
       // Resize our Buffers
@@ -165,17 +162,15 @@ namespace RayCastEngine.GameComponents {
       if (!Velocity.equals(new Vector(0, 0, 0))) {
         double projectedX = position.x + Velocity.x;
         double projectedY = position.y + Velocity.y;
-        if (worldMap[(int)projectedX, (int)position.y] == Texture.Air) position.setX(projectedX);
-        if (worldMap[(int)position.x, (int)projectedY] == Texture.Air) position.setY(projectedY);
+        if (World.getWall((int)projectedX, (int)position.y) == Texture.Air) position.setX(projectedX);
+        if (World.getWall((int)position.x, (int)projectedY) == Texture.Air) position.setY(projectedY);
         position.addZ(Velocity.z);
         SceneUpdate = true;
         UiUpdate = true;
       }
       #endregion
-      // Call Sprite Updates
-      foreach (Sprite sprite in sprites) {
-        sprite.Update(gameTime, worldMap, sprites);
-      }
+      // Call World Update
+      World.Update(gameTime);
       // Determine if game has updated
       if (!oldDirection.equals(direction)) {
         SceneUpdate = true;
@@ -299,10 +294,10 @@ namespace RayCastEngine.GameComponents {
             side1 = true;
           }
           // Check if ray has hit a wall
-          if (worldMap[mapX, mapY] != Texture.Air) break;
+          if (World.getWall(mapX, mapY) != Texture.Air) break;
         }
         // texturing calculations
-        Texture texNum = worldMap[mapX, mapY];
+        Texture texNum = World.getWall(mapX, mapY);
         if (texNum == Texture.Air) return;
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
         double perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
@@ -352,32 +347,18 @@ namespace RayCastEngine.GameComponents {
       #region Sprite Casting
       int screenHeight2 = ScreenHeight / 2;
       //SPRITE CASTING
-      //List<Sprite> spritePool = new List<Sprite>();
-      //// Add Sprites To List
-      //foreach (Sprite currentSprite in sprites) {
-      //  spritePool.Add(currentSprite);
-      //}
-      //// Add Enemys To List
-      //foreach (Enemy currentEnemy in enemys) {
-      //  spritePool.Add(new Sprite(currentEnemy.Position.x, currentEnemy.Position.y, currentEnemy.Texture));
-      //}
-      //// Add Players To List
-      //foreach (Player currentPlayer in players) {
-      //  spritePool.Add(new Sprite(currentPlayer.Position.x, currentPlayer.Position.y, currentPlayer.Texture));
-      //}
-      //// TODO: Add Magic Effects
-      ////sort sprites from far to close
-      //foreach (Sprite currentSprite in spritePool) {
-      //  currentSprite.distance = ((position.x - currentSprite.x) * (position.x - currentSprite.x) + (position.y - currentSprite.y) * (position.y - currentSprite.y));
-      //}
-      // sprites.Sort(new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
-      Array.Sort(sprites, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
+      // TODO: Remove This
+      Vector3 playerPosition = new Vector3((float)position.x, (float)position.y, (float)position.z);
+      foreach (Sprite currentSprite in World.SpritePool) {
+        currentSprite.distance = Vector3.DistanceSquared(playerPosition, currentSprite.Position);
+      }
+      Array.Sort(World.SpritePool, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
       //parameters for scaling and moving the sprites
       const int uDiv = 1;
       const int vDiv = 1;
       const float vMove = 0.0f;
       //after sorting the sprites, do the projection and draw them
-      foreach (Sprite currentSprite in sprites) {
+      foreach (Sprite currentSprite in World.SpritePool) {
         //translate sprite position relative to camera
         double spriteX = currentSprite.Position.X - position.x;
         double spriteY = currentSprite.Position.Y - position.y;
@@ -439,7 +420,7 @@ namespace RayCastEngine.GameComponents {
       // Draw UI
       for (int x = 1; x < worldSizeX; x++) {
         for (int y = 0; y < worldSizeY; y++) {
-          UiBiffer.SetPixel(UiBiffer.Width - x, y, worldMap[x, y] == Texture.Air ? Color.White : Color.Black);
+          UiBiffer.SetPixel(UiBiffer.Width - x, y, World.getWall(x, y) == Texture.Air ? Color.White : Color.Black);
         }
       }
       for (int x = -1; x < 2; x++) {

@@ -93,6 +93,44 @@ namespace RayCastEngine.GameComponents {
       return texture == Texture.Air;
     }
   }
+  // World
+  class World {
+    // Properties
+    private int SizeX;
+    private int SizeY;
+    private Texture[,] WorldMap;
+    public Sprite[] SpritePool;
+    private DungeonGenerator DungeonBuilder;
+    // Constructor
+    public World (int sizeX, int sizeY) {
+      // Set Properties
+      SizeX = sizeX;
+      SizeY = sizeY;
+      // General World
+      DungeonBuilder = new DungeonGenerator(SizeX, SizeY);
+      WorldMap = DungeonBuilder.exportMap();
+      List<Sprite> spritePool = DungeonBuilder.getEntityPositions();
+      // Generate Local Player
+      // TODO: Make A Better Texture
+      spritePool.Add(new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController()));
+      // Set Sprites
+      SpritePool = spritePool.ToArray();
+    }
+    // Method
+    public void Update(TimeSpan gameTime) {
+      // TODO: Make this return weather or not something updated
+      foreach (Sprite sprite in SpritePool) {
+        sprite.Update(gameTime, this);
+      }
+    }
+    public Texture getWall(int x, int y) {
+      // TODO: Implement Infinite Generation
+      return WorldMap[x, y];
+    }
+    public Vector3 getSpawn() {
+      return DungeonBuilder.getStartPosition();
+    }
+  }
   // Main Generator
   class DungeonGenerator {
     private int width;
@@ -127,60 +165,53 @@ namespace RayCastEngine.GameComponents {
       }
       return map;
     }
-    public Sprite[] getEntityPositions() {
+    public List<Sprite> getEntityPositions() {
       List<Sprite> sprites = new List<Sprite>();
       // TODO: Optimize this
       // Generate Light Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Vector3 roomCenter = rooms[roomIndex].center;
-        sprites.Add(new Sprite(new Vector3(roomCenter.X, roomCenter.Y, 0), Vector3.Zero, Texture.GreenLight)
+        sprites.Add(new Sprite(new Vector3(roomCenter.X, roomCenter.Y, 0), Vector3.Zero, Texture.GreenLight, true)
         );
       }
       // Generate Barrel Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Room currentRoom = rooms[roomIndex];
         if (currentRoom.RoomType == RoomTypes.Loot) {
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity, true));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
 
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity, true));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
         }
       }
       // Generate Column Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Room currentRoom = rooms[roomIndex];
         if (currentRoom.w >= 8 && currentRoom.h >= 8) {
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.y + 1, 0), Vector3.Zero, Texture.PillarEntity));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + 1, 0), Vector3.Zero, Texture.PillarEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.y + 1, 0), Vector3.Zero, Texture.PillarEntity, true));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + 1, 0), Vector3.Zero, Texture.PillarEntity, true));
 
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.y + currentRoom.h - 1, 0), Vector3.Zero, Texture.PillarEntity));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + currentRoom.h - 1, 0), Vector3.Zero, Texture.PillarEntity));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.y + currentRoom.h - 1, 0), Vector3.Zero, Texture.PillarEntity, true));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + currentRoom.h - 1, 0), Vector3.Zero, Texture.PillarEntity, true));
         }
       }
-      // Return The Sprites As An Array
-      return sprites.ToArray();
-
-    }
-    // Spawn Enemys
-    public List<Enemy> getEnemyPositions() {
-      List<Enemy> enemys = new List<Enemy>();
-      // Set Enemy Positions
+      // Generate Enemy Positions
       for (int roomIndex = 1; roomIndex < rooms.Count; roomIndex++) { // We Start at 1 because the spawn room should be safe
         Room currentRoom = rooms[roomIndex];
         // Spawn Stuff Based On Room Type
         if (currentRoom.RoomType == RoomTypes.NormalFight) {
           // TODO: Work On Enemy Spawn pattern
           const Texture EnemyTexture = Texture.Boss_1; // TODO: Add Enemy Texture
-          enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + 3, EnemyTexture, false));
-          enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, EnemyTexture, false));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 3, currentRoom.y + 3, 0), Vector3.Zero, EnemyTexture, true, new EnemyController(false)));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, 0), Vector3.Zero, EnemyTexture, true, new EnemyController(false)));
 
-          enemys.Add(new Enemy((int)currentRoom.center.X, (int)currentRoom.center.Y, EnemyTexture, false));
+          sprites.Add(new Sprite(new Vector3((int)currentRoom.center.X, (int)currentRoom.center.Y, 0), Vector3.Zero, EnemyTexture, true, new EnemyController(false)));
 
-          enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, EnemyTexture, false));
-          enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, EnemyTexture, false));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, 0), Vector3.Zero, EnemyTexture, true, new EnemyController(false)));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, 0), Vector3.Zero, EnemyTexture, true, new EnemyController(false)));
         } else if (currentRoom.RoomType == RoomTypes.Boss) {
           Texture EnemyTexture;
           int RoomProbability = RandomNumberGenerator.Next(0, 2);
@@ -192,17 +223,17 @@ namespace RayCastEngine.GameComponents {
             EnemyTexture = Texture.Boss_1;
           }
           // TODO: Work On Enemy Spawn pattern
-          enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + 3, Texture.Boss_3_Minion_1, false));
-          enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, Texture.Boss_3_Minion_1, false));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 3, currentRoom.y + 3, 0), Vector3.Zero, Texture.Boss_3_Minion_1, true, new EnemyController(false)));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + 3, 0), Vector3.Zero, Texture.Boss_3_Minion_1, true, new EnemyController(false)));
 
-          enemys.Add(new Enemy((int)currentRoom.center.X, (int)currentRoom.center.Y, EnemyTexture, true));
+          sprites.Add(new Sprite(new Vector3((int)currentRoom.center.X, (int)currentRoom.center.Y, 0), Vector3.Zero, EnemyTexture, true, new EnemyController(true)));
 
-          enemys.Add(new Enemy(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, Texture.Boss_3_Minion_1, false));
-          enemys.Add(new Enemy(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, Texture.Boss_3_Minion_1, false));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 3, currentRoom.y + currentRoom.h - 3, 0), Vector3.Zero, Texture.Boss_3_Minion_1, true, new EnemyController(false)));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 3, currentRoom.y + currentRoom.h - 3, 0), Vector3.Zero, Texture.Boss_3_Minion_1, true, new EnemyController(false)));
         }
       }
-      // Return Enemys
-      return enemys;
+      // Return The Sprites As An Array
+      return sprites;
     }
     public Vector3 getStartPosition() {
       return rooms[0].center;
