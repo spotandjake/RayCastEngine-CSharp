@@ -100,6 +100,7 @@ namespace RayCastEngine.GameComponents {
     private int SizeY;
     private Texture[,] WorldMap;
     public Sprite[] SpritePool;
+    public Sprite LocalPlayer;
     private DungeonGenerator DungeonBuilder;
     // Constructor
     public World (int sizeX, int sizeY) {
@@ -112,7 +113,9 @@ namespace RayCastEngine.GameComponents {
       List<Sprite> spritePool = DungeonBuilder.getEntityPositions();
       // Generate Local Player
       // TODO: Make A Better Texture
-      spritePool.Add(new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController()));
+      LocalPlayer = new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController());
+      // Add Aditional Sprites
+      spritePool.Add(LocalPlayer);
       // Set Sprites
       SpritePool = spritePool.ToArray();
     }

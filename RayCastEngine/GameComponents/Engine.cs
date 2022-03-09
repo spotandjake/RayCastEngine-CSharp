@@ -17,8 +17,7 @@ namespace RayCastEngine.GameComponents {
     private static int worldSizeX = 300;
     private static int worldSizeY = 300;
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
-    private Vector position = new Vector(22.0, 11.5, 0.0);
-    private Vector direction = new Vector(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
+    //private Vector direction = new Vector(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
     private Vector plane = new Vector(0.0, 0.66, 0.0); // planeX, planeY
     // World Values
     private World World;
@@ -58,9 +57,6 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_3_Minion_1, false));
       // Generate World
       World = new World(worldSizeX, worldSizeY);
-      // TODO: Remove These
-      Vector3 pos = World.getSpawn();
-      position = new Vector(pos.X, pos.Y, pos.Z);
     }
     public void Resize(int width, int height) {
       // Resize our Buffers
@@ -79,7 +75,7 @@ namespace RayCastEngine.GameComponents {
     public bool Update(TimeSpan gameTime) {
       // TODO: Move to using NewVelocity
       // Cached Values
-      Vector oldDirection = direction.copy();
+      //Vector oldDirection = direction.copy();
       Vector Velocity = new Vector(0, 0, 0);
       // We want to normalize movement over time so you move the same distance no matter the fps
       double frameTime = gameTime.Milliseconds / 1000.0;
@@ -89,118 +85,87 @@ namespace RayCastEngine.GameComponents {
       // Perform Movement
       KeyboardState keys = Keyboard.GetState();
       #region Walking Movement
-      // Movement
-      if (keys.IsKeyDown(Keys.W)) {
-        Velocity.addX(direction.x * moveSpeed);
-        Velocity.addY(direction.y * moveSpeed);
-      }
-      //move backwards if no wall behind you
-      if (keys.IsKeyDown(Keys.S)) {
-        Velocity.subX(direction.x * moveSpeed);
-        Velocity.subY(direction.y * moveSpeed);
-      }
-      // Strafe Right
-      if (keys.IsKeyDown(Keys.D)) {
-        double theta = Math.Atan2(direction.x, direction.y) + Math.PI / 2;
-        double dirX = Math.Sin(theta);
-        double dirY = Math.Cos(theta);
-        Velocity.addX(dirX * moveSpeed);
-        Velocity.addY(dirY * moveSpeed);
-      }
-      // Strafe Left
-      if (keys.IsKeyDown(Keys.A)) {
-        double theta = Math.Atan2(direction.x, direction.y) - Math.PI / 2;
-        double dirX = Math.Sin(theta);
-        double dirY = Math.Cos(theta);
-        Velocity.addX(dirX * moveSpeed);
-        Velocity.addY(dirY * moveSpeed);
-      }
-      // jump
-      if (keys.IsKeyDown(Keys.Space) && position.z == 0) Velocity.setZ(200);
-      // crouch
-      if (keys.IsKeyDown(Keys.LeftControl)) Velocity.setZ(-200 - position.z);
-      // Run
-      if (keys.IsKeyDown(Keys.LeftShift)) Velocity.mulScalar(2);
+      //// jump
+      //if (keys.IsKeyDown(Keys.Space) && position.z == 0) Velocity.setZ(200);
+      //// crouch
+      //if (keys.IsKeyDown(Keys.LeftControl)) Velocity.setZ(-200 - position.z);
+      //// Run
+      //if (keys.IsKeyDown(Keys.LeftShift)) Velocity.mulScalar(2);
       #endregion
       #region Turning
-      // TODO: We Want To Use The Mouse
-      double cosRotSpeed = Math.Cos(rotSpeed);
-      double sinRotSpeed = Math.Sin(rotSpeed);
-      //rotate to the right
-      if (keys.IsKeyDown(Keys.Right)) {
-        //both camera direction and camera plane must be rotated
-        double oldDirX = direction.x;
-        direction.setX(direction.x * cosRotSpeed - direction.y * -sinRotSpeed);
-        direction.setY(oldDirX * -sinRotSpeed + direction.y * cosRotSpeed);
-        double oldPlaneX = plane.x;
-        plane.setX(plane.x * cosRotSpeed - plane.y * -sinRotSpeed);
-        plane.setY(oldPlaneX * -sinRotSpeed + plane.y * cosRotSpeed);
-      }
-      //rotate to the left
-      if (keys.IsKeyDown(Keys.Left)) {
-        //both camera direction and camera plane must be rotated
-        double oldDirX = direction.x;
-        direction.setX(direction.x * cosRotSpeed - direction.y * sinRotSpeed);
-        direction.setY(oldDirX * sinRotSpeed + direction.y * cosRotSpeed);
-        double oldPlaneX = plane.x;
-        plane.setX(plane.x * cosRotSpeed - plane.y * sinRotSpeed);
-        plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
-      }
-      // TODO: Add Look Limits
-      // look up
-      if (keys.IsKeyDown(Keys.Up)) direction.addZ(400 * moveSpeed);
-      // look down
-      if (keys.IsKeyDown(Keys.Down)) direction.subZ(400 * moveSpeed);
+      //// TODO: We Want To Use The Mouse
+      //double cosRotSpeed = Math.Cos(rotSpeed);
+      //double sinRotSpeed = Math.Sin(rotSpeed);
+      ////rotate to the right
+      //if (keys.IsKeyDown(Keys.Right)) {
+      //  //both camera direction and camera plane must be rotated
+      //  double oldDirX = direction.x;
+      //  direction.setX(direction.x * cosRotSpeed - direction.y * -sinRotSpeed);
+      //  direction.setY(oldDirX * -sinRotSpeed + direction.y * cosRotSpeed);
+      //  double oldPlaneX = plane.x;
+      //  plane.setX(plane.x * cosRotSpeed - plane.y * -sinRotSpeed);
+      //  plane.setY(oldPlaneX * -sinRotSpeed + plane.y * cosRotSpeed);
+      //}
+      ////rotate to the left
+      //if (keys.IsKeyDown(Keys.Left)) {
+      //  //both camera direction and camera plane must be rotated
+      //  double oldDirX = direction.x;
+      //  direction.setX(direction.x * cosRotSpeed - direction.y * sinRotSpeed);
+      //  direction.setY(oldDirX * sinRotSpeed + direction.y * cosRotSpeed);
+      //  double oldPlaneX = plane.x;
+      //  plane.setX(plane.x * cosRotSpeed - plane.y * sinRotSpeed);
+      //  plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
+      //}
+      //// TODO: Add Look Limits
+      //// look up
+      //if (keys.IsKeyDown(Keys.Up)) direction.addZ(400 * moveSpeed);
+      //// look down
+      //if (keys.IsKeyDown(Keys.Down)) direction.subZ(400 * moveSpeed);
       #endregion
       #region Physics
       // Reset Values
-      if (direction.z > 0) direction.setZ(Math.Max(0, direction.z - 100 * moveSpeed));
-      if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
-      if (position.z > 0) Velocity.subZ(100 * moveSpeed);
-      if (position.z < 0) Velocity.addZ(100 * moveSpeed);
-      // Determine projected Move
-      if (!Velocity.equals(new Vector(0, 0, 0))) {
-        double projectedX = position.x + Velocity.x;
-        double projectedY = position.y + Velocity.y;
-        if (World.getWall((int)projectedX, (int)position.y) == Texture.Air) position.setX(projectedX);
-        if (World.getWall((int)position.x, (int)projectedY) == Texture.Air) position.setY(projectedY);
-        position.addZ(Velocity.z);
-        SceneUpdate = true;
-        UiUpdate = true;
-      }
+      //if (direction.z > 0) direction.setZ(Math.Max(0, direction.z - 100 * moveSpeed));
+      //if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
+      //if (position.z > 0) Velocity.subZ(100 * moveSpeed);
+      //if (position.z < 0) Velocity.addZ(100 * moveSpeed);
+      // TODO: We Need To Determine WHat Has Updated
+      SceneUpdate = true;
+      UiUpdate = true;
       #endregion
       // Call World Update
       World.Update(gameTime);
       // Determine if game has updated
-      if (!oldDirection.equals(direction)) {
-        SceneUpdate = true;
-      }
+      //if (!oldDirection.equals(direction)) {
+      //  SceneUpdate = true;
+      //}
       return true;
     }
     public DirectBitmap DrawScene(TimeSpan gameTime) {
       if (!SceneUpdate) return SceneBuffer;
       SceneBuffer.fillColor(Color.Black);
+      Vector3 position = World.LocalPlayer.Position;
+      Vector3 direction = World.LocalPlayer.Direction;
       // Set Cached Vars
       int screenHeight2 = ScreenHeight / 2;
       // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
-      double rayDirX0 = direction.x - plane.x;
-      double rayDirY0 = direction.y - plane.y;
-      double rayDirX1 = direction.x + plane.x;
-      double rayDirY1 = direction.y + plane.y;
+      double rayDirX0 = direction.X - plane.x;
+      double rayDirY0 = direction.Y - plane.y;
+      double rayDirX1 = direction.X + plane.x;
+      double rayDirY1 = direction.Y + plane.y;
       //move forward if no wall in front of you
-      int intPosX = (int)position.x;
-      int intPosY = (int)position.y;
+      int intPosX = (int)position.X;
+      int intPosY = (int)position.Y;
       // TODO: The Floor And Roof Are Symetrical so we only need to run through half the screen though we need to deal with occlusion when you are not looking forward
       // TODO: we may be able to optimize this by precomputing more stuff
       #region Floor Casting
-      int currentTileSection = (int)(screenHeight2 + direction.z);
+      int currentTileSection = (int)(screenHeight2 + direction.Z);
       double floorStepXBase = (rayDirX1 - rayDirX0) / ScreenWidth;
       double floorStepYBase = (rayDirY1 - rayDirY0) / ScreenWidth;
       Parallel.For(0, ScreenHeight, y => {
         // whether this section is floor or ceiling
         bool is_floor = y > currentTileSection;
         // Current y position compared to the center of the screen (the horizon)
-        int p = (int)(is_floor ? (y - screenHeight2 - direction.z) : (screenHeight2 - y + direction.z));
+        int p = (int)(is_floor ? (y - screenHeight2 - direction.Z) : (screenHeight2 - y + direction.Z));
         /*
          * Vertical position of the camera.
          * NOTE: with 0.5, it's exactly in the center between floor and ceiling,
@@ -208,7 +173,7 @@ namespace RayCastEngine.GameComponents {
          * than 0.5, a separate loop must be done for ceiling and floor since
          * they're no longer symmetrical.
          */
-        double camZ = is_floor ? (screenHeight2 + position.z) : (screenHeight2 - position.z);
+        double camZ = is_floor ? (screenHeight2 + position.Z) : (screenHeight2 - position.Z);
         /*
          * Horizontal distance from the camera to the floor for the current row.
          * 0.5 is the z position exactly in the middle between floor and ceiling.
@@ -231,8 +196,8 @@ namespace RayCastEngine.GameComponents {
         double floorStepX = rowDistance * floorStepXBase;
         double floorStepY = rowDistance * floorStepYBase;
         // real world coordinates of the leftmost column. This will be updated as we step to the right.
-        double floorX = position.x + rowDistance * rayDirX0;
-        double floorY = position.y + rowDistance * rayDirY0;
+        double floorX = position.X + rowDistance * rayDirX0;
+        double floorY = position.Y + rowDistance * rayDirY0;
         // choose texture and draw the pixel
         const Texture ceilingtexture = Texture.WoodWall;
         for (int x = 0; x < ScreenWidth; x++) {
@@ -254,8 +219,8 @@ namespace RayCastEngine.GameComponents {
       Parallel.For(0, ScreenWidth, x => {
         //calculate ray position and direction
         double cameraX = 2 * x / (double)ScreenWidth - 1; //x-coordinate in camera space
-        double rayDirX = direction.x + plane.x * cameraX;
-        double rayDirY = direction.y + plane.y * cameraX;
+        double rayDirX = direction.X + plane.x * cameraX;
+        double rayDirY = direction.Y + plane.y * cameraX;
         //which box of the map we're in
         int mapX = intPosX;
         int mapY = intPosY;
@@ -270,15 +235,15 @@ namespace RayCastEngine.GameComponents {
         //calculate step and initial sideDist
         if (rayDirX < 0) {
           stepX = -1;
-          sideDistX = (position.x - mapX) * deltaDistX;
+          sideDistX = (position.X - mapX) * deltaDistX;
         } else {
-          sideDistX = (mapX + 1.0 - position.x) * deltaDistX;
+          sideDistX = (mapX + 1.0 - position.X) * deltaDistX;
         }
         if (rayDirY < 0) {
           stepY = -1;
-          sideDistY = (position.y - mapY) * deltaDistY;
+          sideDistY = (position.Y - mapY) * deltaDistY;
         } else {
-          sideDistY = (mapY + 1.0 - position.y) * deltaDistY;
+          sideDistY = (mapY + 1.0 - position.Y) * deltaDistY;
         }
         bool side1 = true; //was a NS or a EW wall hit?
         //perform DDA
@@ -304,13 +269,13 @@ namespace RayCastEngine.GameComponents {
         // Calculate height of line to draw on screen
         int lineHeight = (int)(ScreenHeight / perpWallDist);
         // calculate lowest and highest pixel to fill in current stripe
-        int drawBounds = (int)(screenHeight2 + direction.z + (position.z / perpWallDist));
+        int drawBounds = (int)(screenHeight2 + direction.Z + (position.Z / perpWallDist));
         int drawStart = -lineHeight / 2 + drawBounds;
         if (drawStart < 0) drawStart = 0;
         int drawEnd = lineHeight / 2 + drawBounds;
         if (drawEnd >= ScreenHeight) drawEnd = ScreenHeight - 1;
         //calculate value of wallX
-        double wallX = (!side1 ? (position.y + perpWallDist * rayDirY) : (position.x + perpWallDist * rayDirX)) % 1; //where exactly the wall was hit
+        double wallX = (!side1 ? (position.Y + perpWallDist * rayDirY) : (position.X + perpWallDist * rayDirX)) % 1; //where exactly the wall was hit
         //x coordinate on the texture
         int texX = (int)(wallX * texWidth);
         if ((!side1 && rayDirX > 0) || (side1 && rayDirY < 0)) texX = texWidth - texX - 1;
@@ -318,7 +283,7 @@ namespace RayCastEngine.GameComponents {
         // How much to increase the texture coordinate per screen pixel
         double step = 1.0 * texHeight / lineHeight;
         // Starting texture coordinate
-        double texPos = (drawStart - direction.z - (position.z / perpWallDist) - screenHeight2 + lineHeight / 2) * step;
+        double texPos = (drawStart - direction.Z - (position.Z / perpWallDist) - screenHeight2 + lineHeight / 2) * step;
         for (int y = drawStart; y < drawEnd; y++) {
           // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
           int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
@@ -344,13 +309,14 @@ namespace RayCastEngine.GameComponents {
     public DirectBitmap DrawSprites(TimeSpan gameTime) {
       if (!SpriteUpdate) return SpriteBuffer;
       SpriteBuffer.fillColor(Color.Transparent);
+      Vector3 position = World.LocalPlayer.Position;
+      Vector3 direction = World.LocalPlayer.Direction;
       #region Sprite Casting
       int screenHeight2 = ScreenHeight / 2;
       //SPRITE CASTING
       // TODO: Remove This
-      Vector3 playerPosition = new Vector3((float)position.x, (float)position.y, (float)position.z);
       foreach (Sprite currentSprite in World.SpritePool) {
-        currentSprite.distance = Vector3.DistanceSquared(playerPosition, currentSprite.Position);
+        currentSprite.distance = Vector3.DistanceSquared(position, currentSprite.Position);
       }
       Array.Sort(World.SpritePool, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
       //parameters for scaling and moving the sprites
@@ -360,18 +326,18 @@ namespace RayCastEngine.GameComponents {
       //after sorting the sprites, do the projection and draw them
       foreach (Sprite currentSprite in World.SpritePool) {
         //translate sprite position relative to camera
-        double spriteX = currentSprite.Position.X - position.x;
-        double spriteY = currentSprite.Position.Y - position.y;
+        double spriteX = currentSprite.Position.X - position.X;
+        double spriteY = currentSprite.Position.Y - position.Y;
         if (spriteX == 0 || spriteY == 0) continue;
         // transform sprite with the inverse camera matrix
         // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
         // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
         // [ planeY   dirY ]                                          [ -planeY  planeX ]
-        double invDet = 1.0 / (plane.x * direction.y - direction.x * plane.y); //required for correct matrix multiplication
-        double transformX = invDet * (direction.y * spriteX - direction.x * spriteY);
+        double invDet = 1.0 / (plane.x * direction.Y - direction.X * plane.y); //required for correct matrix multiplication
+        double transformX = invDet * (direction.Y * spriteX - direction.X * spriteY);
         double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
         int spriteScreenX = (int)((ScreenWidth / 2) * (1 + transformX / transformY));
-        int vMoveScreen = (int)((int)(vMove / transformY) + direction.z + position.z / transformY);
+        int vMoveScreen = (int)((int)(vMove / transformY) + direction.Z + position.Z / transformY);
         //calculate height of the sprite on screen
         int spriteScale = Math.Abs((int)(ScreenHeight / transformY));
         int spriteHeight = spriteScale / vDiv; //using "transformY" instead of the real distance prevents fisheye
@@ -417,6 +383,7 @@ namespace RayCastEngine.GameComponents {
     public DirectBitmap DrawUi(TimeSpan gameTime) {
       if (!UiUpdate) return UiBiffer;
       UiBiffer.fillColor(Color.Transparent);
+      Vector3 position = World.LocalPlayer.Position;
       // Draw UI
       for (int x = 1; x < worldSizeX; x++) {
         for (int y = 0; y < worldSizeY; y++) {
@@ -425,7 +392,7 @@ namespace RayCastEngine.GameComponents {
       }
       for (int x = -1; x < 2; x++) {
         for (int y = -1; y < 2; y++) {
-          UiBiffer.SetPixel(UiBiffer.Width - (int)position.x - x, (int)position.y - y, Color.Red);
+          UiBiffer.SetPixel(UiBiffer.Width - (int)position.X - x, (int)position.Y - y, Color.Red);
         }
       }
       // Set our Update State
@@ -435,10 +402,12 @@ namespace RayCastEngine.GameComponents {
     }
     public string getDataText(TimeSpan gameTime) {
       double frameTime = gameTime.Milliseconds / 1000.0;
+      Vector3 position = World.LocalPlayer.Position;
+      Vector3 direction = World.LocalPlayer.Direction;
       return (
-$@"frameRate: {(int)(1 / frameTime)}, x: {position.x - (position.x % 0.01)}, y: {position.y - (position.y % 0.01)}, z: {position.z - (position.z % 0.01)}
-pitch: { Math.Round(direction.z, 3)}, dir: { Math.Atan2(direction.x, direction.y) * 180 / Math.PI}
-dirX: {direction.x}, dirY: {direction.y}"
+$@"frameRate: {(int)(1 / frameTime)}, x: {position.X - (position.X % 0.01)}, y: {position.Y - (position.Y % 0.01)}, z: {position.Z - (position.Z % 0.01)}
+pitch: { Math.Round(direction.Z, 3)}, dir: { Math.Atan2(direction.X, direction.Y) * 180 / Math.PI}
+dirX: {direction.X}, dirY: {direction.Y}"
       );
     }
   }

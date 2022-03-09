@@ -8,7 +8,7 @@ namespace RayCastEngine.GameComponents {
     public Vector3 Direction;
     public Texture Texture;
     public bool Render;
-    private Controller Controller;
+    public Controller Controller;
     // Tempory Stuff For Drawing
     // TODO: Move this out of the class
     public double distance;
@@ -18,10 +18,17 @@ namespace RayCastEngine.GameComponents {
       Direction = direction;
       Texture = texture;
       Controller = controller;
+      // Init
+      if (Controller != null)  Controller.Initialize(Position, Direction);
     }
     // Update
     public void Update(TimeSpan gameTime, World world) {
-      if (Controller != null) Controller.Update(gameTime, world);
+      if (Controller != null) {
+        // TODO: Handle If There Is An Update
+        Controller.Update(gameTime, world);
+        Position = Controller.Position;
+        Direction = Controller.Direction;
+      }
     }
   }
 }
