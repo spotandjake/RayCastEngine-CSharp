@@ -5,7 +5,7 @@ namespace RayCastEngine.GameComponents {
   class Sprite {
     // Properties
     public Vector3 Position;
-    public Vector3 Direction;
+    public Vector3 Direction; // dirX, dirY, camPitch
     public Texture Texture;
     public bool Render;
     public Controller Controller;

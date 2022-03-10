@@ -7,10 +7,13 @@ namespace RayCastEngine.GameComponents {
     // Properties
     public Vector3 Position;
     public Vector3 Direction;
+    // Todo: Tempory Value Until we figure out how to calculate plane based off fov
+    public Vector2 Plane; // planeX, planeY
     // Constructor
     public void Initialize(Vector3 position, Vector3 direction) {
       Position = position;
       Direction = direction;
+      Plane = new Vector2(0f, 0.66f);
     }
     // Methods
     public abstract bool Update(TimeSpan gameTime, World world);
@@ -20,7 +23,6 @@ namespace RayCastEngine.GameComponents {
   class LocalPlayerController : Controller {
     // Properties
     private Vector3 Velocity;
-    public Vector3 Plane;
     // Constructor
     // Methods
     public override bool Update(TimeSpan gameTime, World world) {
@@ -36,10 +38,10 @@ namespace RayCastEngine.GameComponents {
       float rotSpeed = frameTime * 2f; //the constant value is in radians/second
       #region Convert Input Axis
       // WASD
-      if (keys.IsKeyDown(Keys.W)) forwardAxis -= 1;
-      if (keys.IsKeyDown(Keys.S)) forwardAxis += 1;
-      if (keys.IsKeyDown(Keys.A)) sideAxis += 1;
-      if (keys.IsKeyDown(Keys.D)) sideAxis -= 1;
+      if (keys.IsKeyDown(Keys.W)) forwardAxis += 1;
+      if (keys.IsKeyDown(Keys.S)) forwardAxis -= 1;
+      if (keys.IsKeyDown(Keys.D)) sideAxis += 1;
+      if (keys.IsKeyDown(Keys.A)) sideAxis -= 1;
       // Arrow Keys
       if (keys.IsKeyDown(Keys.Right)) yawAxis += 1;
       if (keys.IsKeyDown(Keys.Left)) yawAxis -= 1;
@@ -52,6 +54,7 @@ namespace RayCastEngine.GameComponents {
       AdditionalVelocity.X += Direction.X * moveSpeed * forwardAxis;
       AdditionalVelocity.Y += Direction.Y * moveSpeed * forwardAxis;
       // Strafe Right
+      // TODO: if we set Math.Atan2 to 0 then we should get the vector direction we want
       double theta = Math.Atan2(Direction.X, Direction.Y) + Math.PI / 2;
       float dirX = (float)Math.Sin(theta);
       float dirY = (float)Math.Cos(theta);

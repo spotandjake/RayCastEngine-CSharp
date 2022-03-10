@@ -17,8 +17,7 @@ namespace RayCastEngine.GameComponents {
     private static int worldSizeX = 300;
     private static int worldSizeY = 300;
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
-    //private Vector direction = new Vector(-1.0, 0.0, 0.0); // dirX, dirY, camPitch
-    private Vector plane = new Vector(0.0, 0.66, 0.0); // planeX, planeY
+    //private Vector plane = new Vector(0.0, 0.66, 0.0); // planeX, planeY
     // World Values
     private World World;
     // Buffers
@@ -145,13 +144,14 @@ namespace RayCastEngine.GameComponents {
       SceneBuffer.fillColor(Color.Black);
       Vector3 position = World.LocalPlayer.Position;
       Vector3 direction = World.LocalPlayer.Direction;
+      Vector2 plane = World.LocalPlayer.Controller.Plane; // TODO: Fix this
       // Set Cached Vars
       int screenHeight2 = ScreenHeight / 2;
       // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
-      double rayDirX0 = direction.X - plane.x;
-      double rayDirY0 = direction.Y - plane.y;
-      double rayDirX1 = direction.X + plane.x;
-      double rayDirY1 = direction.Y + plane.y;
+      double rayDirX0 = direction.X - plane.X;
+      double rayDirY0 = direction.Y - plane.Y;
+      double rayDirX1 = direction.X + plane.X;
+      double rayDirY1 = direction.Y + plane.Y;
       //move forward if no wall in front of you
       int intPosX = (int)position.X;
       int intPosY = (int)position.Y;
@@ -219,8 +219,8 @@ namespace RayCastEngine.GameComponents {
       Parallel.For(0, ScreenWidth, x => {
         //calculate ray position and direction
         double cameraX = 2 * x / (double)ScreenWidth - 1; //x-coordinate in camera space
-        double rayDirX = direction.X + plane.x * cameraX;
-        double rayDirY = direction.Y + plane.y * cameraX;
+        double rayDirX = direction.X + plane.X * cameraX;
+        double rayDirY = direction.Y + plane.Y * cameraX;
         //which box of the map we're in
         int mapX = intPosX;
         int mapY = intPosY;
@@ -311,6 +311,7 @@ namespace RayCastEngine.GameComponents {
       SpriteBuffer.fillColor(Color.Transparent);
       Vector3 position = World.LocalPlayer.Position;
       Vector3 direction = World.LocalPlayer.Direction;
+      Vector2 plane = World.LocalPlayer.Controller.Plane;
       #region Sprite Casting
       int screenHeight2 = ScreenHeight / 2;
       //SPRITE CASTING
@@ -333,9 +334,9 @@ namespace RayCastEngine.GameComponents {
         // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
         // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
         // [ planeY   dirY ]                                          [ -planeY  planeX ]
-        double invDet = 1.0 / (plane.x * direction.Y - direction.X * plane.y); //required for correct matrix multiplication
+        double invDet = 1.0 / (plane.X * direction.Y - direction.X * plane.Y); //required for correct matrix multiplication
         double transformX = invDet * (direction.Y * spriteX - direction.X * spriteY);
-        double transformY = invDet * (-plane.y * spriteX + plane.x * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
+        double transformY = invDet * (-plane.Y * spriteX + plane.X * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
         int spriteScreenX = (int)((ScreenWidth / 2) * (1 + transformX / transformY));
         int vMoveScreen = (int)((int)(vMove / transformY) + direction.Z + position.Z / transformY);
         //calculate height of the sprite on screen
