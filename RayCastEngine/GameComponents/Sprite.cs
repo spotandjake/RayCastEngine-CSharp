@@ -13,10 +13,11 @@ namespace RayCastEngine.GameComponents {
     // TODO: Move this out of the class
     public double distance;
     // Methods
-    public Sprite(Vector3 position, Vector3 direction, Texture texture, bool Render, Controller controller = null) {
+    public Sprite(Vector3 position, Vector3 direction, Texture texture, bool render, Controller controller = null) {
       Position = position;
       Direction = direction;
       Texture = texture;
+      Render = render;
       Controller = controller;
       // Init
       if (Controller != null)  Controller.Initialize(Position, Direction);

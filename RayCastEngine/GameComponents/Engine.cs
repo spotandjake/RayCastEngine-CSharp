@@ -72,65 +72,14 @@ namespace RayCastEngine.GameComponents {
       UiUpdate = true;
     }
     public bool Update(TimeSpan gameTime) {
-      // TODO: Move to using NewVelocity
-      // Cached Values
-      //Vector oldDirection = direction.copy();
-      Vector Velocity = new Vector(0, 0, 0);
-      // We want to normalize movement over time so you move the same distance no matter the fps
-      double frameTime = gameTime.Milliseconds / 1000.0;
-      // Normalized Move Speeds
-      double moveSpeed = frameTime * 3; //the constant value is in squares/second
-      double rotSpeed = frameTime * 2; //the constant value is in radians/second
-      // Perform Movement
-      KeyboardState keys = Keyboard.GetState();
-      #region Walking Movement
-      //// jump
-      //if (keys.IsKeyDown(Keys.Space) && position.z == 0) Velocity.setZ(200);
-      //// crouch
-      //if (keys.IsKeyDown(Keys.LeftControl)) Velocity.setZ(-200 - position.z);
-      //// Run
-      //if (keys.IsKeyDown(Keys.LeftShift)) Velocity.mulScalar(2);
-      #endregion
-      #region Turning
-      //// TODO: We Want To Use The Mouse
-      //double cosRotSpeed = Math.Cos(rotSpeed);
-      //double sinRotSpeed = Math.Sin(rotSpeed);
-      ////rotate to the right
-      //if (keys.IsKeyDown(Keys.Right)) {
-      //  //both camera direction and camera plane must be rotated
-      //  double oldDirX = direction.x;
-      //  direction.setX(direction.x * cosRotSpeed - direction.y * -sinRotSpeed);
-      //  direction.setY(oldDirX * -sinRotSpeed + direction.y * cosRotSpeed);
-      //  double oldPlaneX = plane.x;
-      //  plane.setX(plane.x * cosRotSpeed - plane.y * -sinRotSpeed);
-      //  plane.setY(oldPlaneX * -sinRotSpeed + plane.y * cosRotSpeed);
-      //}
-      ////rotate to the left
-      //if (keys.IsKeyDown(Keys.Left)) {
-      //  //both camera direction and camera plane must be rotated
-      //  double oldDirX = direction.x;
-      //  direction.setX(direction.x * cosRotSpeed - direction.y * sinRotSpeed);
-      //  direction.setY(oldDirX * sinRotSpeed + direction.y * cosRotSpeed);
-      //  double oldPlaneX = plane.x;
-      //  plane.setX(plane.x * cosRotSpeed - plane.y * sinRotSpeed);
-      //  plane.setY(oldPlaneX * sinRotSpeed + plane.y * cosRotSpeed);
-      //}
       //// TODO: Add Look Limits
       //// look up
       //if (keys.IsKeyDown(Keys.Up)) direction.addZ(400 * moveSpeed);
       //// look down
       //if (keys.IsKeyDown(Keys.Down)) direction.subZ(400 * moveSpeed);
-      #endregion
-      #region Physics
-      // Reset Values
-      //if (direction.z > 0) direction.setZ(Math.Max(0, direction.z - 100 * moveSpeed));
-      //if (direction.z < 0) direction.setZ(Math.Min(0, direction.z + 100 * moveSpeed));
-      //if (position.z > 0) Velocity.subZ(100 * moveSpeed);
-      //if (position.z < 0) Velocity.addZ(100 * moveSpeed);
       // TODO: We Need To Determine WHat Has Updated
       SceneUpdate = true;
       UiUpdate = true;
-      #endregion
       // Call World Update
       World.Update(gameTime);
       // Determine if game has updated
