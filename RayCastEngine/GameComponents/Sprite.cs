@@ -11,7 +11,7 @@ namespace RayCastEngine.GameComponents {
     public Controller Controller;
     // Tempory Stuff For Drawing
     // TODO: Move this out of the class
-    public double distance;
+    public float distance;
     // Methods
     public Sprite(Vector3 position, Vector3 direction, Texture texture, bool render, Controller controller = null) {
       Position = position;
@@ -23,13 +23,19 @@ namespace RayCastEngine.GameComponents {
       if (Controller != null)  Controller.Initialize(Position, Direction);
     }
     // Update
-    public void Update(TimeSpan gameTime, World world) {
+    public WorldUpdateResult Update(TimeSpan gameTime, World world) {
       if (Controller != null) {
         // TODO: Handle If There Is An Update
-        Controller.Update(gameTime, world);
+        WorldUpdateResult result = Controller.Update(gameTime, world);
         Position = Controller.Position;
         Direction = Controller.Direction;
+        return result;
       }
+      return new WorldUpdateResult {
+        SceneUpdate = false,
+        SpriteUpdate = false,
+        UiUpdate = false
+      };
     }
   }
 }

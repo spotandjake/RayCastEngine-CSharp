@@ -16,7 +16,7 @@ namespace RayCastEngine.GameComponents {
       Plane = new Vector2(0f, 0.66f);
     }
     // Methods
-    public abstract bool Update(TimeSpan gameTime, World world);
+    public abstract WorldUpdateResult Update(TimeSpan gameTime, World world);
   }
   // Networked Controller
   // Local Controller
@@ -25,7 +25,7 @@ namespace RayCastEngine.GameComponents {
     private Vector3 Velocity;
     // Constructor
     // Methods
-    public override bool Update(TimeSpan gameTime, World world) {
+    public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
       KeyboardState keys = Keyboard.GetState();
       float forwardAxis = 0;
       float sideAxis = 0;
@@ -57,23 +57,17 @@ namespace RayCastEngine.GameComponents {
         Velocity.Z = Position.Z * -2f;
       else if (Position.Z < 0)
         Velocity.Z = Position.Z * -2f;
-      #endregion
-      #region Movement
       // Strafe Right
-      // TODO: Figure out how to remove the need for conversion here
-      double theta = Math.Atan2(Direction.X, Direction.Y) + Math.PI / 2;
-      float dirX = (float)Math.Sin(theta);
-      float dirY = (float)Math.Cos(theta);
       // Forward
-      // TODO: Merge This with side to side, possibly by using a normalized vector as our axis
-      AdditionalVelocity.X += Direction.X * moveSpeed * forwardAxis + dirX * moveSpeed * sideAxis;
-      AdditionalVelocity.Y += Direction.Y * moveSpeed * forwardAxis + dirY * moveSpeed * sideAxis;
+      // TODO:  i think the moveSpeed value is uneeded because we normalize the Vector anyways
+      AdditionalVelocity.X += moveSpeed * (forwardAxis * Direction.X + sideAxis * Direction.Y);
+      AdditionalVelocity.Y += moveSpeed * (forwardAxis * Direction.Y + sideAxis * -Direction.X);
       #endregion
       #region Rotation
-      float cosRotSpeed = (float)Math.Cos(rotSpeed);
-      float sinRotSpeed = (float)Math.Sin(rotSpeed) * yawAxis;
-      float olddirx = Direction.X, oldPlaneX = Plane.X;
       if (yawAxis != 0) {
+        float cosRotSpeed = (float)Math.Cos(rotSpeed);
+        float sinRotSpeed = (float)Math.Sin(rotSpeed) * yawAxis;
+        float olddirx = Direction.X, oldPlaneX = Plane.X;
         Direction.X = (Direction.X * cosRotSpeed - Direction.Y * -sinRotSpeed);
         Direction.Y = (olddirx * -sinRotSpeed + Direction.Y * cosRotSpeed);
         Plane.X = (Plane.X * cosRotSpeed - Plane.Y * -sinRotSpeed);
@@ -122,9 +116,17 @@ namespace RayCastEngine.GameComponents {
         if (world.getWall((int)projectedX, (int)Position.Y) == Texture.Air) Position.X = projectedX;
         if (world.getWall((int)Position.X, (int)projectedY) == Texture.Air) Position.Y = projectedY;
         Position.Z += Velocity.Z;
-        return true;
+        return new WorldUpdateResult {
+          SceneUpdate = true,
+          SpriteUpdate = true,
+          UiUpdate = true
+        };
       }
-      return false;
+      return new WorldUpdateResult {
+        SceneUpdate = false,
+        SpriteUpdate = false,
+        UiUpdate = false
+      };
       #endregion
     }
   }
@@ -137,8 +139,48 @@ namespace RayCastEngine.GameComponents {
       Boss = boss;
     }
     // Methods
-    public override bool Update(TimeSpan gameTime, World world) {
-      return false;
+    public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
+      // Enemy Logic
+      Sprite closestPlayer = null;
+      float closestDistance = 0;
+      for (int playerIndex = 0; playerIndex < world.SpritePool.Length; playerIndex++) {
+        Sprite currentPlayer = world.SpritePool[playerIndex];
+        // Calculate Distance
+        float playerDistance = (float)Math.Sqrt(
+          (Position.X - currentPlayer.Position.X) *
+          (Position.X - currentPlayer.Position.X) +
+          (Position.Y - currentPlayer.Position.Y) *
+          (Position.Y - currentPlayer.Position.Y) +
+          (Position.Z - currentPlayer.Position.Z) *
+          (Position.Z - currentPlayer.Position.Z)
+        );
+        // Check Distance
+        if (closestDistance == 0 || closestDistance < playerDistance) {
+          closestDistance = playerDistance;
+          closestPlayer = currentPlayer;
+        }
+      }
+      // TODO: Generate A Random Number
+      if (closestDistance != 0 && closestDistance < 10) { // If close enough to attack
+        // TODO: Create A Random Decision Loop
+        Position.X += 10;
+        return new WorldUpdateResult {
+          SceneUpdate = false,
+          SpriteUpdate = true,
+          UiUpdate = false
+        };
+      } else if (closestDistance != 0 && closestDistance < 50) { // If close enough to move see player, we want to take the direction into consideration here eventaully
+        // TODO: Create A Random Decision Loop
+      } else { // If Not Close To Player Patrol
+
+      }
+      // TODO: If We Are Not In View Of The Player No Update
+      // If No Update Return False
+      return new WorldUpdateResult {
+        SceneUpdate = false,
+        SpriteUpdate = false,
+        UiUpdate = false
+      };
     }
   }
 }

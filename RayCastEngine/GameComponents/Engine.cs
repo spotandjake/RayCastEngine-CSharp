@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 //using System.Drawing;
 using RayCastEngine.Views;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 
 namespace RayCastEngine.GameComponents {
   // Our Main Engine
   class Engine {
     // Temporary Engine Variables
-    private int texWidth = 64;
-    private int texHeight = 64;
+    private static int texWidth = 64;
+    private static int texHeight = 64;
     private static int worldSizeX = 300;
     private static int worldSizeY = 300;
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
@@ -24,7 +22,7 @@ namespace RayCastEngine.GameComponents {
     private DirectBitmap SceneBuffer;
     private DirectBitmap SpriteBuffer;
     private DirectBitmap UiBiffer;
-    private double[] ZBuffer;
+    private float[] ZBuffer;
     // Update States
     private bool SceneUpdate = true;
     private bool SpriteUpdate = true;
@@ -35,25 +33,25 @@ namespace RayCastEngine.GameComponents {
     // Methods
     public void Load(GameType gameType) {
       // Load Images
-      textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(Properties.Resources.eagle, false));
-      textures.Add(Texture.RedBrickWall, DirectBitmap.fromBitmap(Properties.Resources.redbrick, false));
-      textures.Add(Texture.PurpleStoneWall, DirectBitmap.fromBitmap(Properties.Resources.purplestone, false));
-      textures.Add(Texture.GreyStoneWall, DirectBitmap.fromBitmap(Properties.Resources.greystone, false));
-      textures.Add(Texture.BlueStoneWall, DirectBitmap.fromBitmap(Properties.Resources.bluestone, false));
-      textures.Add(Texture.MossyWall, DirectBitmap.fromBitmap(Properties.Resources.mossy, false));
-      textures.Add(Texture.WoodWall, DirectBitmap.fromBitmap(Properties.Resources.wood, false));
-      textures.Add(Texture.ColorStoneWall, DirectBitmap.fromBitmap(Properties.Resources.colorstone, false));
-      textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(Properties.Resources.barrel, false));
-      textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(Properties.Resources.pillar, false));
-      textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(Properties.Resources.greenlight, false));
+      textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(Properties.Resources.eagle));
+      textures.Add(Texture.RedBrickWall, DirectBitmap.fromBitmap(Properties.Resources.redbrick));
+      textures.Add(Texture.PurpleStoneWall, DirectBitmap.fromBitmap(Properties.Resources.purplestone));
+      textures.Add(Texture.GreyStoneWall, DirectBitmap.fromBitmap(Properties.Resources.greystone));
+      textures.Add(Texture.BlueStoneWall, DirectBitmap.fromBitmap(Properties.Resources.bluestone));
+      textures.Add(Texture.MossyWall, DirectBitmap.fromBitmap(Properties.Resources.mossy));
+      textures.Add(Texture.WoodWall, DirectBitmap.fromBitmap(Properties.Resources.wood));
+      textures.Add(Texture.ColorStoneWall, DirectBitmap.fromBitmap(Properties.Resources.colorstone));
+      textures.Add(Texture.BarrelEntity, DirectBitmap.fromBitmap(Properties.Resources.barrel));
+      textures.Add(Texture.PillarEntity, DirectBitmap.fromBitmap(Properties.Resources.pillar));
+      textures.Add(Texture.GreenLight, DirectBitmap.fromBitmap(Properties.Resources.greenlight));
       // Load Enemy Sprites
-      textures.Add(Texture.Enemy_1, DirectBitmap.fromBitmap(Properties.Resources.Enemy_1, false));
+      textures.Add(Texture.Enemy_1, DirectBitmap.fromBitmap(Properties.Resources.Enemy_1));
       // Boss Textures
-      textures.Add(Texture.Boss_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_1, false));
-      textures.Add(Texture.Boss_2, DirectBitmap.fromBitmap(Properties.Resources.Boss_2, false));
-      textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(Properties.Resources.Boss_3, false));
+      textures.Add(Texture.Boss_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_1));
+      textures.Add(Texture.Boss_2, DirectBitmap.fromBitmap(Properties.Resources.Boss_2));
+      textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(Properties.Resources.Boss_3));
       // Boss Minions
-      textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_3_Minion_1, false));
+      textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_3_Minion_1));
       // Generate World
       World = new World(worldSizeX, worldSizeY);
     }
@@ -62,7 +60,7 @@ namespace RayCastEngine.GameComponents {
       SceneBuffer = new DirectBitmap(width, height);
       SpriteBuffer = new DirectBitmap(width, height);
       UiBiffer = new DirectBitmap(width, height);
-      ZBuffer = new double[width];
+      ZBuffer = new float[width];
       // Update Our Size Vars
       ScreenWidth = width;
       ScreenHeight = height;
@@ -72,35 +70,25 @@ namespace RayCastEngine.GameComponents {
       UiUpdate = true;
     }
     public bool Update(TimeSpan gameTime) {
-      //// TODO: Add Look Limits
-      //// look up
-      //if (keys.IsKeyDown(Keys.Up)) direction.addZ(400 * moveSpeed);
-      //// look down
-      //if (keys.IsKeyDown(Keys.Down)) direction.subZ(400 * moveSpeed);
-      // TODO: We Need To Determine WHat Has Updated
-      SceneUpdate = true;
-      UiUpdate = true;
       // Call World Update
-      World.Update(gameTime);
-      // Determine if game has updated
-      //if (!oldDirection.equals(direction)) {
-      //  SceneUpdate = true;
-      //}
-      return true;
+      WorldUpdateResult result = World.Update(gameTime);
+      SceneUpdate |= result.SceneUpdate;
+      SpriteUpdate |= result.SpriteUpdate;
+      UiUpdate |= result.UiUpdate;
+      return SceneUpdate || SpriteUpdate || UiUpdate;
     }
     public DirectBitmap DrawScene(TimeSpan gameTime) {
       if (!SceneUpdate) return SceneBuffer;
-      SceneBuffer.fillColor(Color.Black);
       Vector3 position = World.LocalPlayer.Position;
       Vector3 direction = World.LocalPlayer.Direction;
       Vector2 plane = World.LocalPlayer.Controller.Plane; // TODO: Fix this
       // Set Cached Vars
       int screenHeight2 = ScreenHeight / 2;
       // rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
-      double rayDirX0 = direction.X - plane.X;
-      double rayDirY0 = direction.Y - plane.Y;
-      double rayDirX1 = direction.X + plane.X;
-      double rayDirY1 = direction.Y + plane.Y;
+      float rayDirX0 = direction.X - plane.X;
+      float rayDirY0 = direction.Y - plane.Y;
+      float rayDirX1 = direction.X + plane.X;
+      float rayDirY1 = direction.Y + plane.Y;
       //move forward if no wall in front of you
       int intPosX = (int)position.X;
       int intPosY = (int)position.Y;
@@ -108,8 +96,8 @@ namespace RayCastEngine.GameComponents {
       // TODO: we may be able to optimize this by precomputing more stuff
       #region Floor Casting
       int currentTileSection = (int)(screenHeight2 + direction.Z);
-      double floorStepXBase = (rayDirX1 - rayDirX0) / ScreenWidth;
-      double floorStepYBase = (rayDirY1 - rayDirY0) / ScreenWidth;
+      float floorStepXBase = (rayDirX1 - rayDirX0) / ScreenWidth;
+      float floorStepYBase = (rayDirY1 - rayDirY0) / ScreenWidth;
       Parallel.For(0, ScreenHeight, y => {
         // whether this section is floor or ceiling
         bool is_floor = y > currentTileSection;
@@ -122,7 +110,7 @@ namespace RayCastEngine.GameComponents {
          * than 0.5, a separate loop must be done for ceiling and floor since
          * they're no longer symmetrical.
          */
-        double camZ = is_floor ? (screenHeight2 + position.Z) : (screenHeight2 - position.Z);
+        float camZ = is_floor ? (screenHeight2 + position.Z) : (screenHeight2 - position.Z);
         /*
          * Horizontal distance from the camera to the floor for the current row.
          * 0.5 is the z position exactly in the middle between floor and ceiling.
@@ -139,14 +127,14 @@ namespace RayCastEngine.GameComponents {
          * 1 / p for going through the camera plane, so to go posZ times farther
          * to reach the floor, we get that the total horizontal distance is posZ / p.
          */
-        double rowDistance = camZ / p;
+        float rowDistance = camZ / p;
         // calculate the real world step vector we have to add for each x (parallel to camera plane)
         // adding step by step avoids multiplications with a weight in the inner loop
-        double floorStepX = rowDistance * floorStepXBase;
-        double floorStepY = rowDistance * floorStepYBase;
+        float floorStepX = rowDistance * floorStepXBase;
+        float floorStepY = rowDistance * floorStepYBase;
         // real world coordinates of the leftmost column. This will be updated as we step to the right.
-        double floorX = position.X + rowDistance * rayDirX0;
-        double floorY = position.Y + rowDistance * rayDirY0;
+        float floorX = position.X + rowDistance * rayDirX0;
+        float floorY = position.Y + rowDistance * rayDirY0;
         // choose texture and draw the pixel
         const Texture ceilingtexture = Texture.WoodWall;
         for (int x = 0; x < ScreenWidth; x++) {
@@ -167,18 +155,18 @@ namespace RayCastEngine.GameComponents {
       #region WallCasting
       Parallel.For(0, ScreenWidth, x => {
         //calculate ray position and direction
-        double cameraX = 2 * x / (double)ScreenWidth - 1; //x-coordinate in camera space
-        double rayDirX = direction.X + plane.X * cameraX;
-        double rayDirY = direction.Y + plane.Y * cameraX;
+        float cameraX = 2 * x / (float)ScreenWidth - 1; //x-coordinate in camera space
+        float rayDirX = direction.X + plane.X * cameraX;
+        float rayDirY = direction.Y + plane.Y * cameraX;
         //which box of the map we're in
         int mapX = intPosX;
         int mapY = intPosY;
         //length of ray from one x or y-side to next x or y-side
-        double deltaDistX = (rayDirX == 0) ? 1e30 : Math.Abs(1.0 / rayDirX);
-        double deltaDistY = (rayDirY == 0) ? 1e30 : Math.Abs(1.0 / rayDirY);
+        float deltaDistX = (rayDirX == 0) ? 1e30f : Math.Abs(1.0f / rayDirX);
+        float deltaDistY = (rayDirY == 0) ? 1e30f : Math.Abs(1.0f / rayDirY);
         //length of ray from current position to next x or y-side
-        double sideDistX;
-        double sideDistY;
+        float sideDistX;
+        float sideDistY;
         //what direction to step in x or y-direction (either +1 or -1)
         int stepX = 1, stepY = 1;
         //calculate step and initial sideDist
@@ -186,13 +174,13 @@ namespace RayCastEngine.GameComponents {
           stepX = -1;
           sideDistX = (position.X - mapX) * deltaDistX;
         } else {
-          sideDistX = (mapX + 1.0 - position.X) * deltaDistX;
+          sideDistX = (mapX + 1.0f - position.X) * deltaDistX;
         }
         if (rayDirY < 0) {
           stepY = -1;
           sideDistY = (position.Y - mapY) * deltaDistY;
         } else {
-          sideDistY = (mapY + 1.0 - position.Y) * deltaDistY;
+          sideDistY = (mapY + 1.0f - position.Y) * deltaDistY;
         }
         bool side1 = true; //was a NS or a EW wall hit?
         //perform DDA
@@ -214,7 +202,7 @@ namespace RayCastEngine.GameComponents {
         Texture texNum = World.getWall(mapX, mapY);
         if (texNum == Texture.Air) return;
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
-        double perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
+        float perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
         // Calculate height of line to draw on screen
         int lineHeight = (int)(ScreenHeight / perpWallDist);
         // calculate lowest and highest pixel to fill in current stripe
@@ -224,15 +212,15 @@ namespace RayCastEngine.GameComponents {
         int drawEnd = lineHeight / 2 + drawBounds;
         if (drawEnd >= ScreenHeight) drawEnd = ScreenHeight - 1;
         //calculate value of wallX
-        double wallX = (!side1 ? (position.Y + perpWallDist * rayDirY) : (position.X + perpWallDist * rayDirX)) % 1; //where exactly the wall was hit
+        float wallX = (!side1 ? (position.Y + perpWallDist * rayDirY) : (position.X + perpWallDist * rayDirX)) % 1; //where exactly the wall was hit
         //x coordinate on the texture
         int texX = (int)(wallX * texWidth);
         if ((!side1 && rayDirX > 0) || (side1 && rayDirY < 0)) texX = texWidth - texX - 1;
         // TODO: an integer-only bresenham or DDA like algorithm could make the texture coordinate stepping faster
         // How much to increase the texture coordinate per screen pixel
-        double step = 1.0 * texHeight / lineHeight;
+        float step = 1.0f * texHeight / lineHeight;
         // Starting texture coordinate
-        double texPos = (drawStart - direction.Z - (position.Z / perpWallDist) - screenHeight2 + lineHeight / 2) * step;
+        float texPos = (drawStart - direction.Z - (position.Z / perpWallDist) - screenHeight2 + lineHeight / 2) * step;
         for (int y = drawStart; y < drawEnd; y++) {
           // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
           int texY = (int)(texPos) & (texHeight - 1); // TODO: Figure this out
@@ -257,7 +245,7 @@ namespace RayCastEngine.GameComponents {
     }
     public DirectBitmap DrawSprites(TimeSpan gameTime) {
       if (!SpriteUpdate) return SpriteBuffer;
-      SpriteBuffer.fillColor(Color.Transparent);
+      SpriteBuffer.clearImage();
       Vector3 position = World.LocalPlayer.Position;
       Vector3 direction = World.LocalPlayer.Direction;
       Vector2 plane = World.LocalPlayer.Controller.Plane;
@@ -276,16 +264,16 @@ namespace RayCastEngine.GameComponents {
       //after sorting the sprites, do the projection and draw them
       foreach (Sprite currentSprite in World.SpritePool) {
         //translate sprite position relative to camera
-        double spriteX = currentSprite.Position.X - position.X;
-        double spriteY = currentSprite.Position.Y - position.Y;
+        float spriteX = currentSprite.Position.X - position.X;
+        float spriteY = currentSprite.Position.Y - position.Y;
         if (spriteX == 0 || spriteY == 0) continue;
         // transform sprite with the inverse camera matrix
         // [ planeX   dirX ] -1                                       [ dirY      -dirX ]
         // [               ]       =  1/(planeX*dirY-dirX*planeY) *   [                 ]
         // [ planeY   dirY ]                                          [ -planeY  planeX ]
-        double invDet = 1.0 / (plane.X * direction.Y - direction.X * plane.Y); //required for correct matrix multiplication
-        double transformX = invDet * (direction.Y * spriteX - direction.X * spriteY);
-        double transformY = invDet * (-plane.Y * spriteX + plane.X * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
+        float invDet = 1 / (plane.X * direction.Y - direction.X * plane.Y); //required for correct matrix multiplication
+        float transformX = invDet * (direction.Y * spriteX - direction.X * spriteY);
+        float transformY = invDet * (-plane.Y * spriteX + plane.X * spriteY); //this is actually the depth inside the screen, that what Z is in 3D, the distance of sprite to player, matching sqrt(spriteDistance[i])
         int spriteScreenX = (int)((ScreenWidth / 2) * (1 + transformX / transformY));
         int vMoveScreen = (int)((int)(vMove / transformY) + direction.Z + position.Z / transformY);
         //calculate height of the sprite on screen
@@ -328,11 +316,12 @@ namespace RayCastEngine.GameComponents {
         }
       }
       #endregion
+      SpriteUpdate = false;
       return SpriteBuffer;
     }
     public DirectBitmap DrawUi(TimeSpan gameTime) {
       if (!UiUpdate) return UiBiffer;
-      UiBiffer.fillColor(Color.Transparent);
+      UiBiffer.clearImage();
       Vector3 position = World.LocalPlayer.Position;
       // Draw UI
       for (int x = 1; x < worldSizeX; x++) {
@@ -351,7 +340,7 @@ namespace RayCastEngine.GameComponents {
       return UiBiffer;
     }
     public string getDataText(TimeSpan gameTime) {
-      double frameTime = gameTime.Milliseconds / 1000.0;
+      float frameTime = gameTime.Milliseconds / 1000.0f;
       Vector3 position = World.LocalPlayer.Position;
       Vector3 direction = World.LocalPlayer.Direction;
       return (

@@ -19,14 +19,14 @@ namespace RayCastEngine.GameComponents {
     public int y;
     public int w;
     public int h;
-    public Vector3 center;
+    public Vector2 center;
     public RoomTypes RoomType = RoomTypes.Unknown;
     public Room(int x, int y, int width, int height) {
       this.x = (x - 1); //column
       this.y = (y - 1); //row
       w = width; //width
       h = height; //height
-      center = new Vector3(this.x + width / 2.0f, this.y + height / 2.0f, 0); //center
+      center = new Vector2(this.x + width / 2.0f, this.y + height / 2.0f); //center
     }
   }
   // Cell Class
@@ -120,11 +120,20 @@ namespace RayCastEngine.GameComponents {
       SpritePool = spritePool.ToArray();
     }
     // Method
-    public void Update(TimeSpan gameTime) {
+    public WorldUpdateResult Update(TimeSpan gameTime) {
+      WorldUpdateResult worldUpdate = new WorldUpdateResult {
+        SceneUpdate = false,
+        SpriteUpdate = false,
+        UiUpdate = false
+      };
       // TODO: Make this return weather or not something updated
       foreach (Sprite sprite in SpritePool) {
-        sprite.Update(gameTime, this);
+        WorldUpdateResult updateData = sprite.Update(gameTime, this);
+        worldUpdate.SceneUpdate |= updateData.SceneUpdate;
+        worldUpdate.SpriteUpdate |= updateData.SpriteUpdate;
+        worldUpdate.UiUpdate |= updateData.UiUpdate;
       }
+      return worldUpdate;
     }
     public Texture getWall(int x, int y) {
       // TODO: Implement Infinite Generation
@@ -166,20 +175,23 @@ namespace RayCastEngine.GameComponents {
         Cell currentCell = grid[i];
         map[currentCell.x, currentCell.y] = currentCell.texture;
       }
+      // Cleanup Unused Values
+      grid = null;
+      // Return Value
       return map;
     }
     public List<Sprite> getEntityPositions() {
       List<Sprite> sprites = new List<Sprite>();
-      // TODO: Optimize this
       // Generate Light Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
-        Vector3 roomCenter = rooms[roomIndex].center;
+        Vector2 roomCenter = rooms[roomIndex].center;
         sprites.Add(new Sprite(new Vector3(roomCenter.X, roomCenter.Y, 0), Vector3.Zero, Texture.GreenLight, true)
         );
       }
-      // Generate Barrel Positions
+      // Generate Entity Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Room currentRoom = rooms[roomIndex];
+        // Generate Barrel Positions
         if (currentRoom.RoomType == RoomTypes.Loot) {
           sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
           sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity, true));
@@ -189,10 +201,7 @@ namespace RayCastEngine.GameComponents {
           sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity, true));
           sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
         }
-      }
-      // Generate Column Positions
-      for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
-        Room currentRoom = rooms[roomIndex];
+        // Generate Column Positions
         if (currentRoom.w >= 8 && currentRoom.h >= 8) {
           sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.y + 1, 0), Vector3.Zero, Texture.PillarEntity, true));
           sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + 1, 0), Vector3.Zero, Texture.PillarEntity, true));
@@ -200,10 +209,8 @@ namespace RayCastEngine.GameComponents {
           sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.y + currentRoom.h - 1, 0), Vector3.Zero, Texture.PillarEntity, true));
           sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.y + currentRoom.h - 1, 0), Vector3.Zero, Texture.PillarEntity, true));
         }
-      }
-      // Generate Enemy Positions
-      for (int roomIndex = 1; roomIndex < rooms.Count; roomIndex++) { // We Start at 1 because the spawn room should be safe
-        Room currentRoom = rooms[roomIndex];
+        // Generate Enemy Positions
+        if (roomIndex == 0) continue; // We skip room one so the spawn room is safe
         // Spawn Stuff Based On Room Type
         if (currentRoom.RoomType == RoomTypes.NormalFight) {
           // TODO: Work On Enemy Spawn pattern
@@ -239,7 +246,8 @@ namespace RayCastEngine.GameComponents {
       return sprites;
     }
     public Vector3 getStartPosition() {
-      return rooms[0].center;
+      Vector2 spawnPoint = rooms[0].center;
+      return new Vector3(spawnPoint.X, spawnPoint.Y, 0f);
     }
     // Methods
     private void createRooms() { // Create The Rooms
@@ -316,7 +324,6 @@ namespace RayCastEngine.GameComponents {
         grid[i].carveH(RandomNumberGenerator, disX, x, y); //carve out corridor
       }
     }
-
     private void vCorridor(int x1, int x2, int y1, int y2) {//vertical corridor creator
       int disY = (y1 > y2 ? (y1 - y2) : (y2 - y1)) + 1; //find the distance between rooms
       int oppsideX = y1 > y2 ? x1 : x2;

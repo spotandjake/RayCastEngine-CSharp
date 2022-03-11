@@ -69,10 +69,8 @@
     <Compile Include="GameComponents\DungeonGenerator.cs" />
     <Compile Include="GameComponents\Engine.cs" />
     <Compile Include="GameComponents\DirectBitmap.cs" />
-    <Compile Include="GameComponents\Entitys.cs" />
     <Compile Include="GameComponents\Sprite.cs" />
     <Compile Include="GameComponents\Types.cs" />
-    <Compile Include="GameComponents\Vector.cs" />
     <Compile Include="Views\FullGame.cs">
       <SubType>Form</SubType>
     </Compile>

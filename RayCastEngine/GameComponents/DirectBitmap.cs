@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
 namespace RayCastEngine.GameComponents {
@@ -11,6 +12,9 @@ namespace RayCastEngine.GameComponents {
       Width = width;
       Height = height;
       Bits = new Color[width * height];
+    }
+    public void clearImage() {
+      Array.Clear(Bits, 0, Bits.Length);
     }
     public void fillColor(Color colour) {
       Parallel.For(0, Width * Height, index => {
@@ -25,7 +29,7 @@ namespace RayCastEngine.GameComponents {
       return Bits[index];
     }
     // Create a Direct BitMap From A Normal Bitmap
-    public static DirectBitmap fromBitmap(System.Drawing.Bitmap bitMap, bool doBitMap) {
+    public static DirectBitmap fromBitmap(System.Drawing.Bitmap bitMap) {
       // Create New DirectBitMap
       DirectBitmap directBitMap = new DirectBitmap(bitMap.Width, bitMap.Height);
       // Set Data
@@ -42,6 +46,5 @@ namespace RayCastEngine.GameComponents {
       // Return New Value
       return directBitMap;
     }
-
   }
 }

@@ -23,4 +23,9 @@
     // Boss Minion Texture
     Boss_3_Minion_1
   }
+  struct WorldUpdateResult {
+    public bool SceneUpdate;
+    public bool SpriteUpdate;
+    public bool UiUpdate;
+  }
 }

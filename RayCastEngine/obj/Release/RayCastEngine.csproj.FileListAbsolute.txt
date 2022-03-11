@@ -1,9 +1,13 @@
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\RayCastEngine.exe.config
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\RayCastEngine.exe
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\RayCastEngine.pdb
-C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Release\RayCastEngine.Views.Game.resources
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Release\RayCastEngine.Menu.resources
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Release\RayCastEngine.Properties.Resources.resources
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Release\RayCastEngine.csproj.GenerateResource.Cache
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Release\RayCastEngine.exe
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Release\RayCastEngine.pdb
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\Microsoft.Xna.Framework.dll
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\Microsoft.Xna.Framework.Graphics.dll
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\Microsoft.Xna.Framework.xml
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\Microsoft.Xna.Framework.Graphics.xml
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Release\RayCastEngine.FullGame.resources
