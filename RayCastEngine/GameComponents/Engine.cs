@@ -195,6 +195,10 @@ namespace RayCastEngine.GameComponents {
             mapY += stepY;
             side1 = true;
           }
+          // Stop From Leaving Map
+          if (mapX < 0 || mapY < 0) {
+            return;
+          }
           // Check if ray has hit a wall
           if (World.getWall(mapX, mapY) != Texture.Air) break;
         }
