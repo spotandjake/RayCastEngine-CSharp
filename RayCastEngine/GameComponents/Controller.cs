@@ -23,14 +23,18 @@ namespace RayCastEngine.GameComponents {
   class LocalPlayerController : Controller {
     // Properties
     private Vector3 Velocity;
+    private bool Crouch = false;
+    private bool CrouchButtonPressed = false;
     // Constructor
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
       KeyboardState keys = Keyboard.GetState();
+      GamePadState gamepad = GamePad.GetState(0);
       float forwardAxis = 0;
       float sideAxis = 0;
       float yawAxis = 0;
       float pitchAxis = 0;
+      bool Jump = false;
       bool Running = false;
       // We want to normalize movement over time so you move the same distance no matter the fps
       float frameTime = gameTime.Milliseconds / 1000.0f;
@@ -38,16 +42,42 @@ namespace RayCastEngine.GameComponents {
       float moveSpeed = frameTime * 3f; //the constant value is in squares/second
       float rotSpeed = frameTime * 2f; //the constant value is in radians/second
       #region Convert Input Axis
-      // WASD
-      if (keys.IsKeyDown(Keys.W)) forwardAxis += 1;
-      if (keys.IsKeyDown(Keys.S)) forwardAxis -= 1;
-      if (keys.IsKeyDown(Keys.D)) sideAxis += 1;
-      if (keys.IsKeyDown(Keys.A)) sideAxis -= 1;
-      // Arrow Keys
-      if (keys.IsKeyDown(Keys.Right)) yawAxis += 1;
-      if (keys.IsKeyDown(Keys.Left)) yawAxis -= 1;
-      if (keys.IsKeyDown(Keys.Up)) pitchAxis += 1;
-      if (keys.IsKeyDown(Keys.Down)) pitchAxis -= 1;
+      
+      if (gamepad.IsConnected) {
+        // Movement
+        forwardAxis = gamepad.ThumbSticks.Left.Y;
+        sideAxis = gamepad.ThumbSticks.Left.X;
+        // Looking
+        pitchAxis = gamepad.ThumbSticks.Right.Y;
+        yawAxis = gamepad.ThumbSticks.Right.X;
+        // Modifiers
+        if (gamepad.Buttons.A == ButtonState.Pressed) {
+          Crouch = false;
+          CrouchButtonPressed = false;
+          Jump = true;
+        }
+        if (gamepad.Buttons.RightStick == ButtonState.Pressed && CrouchButtonPressed == false) {
+          CrouchButtonPressed = true;
+          Crouch = !Crouch;
+        } else if (gamepad.Buttons.RightStick == ButtonState.Released) CrouchButtonPressed = false;
+        if (gamepad.Buttons.LeftStick == ButtonState.Pressed) Running = true;
+      } else {
+        // WASD
+        if (keys.IsKeyDown(Keys.W)) forwardAxis += 1;
+        if (keys.IsKeyDown(Keys.S)) forwardAxis -= 1;
+        if (keys.IsKeyDown(Keys.D)) sideAxis += 1;
+        if (keys.IsKeyDown(Keys.A)) sideAxis -= 1;
+        // Arrow Keys
+        if (keys.IsKeyDown(Keys.Right)) yawAxis += 1;
+        if (keys.IsKeyDown(Keys.Left)) yawAxis -= 1;
+        if (keys.IsKeyDown(Keys.Up)) pitchAxis += 1;
+        if (keys.IsKeyDown(Keys.Down)) pitchAxis -= 1;
+        // Modifiers
+        if (keys.IsKeyDown(Keys.Space)) Jump = true;
+        if (keys.IsKeyDown(Keys.LeftControl)) Crouch = true;
+        else if (keys.IsKeyUp(Keys.LeftControl)) Crouch = false;
+        if (keys.IsKeyDown(Keys.LeftShift)) Running = true;
+      }
       #endregion
       Vector3 AdditionalVelocity = Vector3.Zero;
       #region Movement
@@ -59,9 +89,8 @@ namespace RayCastEngine.GameComponents {
         Velocity.Z = Position.Z * -2f;
       // Strafe Right
       // Forward
-      // TODO:  i think the moveSpeed value is uneeded because we normalize the Vector anyways
-      AdditionalVelocity.X += moveSpeed * (forwardAxis * Direction.X + sideAxis * Direction.Y);
-      AdditionalVelocity.Y += moveSpeed * (forwardAxis * Direction.Y + sideAxis * -Direction.X);
+      AdditionalVelocity.X += (forwardAxis * Direction.X + sideAxis * Direction.Y);
+      AdditionalVelocity.Y += (forwardAxis * Direction.Y + sideAxis * -Direction.X);
       #endregion
       #region Rotation
       if (yawAxis != 0) {
@@ -85,29 +114,22 @@ namespace RayCastEngine.GameComponents {
       }
       #endregion
       #region Modifiers 
-      // TODO: Modifiers
-      //// jump
-      if (keys.IsKeyDown(Keys.Space) && Position.Z == 0) Velocity.Z += 200;
-      //// crouch
-      if (keys.IsKeyDown(Keys.LeftControl)) Velocity.Z -= 200;
-      //// Run
-      if (keys.IsKeyDown(Keys.LeftShift)) Running = true;
+      // jump
+      if (Jump && Position.Z == 0) Velocity.Z += 200;
+      // crouch
+      if (Crouch) Velocity.Z -= 200;
       #endregion
       #region ApplyMotion
       // Apply Dampening
-      if (AdditionalVelocity.Length() > 0) {
-        // Set new Velocity
-        AdditionalVelocity.Normalize();
-        Velocity.X = AdditionalVelocity.X * (Running ? .3f : .2f);
-        Velocity.Y = AdditionalVelocity.Y * (Running ? .3f : .2f);
-        Velocity.Z = AdditionalVelocity.Z * (Running ? .3f : .2f);
-      } else {
-        // Dappen Velocity
-        float dampening = Position.Z == 0 ? 3f : 5f;
-        Velocity.X /= dampening;
-        Velocity.Y /= dampening;
-        Velocity.Z /= dampening;
-      }
+      if (AdditionalVelocity.Length() > 0) AdditionalVelocity.Normalize();
+      // Dappen Velocity
+      float dampening = Position.Z == 0 ? 3f : 5f;
+      if (AdditionalVelocity.X != 0) Velocity.X = AdditionalVelocity.X * (Running ? .3f : .2f) * (Crouch ? 0.5f : 1);
+      else Velocity.X /= dampening;
+      if (AdditionalVelocity.Y != 0) Velocity.Y = AdditionalVelocity.Y * (Running ? .3f : .2f) * (Crouch ? 0.5f : 1);
+      else Velocity.Y /= dampening;
+      if (AdditionalVelocity.Z != 0) Velocity.Z = AdditionalVelocity.Z;
+      else Velocity.Z /= dampening;
       // Update State
       if (Velocity.X != 0 || Velocity.Y != 0 || Velocity.Z != 0) {
         // Set Position
