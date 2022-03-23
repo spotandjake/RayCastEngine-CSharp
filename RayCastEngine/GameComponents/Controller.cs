@@ -131,7 +131,7 @@ namespace RayCastEngine.GameComponents {
       if (AdditionalVelocity.Z != 0) Velocity.Z = AdditionalVelocity.Z;
       else Velocity.Z /= dampening;
       // Update State
-      if (Velocity.X != 0 || Velocity.Y != 0 || Velocity.Z != 0) {
+      if (Velocity.X != 0 || Velocity.Y != 0 || Velocity.Z != 0 || yawAxis != 0 || pitchAxis != 0) {
         // Set Position
         float projectedX = Position.X + Velocity.X;
         float projectedY = Position.Y + Velocity.Y;

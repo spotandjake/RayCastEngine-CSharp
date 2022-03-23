@@ -1,0 +1,44 @@
+let dir, fov;
+function setup() {
+  createCanvas(400, 400);
+  dir = createSlider(0, 360, 90, 0);
+  fov = createSlider(0, 180, 60, 0);
+}
+function rotateAround(center, vector, angle) {
+    const c = Math.cos( angle ), s = Math.sin( angle );
+    const x = vector.x - center.x;
+    const y = vector.y - center.y;
+    return createVector(x * c - y * s + center.x, x * s + y * c + center.y);
+}
+
+function draw() {
+  background(220);
+  // Math
+  let position = createVector(width/2, height/2);
+  let theta = dir.value()/(Math.PI/180);
+  let fovTheta = fov.value()/(Math.PI/180);
+  let distance = 100;
+  let direction = createVector(position.x+cos(theta)*distance, position.y+sin(theta)*distance);
+  let plane1 = createVector(position.x, position.y)
+    .add(distance*Math.cos(fovTheta/(Math.PI/180)), distance*Math.cos(fovTheta/(Math.PI/180)));
+  // console.log(position.dist(direction)*Math.cos(theta/(Math.PI/180)));
+  // Drawing
+  // Draw Plane
+  stroke(0, 255, 0);
+  strokeWeight(10);
+  //line (direction.x, direction.y, plane1.x, plane1.y);
+  point(plane1.x, plane1.y);
+  // Draw Direction Vector
+  stroke(0, 0, 255);
+  strokeWeight(3);
+  line(position.x, position.y, direction.x, direction.y);
+  strokeWeight(10);
+  point(direction.x, direction.y);
+  // Draw Position Vector
+  stroke(255,0, 0);
+  strokeWeight(10);
+  point(position.x, position.y);
+  // Text
+  noStroke();
+  text(theta, 20, 20);
+}

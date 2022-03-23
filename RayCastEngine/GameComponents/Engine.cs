@@ -14,9 +14,7 @@ namespace RayCastEngine.GameComponents {
     private static int texHeight = 64;
     private static int worldSizeX = 300;
     private static int worldSizeY = 300;
-    private static float Scalar = 1f;
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
-    //private Vector plane = new Vector(0.0, 0.66, 0.0); // planeX, planeY
     // World Values
     private World World;
     // Buffers
@@ -128,7 +126,7 @@ namespace RayCastEngine.GameComponents {
          * 1 / p for going through the camera plane, so to go posZ times farther
          * to reach the floor, we get that the total horizontal distance is posZ / p.
          */
-        float rowDistance = camZ / p * Scalar;
+        float rowDistance = camZ / p;
         // calculate the real world step vector we have to add for each x (parallel to camera plane)
         // adding step by step avoids multiplications with a weight in the inner loop
         float floorStepX = rowDistance * floorStepXBase;
@@ -197,9 +195,7 @@ namespace RayCastEngine.GameComponents {
             side1 = true;
           }
           // Stop From Leaving Map
-          if (mapX < 0 || mapY < 0) {
-            return;
-          }
+          if (mapX < 0 || mapY < 0) return;
           // Check if ray has hit a wall
           if (World.getWall(mapX, mapY) != Texture.Air) break;
         }
@@ -209,7 +205,7 @@ namespace RayCastEngine.GameComponents {
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
         float perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
         // Calculate height of line to draw on screen
-        int lineHeight = (int)(ScreenHeight / perpWallDist * Scalar);
+        int lineHeight = (int)(ScreenHeight / perpWallDist );
         // calculate lowest and highest pixel to fill in current stripe
         int drawBounds = (int)(screenHeight2 + direction.Z + (position.Z / perpWallDist));
         int drawStart = -lineHeight / 2 + drawBounds;
@@ -282,7 +278,7 @@ namespace RayCastEngine.GameComponents {
         int spriteScreenX = (int)((ScreenWidth / 2) * (1 + transformX / transformY));
         int vMoveScreen = (int)((int)(vMove / transformY) + direction.Z + position.Z / transformY);
         //calculate height of the sprite on screen
-        int spriteScale = Math.Abs((int)(ScreenHeight / transformY * Scalar));
+        int spriteScale = Math.Abs((int)(ScreenHeight / transformY));
         int spriteHeight = spriteScale / vDiv; //using "transformY" instead of the real distance prevents fisheye
         //calculate lowest and highest pixel to fill in current stripe
         int drawStartY = -spriteHeight / 2 + screenHeight2 + vMoveScreen;
