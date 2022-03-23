@@ -15,23 +15,30 @@ function draw() {
   background(220);
   // Math
   let position = createVector(width/2, height/2);
-  let theta = dir.value()/(Math.PI/180);
-  let fovTheta = fov.value()/(Math.PI/180);
+  let theta = dir.value()*(Math.PI/180);
+  let fovTheta = fov.value()*(Math.PI/180)/2;
   let distance = 100;
   let direction = createVector(position.x+cos(theta)*distance, position.y+sin(theta)*distance);
-  let plane1 = createVector(position.x, position.y)
-    .add(distance*Math.cos(fovTheta/(Math.PI/180)), distance*Math.cos(fovTheta/(Math.PI/180)));
-  // console.log(position.dist(direction)*Math.cos(theta/(Math.PI/180)));
+  let plane1 = createVector(cos(theta+fovTheta), sin(theta+fovTheta))
+    .setMag(distance/Math.cos(fovTheta))
+    .add(position.x, position.y);
+  let plane2 = createVector(cos(theta-fovTheta), sin(theta-fovTheta))
+    .setMag(distance/Math.cos(fovTheta))
+    .add(position.x, position.y);
   // Drawing
   // Draw Plane
   stroke(0, 255, 0);
+  strokeWeight(3);
+  line (direction.x, direction.y, plane1.x, plane1.y);
+  line (direction.x, direction.y, plane2.x, plane2.y);
   strokeWeight(10);
-  //line (direction.x, direction.y, plane1.x, plane1.y);
   point(plane1.x, plane1.y);
+  point(plane2.x, plane2.y);
   // Draw Direction Vector
   stroke(0, 0, 255);
   strokeWeight(3);
-  line(position.x, position.y, direction.x, direction.y);
+  line(position.x, position.y, plane1.x, plane1.y);
+  line(position.x, position.y, plane2.x, plane2.y);
   strokeWeight(10);
   point(direction.x, direction.y);
   // Draw Position Vector
@@ -40,5 +47,5 @@ function draw() {
   point(position.x, position.y);
   // Text
   noStroke();
-  text(theta, 20, 20);
+  text(dir.value(), 20, 20);
 }
