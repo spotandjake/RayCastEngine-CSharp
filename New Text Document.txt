@@ -2,13 +2,7 @@ let dir, fov;
 function setup() {
   createCanvas(400, 400);
   dir = createSlider(0, 360, 90, 1);
-  fov = createSlider(0, 180, 60, 1);
-}
-function rotateAround(center, vector, angle) {
-    const c = Math.cos( angle ), s = Math.sin( angle );
-    const x = vector.x - center.x;
-    const y = vector.y - center.y;
-    return createVector(x * c - y * s + center.x, x * s + y * c + center.y);
+  fov = createSlider(45, 100, 60, 1);
 }
 
 function draw() {
