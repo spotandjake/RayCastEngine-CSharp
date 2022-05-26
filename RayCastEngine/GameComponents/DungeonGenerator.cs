@@ -113,14 +113,14 @@ namespace RayCastEngine.GameComponents {
       List<Sprite> spritePool = DungeonBuilder.getEntityPositions();
       // Generate Local Player
       // TODO: Make A Better Texture
-      LocalPlayer = new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController());
+      LocalPlayer = new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController(net));
       // Add Aditional Sprites
       spritePool.Add(LocalPlayer);
       // Set Sprites
       SpritePool = spritePool.ToArray();
     }
     // Method
-    public WorldUpdateResult Update(TimeSpan gameTime) {
+    public WorldUpdateResult Update(TimeSpan gameTime, Network net) {
       WorldUpdateResult worldUpdate = new WorldUpdateResult {
         SceneUpdate = false,
         SpriteUpdate = false,

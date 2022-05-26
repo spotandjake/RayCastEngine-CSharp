@@ -5,7 +5,6 @@ using RayCastEngine.GameComponents;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-
 namespace RayCastEngine {
   public partial class FullGame : XNAWinForm {
     // Temp Props
@@ -21,6 +20,7 @@ namespace RayCastEngine {
     private Texture2D SceneBufferTexture;
     private Texture2D SpriteBufferTexture;
     private Texture2D UiBufferTexture;
+    
     // XNA STuff
     public FullGame() {
       InitializeComponent();
@@ -48,7 +48,6 @@ namespace RayCastEngine {
       // Make Sure We Load A Game
       if (currentEngine == null)
         throw new ArgumentException("Game not loaded!");
-
       // Load game content
       currentEngine.Load(currentGameType);
       // Load Size

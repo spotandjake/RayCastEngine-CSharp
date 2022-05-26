@@ -5,6 +5,7 @@ using RayCastEngine.Views;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
+using System.IO;
 
 namespace RayCastEngine.GameComponents {
   // Our Main Engine
@@ -29,6 +30,8 @@ namespace RayCastEngine.GameComponents {
     // Screen Size
     private int ScreenWidth;
     private int ScreenHeight;
+    // Network Class
+    private Network net;
     // Methods
     public void Load(GameType gameType) {
       // Load Images
@@ -51,6 +54,12 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(Properties.Resources.Boss_3));
       // Boss Minions
       textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_3_Minion_1));
+      // Init Network
+      // Random Username
+      string username = Path.GetRandomFileName();
+      username = username.Replace(".", ""); // Remove period.
+      username.Substring(0, 8);  // Return 8 character string
+      net = new Network("wss://socketTest.spotandjake.repl.co/", username);
       // Generate World
       World = new World(worldSizeX, worldSizeY);
     }
@@ -70,7 +79,7 @@ namespace RayCastEngine.GameComponents {
     }
     public bool Update(TimeSpan gameTime) {
       // Call World Update
-      WorldUpdateResult result = World.Update(gameTime);
+      WorldUpdateResult result = World.Update(gameTime, net);
       SceneUpdate |= result.SceneUpdate;
       SpriteUpdate |= result.SpriteUpdate;
       UiUpdate |= result.UiUpdate;

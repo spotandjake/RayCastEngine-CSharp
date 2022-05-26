@@ -25,7 +25,11 @@ namespace RayCastEngine.GameComponents {
     private Vector3 Velocity;
     private bool Crouch = false;
     private bool CrouchButtonPressed = false;
+    private Network net;
     // Constructor
+    public LocalPlayerController(Network net) {
+      net = net;
+    }
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
       KeyboardState keys = Keyboard.GetState();
