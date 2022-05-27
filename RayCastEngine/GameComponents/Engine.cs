@@ -61,7 +61,7 @@ namespace RayCastEngine.GameComponents {
       username.Substring(0, 8);  // Return 8 character string
       net = new Network("wss://socketTest.spotandjake.repl.co/", username);
       // Generate World
-      World = new World(worldSizeX, worldSizeY);
+      World = new World(worldSizeX, worldSizeY, net);
     }
     public void Resize(int width, int height) {
       // Resize our Buffers

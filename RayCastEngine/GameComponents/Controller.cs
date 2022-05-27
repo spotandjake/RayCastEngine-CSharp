@@ -28,7 +28,7 @@ namespace RayCastEngine.GameComponents {
     private Network net;
     // Constructor
     public LocalPlayerController(Network net) {
-      net = net;
+      this.net = net;
     }
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
@@ -142,6 +142,9 @@ namespace RayCastEngine.GameComponents {
         if (world.getWall((int)projectedX, (int)Position.Y) == Texture.Air) Position.X = projectedX;
         if (world.getWall((int)Position.X, (int)projectedY) == Texture.Air) Position.Y = projectedY;
         Position.Z += Velocity.Z;
+        // Send Update Data
+        net.sendPositionPackage(Position, Direction);
+        // Return Value
         return new WorldUpdateResult {
           SceneUpdate = true,
           SpriteUpdate = true,

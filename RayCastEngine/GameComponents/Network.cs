@@ -11,6 +11,7 @@ namespace RayCastEngine.GameComponents {
   enum PacketId {
     Auth = 1,
     ChatMessage = 2,
+    PlayerPosition = 3
   }
   // Network Controller
   class Network {
@@ -23,19 +24,17 @@ namespace RayCastEngine.GameComponents {
       // Set Properties
       this.serverURL = serverURL;
       this.username = username;
-      // Connect To Server
-      using (WebSocket ws = new WebSocket(serverURL)) {
-        // Set Conenction
-        this.connection = ws;
-        // Set Listener
-        ws.OnMessage += (sender, e) => {
-          Console.WriteLine("Server: " + e.Data);
-        };
-        // Connect
-        ws.Connect();
-        // Authenticate
-        sendAuthPackage();
-      }
+      // Conenctr To Server
+      WebSocket ws = new WebSocket(serverURL);
+      this.connection = ws;
+      // Set Listener
+      ws.OnMessage += (sender, e) => {
+        Console.WriteLine("Server: " + e.Data);
+      };
+      // Connect
+      ws.Connect();
+      // Authenticate
+      sendAuthPackage();
     }
     // Message Creators
     private void sendAuthPackage () {
@@ -44,19 +43,19 @@ namespace RayCastEngine.GameComponents {
       // Send The Package
       this.connection.Send(package);
     }
-    private void sendPositionPackage(Vector3 position, Vector3 direction) {
+    public void sendPositionPackage(Vector3 position, Vector3 direction) {
       // TODO: Handle Floats On Both Sides
       // Build Packet
       byte[] usernamePackage = encodeString(this.username);
-      byte[] xPackage = encodeInt((int)position.X);
-      byte[] yPackage = encodeInt((int)position.X);
-      byte[] zPackage = encodeInt((int)position.X);
-      byte[] dirXPackage = encodeInt((int)direction.X);
-      byte[] dirYPackage = encodeInt((int)direction.Y);
-      byte[] pitchPackage = encodeInt((int)direction.Z);
+      byte[] xPackage = encodeFloat(position.X);
+      byte[] yPackage = encodeFloat(position.X);
+      byte[] zPackage = encodeFloat(position.X);
+      byte[] dirXPackage = encodeFloat(direction.X);
+      byte[] dirYPackage = encodeFloat(direction.Y);
+      byte[] pitchPackage = encodeFloat(direction.Z);
       // Combine Packet
       byte[] packageContents = usernamePackage.Concat(xPackage).Concat(yPackage).Concat(zPackage).Concat(dirXPackage).Concat(dirYPackage).Concat(pitchPackage).ToArray();
-      byte[] package = createMessage(PacketId.ChatMessage, packageContents);
+      byte[] package = createMessage(PacketId.PlayerPosition, packageContents);
       // Send Packet
       this.connection.Send(package);
     }
@@ -84,6 +83,10 @@ namespace RayCastEngine.GameComponents {
       bytes[2] = (byte)(value >> 8);
       bytes[3] = (byte)value;
       return bytes;
+    }
+    // Handle Float Encoding
+    private byte[] encodeFloat(float value) {
+      return BitConverter.GetBytes(value);
     }
   }
 }

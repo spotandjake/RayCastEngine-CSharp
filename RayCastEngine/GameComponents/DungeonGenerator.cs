@@ -103,7 +103,7 @@ namespace RayCastEngine.GameComponents {
     public Sprite LocalPlayer;
     private DungeonGenerator DungeonBuilder;
     // Constructor
-    public World (int sizeX, int sizeY) {
+    public World (int sizeX, int sizeY, Network net) {
       // Set Properties
       SizeX = sizeX;
       SizeY = sizeY;
