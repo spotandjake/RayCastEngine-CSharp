@@ -31,6 +31,9 @@ namespace RayCastEngine.GameComponents {
       ws.OnMessage += (sender, e) => {
         Console.WriteLine("Server: " + e.Data);
       };
+      ws.OnError += (sender, e) => {
+        Console.WriteLine("Server Closed");
+      };
       // Connect
       ws.Connect();
       // Authenticate
@@ -48,8 +51,8 @@ namespace RayCastEngine.GameComponents {
       // Build Packet
       byte[] usernamePackage = encodeString(this.username);
       byte[] xPackage = encodeFloat(position.X);
-      byte[] yPackage = encodeFloat(position.X);
-      byte[] zPackage = encodeFloat(position.X);
+      byte[] yPackage = encodeFloat(position.Y);
+      byte[] zPackage = encodeFloat(position.Z);
       byte[] dirXPackage = encodeFloat(direction.X);
       byte[] dirYPackage = encodeFloat(direction.Y);
       byte[] pitchPackage = encodeFloat(direction.Z);
@@ -68,11 +71,7 @@ namespace RayCastEngine.GameComponents {
     // Handle String Encoding
     private byte[] encodeString(string value) {
       byte[] stringBytes = Encoding.ASCII.GetBytes(value);
-      byte[] bytes = new byte[4];
-      bytes[0] = (byte)(stringBytes.Length >> 24);
-      bytes[1] = (byte)(stringBytes.Length >> 16);
-      bytes[2] = (byte)(stringBytes.Length >> 8);
-      bytes[3] = (byte)stringBytes.Length;
+      byte[] bytes = encodeInt(stringBytes.Length);
       return bytes.Concat(stringBytes).ToArray();
     }
     // Handle Number Encoding
@@ -86,7 +85,10 @@ namespace RayCastEngine.GameComponents {
     }
     // Handle Float Encoding
     private byte[] encodeFloat(float value) {
-      return BitConverter.GetBytes(value);
+      byte[] bytes = BitConverter.GetBytes(value);
+      if (BitConverter.IsLittleEndian)
+        Array.Reverse(bytes);
+      return bytes;
     }
   }
 }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 //using System.Drawing;
+using System.Linq;
 using RayCastEngine.Views;
 using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
-using System.IO;
 
 namespace RayCastEngine.GameComponents {
   // Our Main Engine
@@ -56,9 +56,9 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_3_Minion_1));
       // Init Network
       // Random Username
-      string username = Path.GetRandomFileName();
-      username = username.Replace(".", ""); // Remove period.
-      username.Substring(0, 8);  // Return 8 character string
+      string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      Random random = new Random();
+      string username = string.Join("", Enumerable.Repeat(0, 8).Select(x => chars[random.Next(chars.Length)]));
       net = new Network("wss://socketTest.spotandjake.repl.co/", username);
       // Generate World
       World = new World(worldSizeX, worldSizeY, net);
