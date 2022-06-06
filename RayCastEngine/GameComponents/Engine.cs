@@ -339,11 +339,18 @@ namespace RayCastEngine.GameComponents {
           UiBiffer.SetPixel(UiBiffer.Width - x, y, World.getWall(x, y) == Texture.Air ? Color.White : Color.Black);
         }
       }
-      for (int x = -1; x < 2; x++) {
-        for (int y = -1; y < 2; y++) {
-          UiBiffer.SetPixel(UiBiffer.Width - (int)position.X - x, (int)position.Y - y, Color.Red);
+      foreach (Sprite sprite in World.SpritePool) {
+        if (sprite.Controller == null) continue;
+        Color color = Color.Red;
+        if (sprite.Controller is LocalPlayerController)
+          color = Color.Blue;
+        for (int x = -1; x < 2; x++) {
+          for (int y = -1; y < 2; y++) {
+            UiBiffer.SetPixel(UiBiffer.Width - (int)sprite.Position.X - x, (int)sprite.Position.Y - y, color);
+          }
         }
       }
+      
       // Set our Update State
       UiUpdate = false;
       // Return Buffer

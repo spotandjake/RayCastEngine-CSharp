@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace RayCastEngine.GameComponents {
-  abstract  class Controller {
+  abstract class Controller {
     // Properties
     public Vector3 Position;
     public Vector3 Direction;
@@ -26,6 +26,8 @@ namespace RayCastEngine.GameComponents {
     private bool Crouch = false;
     private bool CrouchButtonPressed = false;
     private Network net;
+    private Weapon currentWeapon = new Pistol();
+    private float LastFired = 0;
     // Constructor
     public LocalPlayerController(Network net) {
       this.net = net;
@@ -33,6 +35,7 @@ namespace RayCastEngine.GameComponents {
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
       KeyboardState keys = Keyboard.GetState();
+      MouseState mouse = Mouse.GetState();
       GamePadState gamepad = GamePad.GetState(0);
       float forwardAxis = 0;
       float sideAxis = 0;
@@ -40,6 +43,7 @@ namespace RayCastEngine.GameComponents {
       float pitchAxis = 0;
       bool Jump = false;
       bool Running = false;
+      bool shooting = false;
       // We want to normalize movement over time so you move the same distance no matter the fps
       float frameTime = gameTime.Milliseconds / 1000.0f;
       // Normalized Move Speeds
@@ -65,6 +69,7 @@ namespace RayCastEngine.GameComponents {
           Crouch = !Crouch;
         } else if (gamepad.Buttons.RightStick == ButtonState.Released) CrouchButtonPressed = false;
         if (gamepad.Buttons.LeftStick == ButtonState.Pressed) Running = true;
+        if (gamepad.Triggers.Left > 0.5f) shooting = true;
       } else {
         // WASD
         if (keys.IsKeyDown(Keys.W)) forwardAxis += 1;
@@ -81,6 +86,8 @@ namespace RayCastEngine.GameComponents {
         if (keys.IsKeyDown(Keys.LeftControl)) Crouch = true;
         else if (keys.IsKeyUp(Keys.LeftControl)) Crouch = false;
         if (keys.IsKeyDown(Keys.LeftShift)) Running = true;
+        // Shooting
+        if (mouse.LeftButton == ButtonState.Pressed) shooting = true;
       }
       #endregion
       Vector3 AdditionalVelocity = Vector3.Zero;
@@ -122,6 +129,17 @@ namespace RayCastEngine.GameComponents {
       if (Jump && Position.Z == 0) Velocity.Z += 200;
       // crouch
       if (Crouch) Velocity.Z -= 200;
+      // Shooting
+      if (shooting && currentWeapon != null && LastFired == 0) {
+        Console.WriteLine(currentWeapon.shootRate);
+        // TODO: Find Target
+        // TODO: Spawn Bullet
+        // TODO: Set CoolDown
+        LastFired = currentWeapon.shootRate;
+        Console.WriteLine(LastFired);
+      }
+      // Lower LastFired
+      if (LastFired > 0) LastFired--;
       #endregion
       #region ApplyMotion
       // Apply Dampening
@@ -169,11 +187,18 @@ namespace RayCastEngine.GameComponents {
     }
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
+      WorldUpdateResult currentState = new WorldUpdateResult {
+        SceneUpdate = false,
+        SpriteUpdate = false,
+        UiUpdate = false
+      };
+      Vector3 newPosition = new Vector3();
       // Enemy Logic
       Sprite closestPlayer = null;
       float closestDistance = 0;
       for (int playerIndex = 0; playerIndex < world.SpritePool.Length; playerIndex++) {
         Sprite currentPlayer = world.SpritePool[playerIndex];
+        if (!(currentPlayer.Controller is LocalPlayerController)) continue;
         // Calculate Distance
         float playerDistance = (float)Math.Sqrt(
           (Position.X - currentPlayer.Position.X) *
@@ -184,32 +209,55 @@ namespace RayCastEngine.GameComponents {
           (Position.Z - currentPlayer.Position.Z)
         );
         // Check Distance
-        if (closestDistance == 0 || closestDistance < playerDistance) {
+        if (closestDistance == 0 || closestDistance > playerDistance) {
           closestDistance = playerDistance;
           closestPlayer = currentPlayer;
         }
       }
       // TODO: Generate A Random Number
-      if (closestDistance != 0 && closestDistance < 10) { // If close enough to attack
+      if (closestDistance != 0 && closestDistance < 5) { // If close enough to attack
+        // TODO: We want to follow close
+        newPosition = Vector3.Add(
+          Position,
+          Vector3.Multiply(
+            Vector3.Normalize(
+              Vector3.Subtract(
+                Position,
+                closestPlayer.Position
+              )
+            ),
+            -2f * gameTime.Milliseconds / 1000.0f
+          )
+        );
         // TODO: Create A Random Decision Loop
-        Position.X += 10;
-        return new WorldUpdateResult {
-          SceneUpdate = false,
-          SpriteUpdate = true,
-          UiUpdate = false
-        };
-      } else if (closestDistance != 0 && closestDistance < 50) { // If close enough to move see player, we want to take the direction into consideration here eventaully
-        // TODO: Create A Random Decision Loop
+        currentState.SpriteUpdate = true;
+      } else if (closestDistance != 0 && closestDistance < 20) { // If close enough to move see player, we want to take the direction into consideration here eventaully
+        // Move Towards Slower
+        // TODO: Add Some Randomness To The Movement
+        newPosition = Vector3.Add(
+          Position,
+          Vector3.Multiply(
+            Vector3.Normalize(
+              Vector3.Subtract(
+                Position,
+                closestPlayer.Position
+              )
+            ),
+            -0.5f * gameTime.Milliseconds / 1000.0f
+          )
+        );
+        currentState.SpriteUpdate = true;
       } else { // If Not Close To Player Patrol
-
+        // TODO: Patrol
+      }
+      // If we have moved ensure we are not in the wall
+      if (currentState.SpriteUpdate) {
+        if (world.getWall((int)newPosition.X, (int)Position.Y) == Texture.Air) Position.X = newPosition.X;
+        if (world.getWall((int)Position.X, (int)newPosition.Y) == Texture.Air) Position.Y = newPosition.Y;
       }
       // TODO: If We Are Not In View Of The Player No Update
       // If No Update Return False
-      return new WorldUpdateResult {
-        SceneUpdate = false,
-        SpriteUpdate = false,
-        UiUpdate = false
-      };
+      return currentState;
     }
   }
 }

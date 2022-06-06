@@ -21,7 +21,12 @@
     Boss_2,
     Boss_3,
     // Boss Minion Texture
-    Boss_3_Minion_1
+    Boss_3_Minion_1,
+    // Weapons
+    Pistol_1_1,
+    Pistol_1_2,
+    Pistol_1_3,
+    Pistol_1_4,
   }
   struct WorldUpdateResult {
     public bool SceneUpdate;
