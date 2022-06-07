@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-//using System.Drawing;
 using System.Linq;
 using RayCastEngine.Views;
 using System.Threading.Tasks;
@@ -54,6 +53,13 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.Boss_3, DirectBitmap.fromBitmap(Properties.Resources.Boss_3));
       // Boss Minions
       textures.Add(Texture.Boss_3_Minion_1, DirectBitmap.fromBitmap(Properties.Resources.Boss_3_Minion_1));
+      // Gun Textures
+      textures.Add(Texture.Pistol_1_1, DirectBitmap.fromBitmap(Properties.Resources.Pistol_1_1));
+      textures.Add(Texture.Pistol_1_2, DirectBitmap.fromBitmap(Properties.Resources.Pistol_1_2));
+      textures.Add(Texture.Pistol_1_3, DirectBitmap.fromBitmap(Properties.Resources.Pistol_1_3));
+      textures.Add(Texture.Pistol_1_4, DirectBitmap.fromBitmap(Properties.Resources.Pistol_1_4));
+      // Bullet Texture
+      textures.Add(Texture.Bullet, DirectBitmap.fromBitmap(Properties.Resources.Bullet));
       // Init Network
       // Random Username
       string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -266,7 +272,7 @@ namespace RayCastEngine.GameComponents {
       foreach (Sprite currentSprite in World.SpritePool) {
         currentSprite.distance = Vector3.DistanceSquared(position, currentSprite.Position);
       }
-      Array.Sort(World.SpritePool, new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
+      World.SpritePool.Sort(new Comparison<Sprite>((a, b) => b.distance.CompareTo(a.distance)));
       //parameters for scaling and moving the sprites
       const int uDiv = 1;
       const int vDiv = 1;

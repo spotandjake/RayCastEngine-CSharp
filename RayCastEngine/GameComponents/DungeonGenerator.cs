@@ -99,7 +99,8 @@ namespace RayCastEngine.GameComponents {
     private int SizeX;
     private int SizeY;
     private Texture[,] WorldMap;
-    public Sprite[] SpritePool;
+    public List<Sprite> SpritePool;
+    private Sprite[] tempSpritePool;
     public Sprite LocalPlayer;
     private DungeonGenerator DungeonBuilder;
     // Constructor
@@ -110,25 +111,27 @@ namespace RayCastEngine.GameComponents {
       // General World
       DungeonBuilder = new DungeonGenerator(SizeX, SizeY);
       WorldMap = DungeonBuilder.exportMap();
-      List<Sprite> spritePool = DungeonBuilder.getEntityPositions();
+      SpritePool = DungeonBuilder.getEntityPositions();
       // Generate Local Player
       // TODO: Make A Better Texture
       LocalPlayer = new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController(net));
       // Add Aditional Sprites
-      spritePool.Add(LocalPlayer);
-      // Set Sprites
-      SpritePool = spritePool.ToArray();
+      SpritePool.Add(LocalPlayer);
     }
     // Method
     public WorldUpdateResult Update(TimeSpan gameTime, Network net) {
       WorldUpdateResult worldUpdate = new WorldUpdateResult {
         SceneUpdate = false,
         SpriteUpdate = false,
-        UiUpdate = false
+        UiUpdate = false,
+        removeSelf = false
       };
       // TODO: Make this return weather or not something updated
-      foreach (Sprite sprite in SpritePool) {
+      tempSpritePool = SpritePool.ToArray();
+      for (int i = 0; i < tempSpritePool.Length; i++) {
+        Sprite sprite = tempSpritePool[i];
         WorldUpdateResult updateData = sprite.Update(gameTime, this);
+        if (updateData.removeSelf) SpritePool.RemoveAt(i);
         worldUpdate.SceneUpdate |= updateData.SceneUpdate;
         worldUpdate.SpriteUpdate |= updateData.SpriteUpdate;
         worldUpdate.UiUpdate |= updateData.UiUpdate;

@@ -9,6 +9,7 @@ namespace RayCastEngine.GameComponents {
     public Texture Texture;
     public bool Render;
     public Controller Controller;
+    public float health = 100f; // TODO: Set This Based On Sprite
     // Tempory Stuff For Drawing
     // TODO: Move this out of the class
     public float distance;
@@ -34,8 +35,13 @@ namespace RayCastEngine.GameComponents {
       return new WorldUpdateResult {
         SceneUpdate = false,
         SpriteUpdate = false,
-        UiUpdate = false
+        UiUpdate = false,
+        removeSelf = this.health <= 0,
       };
+    }
+    // Handle health
+    public void lowerHealth(float damage) {
+      this.health -= damage;
     }
   }
 }

@@ -26,7 +26,7 @@ namespace RayCastEngine.GameComponents {
     private bool Crouch = false;
     private bool CrouchButtonPressed = false;
     private Network net;
-    private Weapon currentWeapon = new Pistol();
+    private Weapon currentWeapon = new Weapon(WeaponType.Pistol, 10f);
     private float LastFired = 0;
     // Constructor
     public LocalPlayerController(Network net) {
@@ -129,19 +129,13 @@ namespace RayCastEngine.GameComponents {
       if (Jump && Position.Z == 0) Velocity.Z += 200;
       // crouch
       if (Crouch) Velocity.Z -= 200;
-      // Shooting
-      if (shooting && currentWeapon != null && LastFired == 0) {
-        Console.WriteLine(currentWeapon);
-        Console.WriteLine(currentWeapon.shootRate);
-        // TODO: Find Target
-        // TODO: Spawn Bullet
-        // TODO: Set CoolDown
-        LastFired = currentWeapon.shootRate;
-        Console.WriteLine(LastFired);
-      }
-      // Lower LastFired
-      if (LastFired > 0) LastFired--;
       #endregion
+      WorldUpdateResult sceneState = new WorldUpdateResult {
+        SceneUpdate = false,
+        SpriteUpdate = false,
+        UiUpdate = false,
+        removeSelf = false,
+      };
       #region ApplyMotion
       // Apply Dampening
       if (AdditionalVelocity.Length() > 0) AdditionalVelocity.Normalize();
@@ -163,19 +157,91 @@ namespace RayCastEngine.GameComponents {
         Position.Z += Velocity.Z;
         // Send Update Data
         net.sendPositionPackage(Position, Direction);
-        // Return Value
-        return new WorldUpdateResult {
-          SceneUpdate = true,
-          SpriteUpdate = true,
-          UiUpdate = true
-        };
+        // Set Update
+        sceneState.SceneUpdate = true;
+        sceneState.SpriteUpdate = true;
+        sceneState.UiUpdate = true;
       }
-      return new WorldUpdateResult {
-        SceneUpdate = false,
-        SpriteUpdate = false,
-        UiUpdate = false
-      };
       #endregion
+      #region shoot
+      // Shooting
+      if (shooting && currentWeapon != null && LastFired == 0) {
+        Console.WriteLine(currentWeapon);
+        Console.WriteLine(currentWeapon.shootRate);
+        // TODO: Find Target
+        // TODO: Spawn Bullet
+        currentWeapon.spawnBullet(Position, Direction, world);
+        // Set Update
+        sceneState.SpriteUpdate = true;
+        // Set CoolDown
+        LastFired = currentWeapon.shootRate;
+      }
+      // Lower LastFired
+      if (LastFired > 0) LastFired--;
+      #endregion
+      return sceneState;
+    }
+  }
+  // Bullet Controller
+  class BulletController : Controller {
+    // Properties
+    // TODO: Set These From The Gun
+    private float distance = 0f;
+    private float speed = 0.25f;
+    private float accuracy = 1f;
+    private float damage = 10f;
+    // Constructor
+    public BulletController(float distance) {
+      this.distance = distance;
+    }
+    // Methods
+    public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
+      WorldUpdateResult currentState = new WorldUpdateResult {
+        SceneUpdate = false,
+        SpriteUpdate = true,
+        UiUpdate = true,
+        removeSelf = false,
+      };
+      // Move Forward
+      Position.X += (speed * Direction.X);
+      Position.Y += (speed * Direction.Y);
+      // Check For Hit
+      if (distance <= 0) currentState.removeSelf = true;
+      if (currentState.SpriteUpdate) {
+        if (world.getWall((int)Position.X, (int)Position.Y) != Texture.Air) currentState.removeSelf = true;
+        if (world.getWall((int)Position.X, (int)Position.Y) != Texture.Air) currentState.removeSelf = true;
+      }
+      Sprite closestSprite = null;
+      float closestDistance = 0;
+      for (int spriteIndex = 0; spriteIndex < world.SpritePool.Count; spriteIndex++) {
+        Sprite currentSprite = world.SpritePool[spriteIndex];
+        if (!(currentSprite.Controller is EnemyController)) continue;
+        // Calculate Distance
+        float spriteDistance = (float)Math.Sqrt(
+          (Position.X - currentSprite.Position.X) *
+          (Position.X - currentSprite.Position.X) +
+          (Position.Y - currentSprite.Position.Y) *
+          (Position.Y - currentSprite.Position.Y) +
+          (Position.Z - currentSprite.Position.Z) *
+          (Position.Z - currentSprite.Position.Z)
+        );
+        // Check Distance
+        if (closestDistance == 0 || closestDistance > spriteDistance) {
+          closestDistance = spriteDistance;
+          closestSprite = currentSprite;
+        }
+      }
+      // If Close Enough Hit
+      if (closestDistance <= this.accuracy) {
+        // TODO: Make A health System
+        closestSprite.lowerHealth(this.damage);
+        Console.WriteLine("Hit");
+        currentState.removeSelf = true;
+      }
+      // Kill If has hit max range
+      this.distance -= speed;
+      // If No Update Return False
+      return currentState;
     }
   }
   // Enemy Controller
@@ -191,13 +257,14 @@ namespace RayCastEngine.GameComponents {
       WorldUpdateResult currentState = new WorldUpdateResult {
         SceneUpdate = false,
         SpriteUpdate = false,
-        UiUpdate = false
+        UiUpdate = false,
+        removeSelf = false,
       };
       Vector3 newPosition = new Vector3();
       // Enemy Logic
       Sprite closestPlayer = null;
       float closestDistance = 0;
-      for (int playerIndex = 0; playerIndex < world.SpritePool.Length; playerIndex++) {
+      for (int playerIndex = 0; playerIndex < world.SpritePool.Count; playerIndex++) {
         Sprite currentPlayer = world.SpritePool[playerIndex];
         if (!(currentPlayer.Controller is LocalPlayerController)) continue;
         // Calculate Distance

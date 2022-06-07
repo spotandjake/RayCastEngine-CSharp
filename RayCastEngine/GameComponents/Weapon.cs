@@ -12,7 +12,6 @@ namespace RayCastEngine.GameComponents {
   // Different Gun Types
   class Weapon {
     // Properties
-    public Texture texture;
     public WeaponType weaponType;
     public float shootRate;
     // Initiailizer
@@ -20,10 +19,20 @@ namespace RayCastEngine.GameComponents {
       // Set Properties
       this.weaponType = weapon;
       this.shootRate = shootRate;
-      // Set Texture
-      switch (weapon) {
-
+    }
+    // Get Texture
+    public Texture getTexture() {
+      switch (this.weaponType) {
+        case WeaponType.Pistol:
+          return Texture.Pistol_1_1;
+        default:
+          return Texture.Pistol_1_1;
       }
+    }
+    // Spawn Bullet
+    public void spawnBullet(Vector3 position, Vector3 direction, World world) {
+      // TODO: Use Bullet Texture
+      world.SpritePool.Add(new Sprite(position, direction, Texture.Boss_1, true, new BulletController(25)));
     }
   }
 }

@@ -27,10 +27,13 @@
     Pistol_1_2,
     Pistol_1_3,
     Pistol_1_4,
+    // Bullets
+    Bullet,
   }
   struct WorldUpdateResult {
     public bool SceneUpdate;
     public bool SpriteUpdate;
     public bool UiUpdate;
+    public bool removeSelf;
   }
 }

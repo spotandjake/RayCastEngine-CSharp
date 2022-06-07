@@ -137,6 +137,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Bullet.png" />
     <None Include="Resources\1.png" />
     <None Include="Resources\2.png" />
     <None Include="Resources\3.png" />
