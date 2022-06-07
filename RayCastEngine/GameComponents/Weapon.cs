@@ -7,19 +7,23 @@ using Microsoft.Xna.Framework;
 
 namespace RayCastEngine.GameComponents {
   enum WeaponType {
-    Pistol
+    Pistol,
   }
-  abstract class Weapon {
+  // Different Gun Types
+  class Weapon {
     // Properties
     public Texture texture;
     public WeaponType weaponType;
-    public float shootRate; // the rate of fire in ms
-    // Methods
-  }
-  // Different Gun Types
-  class Pistol : Weapon {
-    public Texture texture = Texture.Pistol_1_1;
-    public WeaponType weaponType = WeaponType.Pistol;
-    public float shootRate = 1000 * 60f;
+    public float shootRate;
+    // Initiailizer
+    public Weapon(WeaponType weapon, float shootRate) {
+      // Set Properties
+      this.weaponType = weapon;
+      this.shootRate = shootRate;
+      // Set Texture
+      switch (weapon) {
+
+      }
+    }
   }
 }

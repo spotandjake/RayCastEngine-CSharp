@@ -131,6 +131,7 @@ namespace RayCastEngine.GameComponents {
       if (Crouch) Velocity.Z -= 200;
       // Shooting
       if (shooting && currentWeapon != null && LastFired == 0) {
+        Console.WriteLine(currentWeapon);
         Console.WriteLine(currentWeapon.shootRate);
         // TODO: Find Target
         // TODO: Spawn Bullet
