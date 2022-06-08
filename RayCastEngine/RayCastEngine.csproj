@@ -73,6 +73,7 @@
     <Compile Include="GameComponents\DungeonGenerator.cs" />
     <Compile Include="GameComponents\Engine.cs" />
     <Compile Include="GameComponents\DirectBitmap.cs" />
+    <Compile Include="GameComponents\MidiPlayer.cs" />
     <Compile Include="GameComponents\Network.cs" />
     <Compile Include="GameComponents\Sprite.cs" />
     <Compile Include="GameComponents\Types.cs" />

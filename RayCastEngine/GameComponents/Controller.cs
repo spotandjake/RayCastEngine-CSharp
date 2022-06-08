@@ -9,14 +9,16 @@ namespace RayCastEngine.GameComponents {
     public Vector3 Direction;
     // Todo: Tempory Value Until we figure out how to calculate plane based off fov
     public Vector2 Plane; // planeX, planeY
+    public Sprite Parent;
     // Constructor
-    public void Initialize(Vector3 position, Vector3 direction) {
+    public void Initialize(Vector3 position, Vector3 direction, Sprite parent) {
       Position = position;
       Direction = direction;
       Plane = new Vector2(0f, 0.66f);
+      Parent = parent;
     }
     // Methods
-    public abstract WorldUpdateResult Update(TimeSpan gameTime, World world);
+    public abstract WorldUpdateResult Update(TimeSpan gameTime, World world, float health);
   }
   // Networked Controller
   // Local Controller
@@ -33,7 +35,7 @@ namespace RayCastEngine.GameComponents {
       this.net = net;
     }
     // Methods
-    public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
+    public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
       KeyboardState keys = Keyboard.GetState();
       MouseState mouse = Mouse.GetState();
       GamePadState gamepad = GamePad.GetState(0);
@@ -195,7 +197,7 @@ namespace RayCastEngine.GameComponents {
       this.distance = distance;
     }
     // Methods
-    public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
+    public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
       WorldUpdateResult currentState = new WorldUpdateResult {
         SceneUpdate = false,
         SpriteUpdate = true,
@@ -253,12 +255,12 @@ namespace RayCastEngine.GameComponents {
       Boss = boss;
     }
     // Methods
-    public override WorldUpdateResult Update(TimeSpan gameTime, World world) {
+    public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
       WorldUpdateResult currentState = new WorldUpdateResult {
         SceneUpdate = false,
         SpriteUpdate = false,
         UiUpdate = false,
-        removeSelf = false,
+        removeSelf = health <= 0,
       };
       Vector3 newPosition = new Vector3();
       // Enemy Logic

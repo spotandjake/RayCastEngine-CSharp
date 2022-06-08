@@ -21,13 +21,13 @@ namespace RayCastEngine.GameComponents {
       Render = render;
       Controller = controller;
       // Init
-      if (Controller != null)  Controller.Initialize(Position, Direction);
+      if (Controller != null)  Controller.Initialize(Position, Direction, this);
     }
     // Update
     public WorldUpdateResult Update(TimeSpan gameTime, World world) {
       if (Controller != null) {
         // TODO: Handle If There Is An Update
-        WorldUpdateResult result = Controller.Update(gameTime, world);
+        WorldUpdateResult result = Controller.Update(gameTime, world, health);
         Position = Controller.Position;
         Direction = Controller.Direction;
         return result;

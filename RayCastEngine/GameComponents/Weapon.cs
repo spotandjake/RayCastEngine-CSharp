@@ -31,6 +31,8 @@ namespace RayCastEngine.GameComponents {
     }
     // Spawn Bullet
     public void spawnBullet(Vector3 position, Vector3 direction, World world) {
+      // Try To Play Sound
+      world.sound.ShootNoise();
       // TODO: Use Bullet Texture
       world.SpritePool.Add(new Sprite(position, direction, Texture.Boss_1, true, new BulletController(25)));
     }

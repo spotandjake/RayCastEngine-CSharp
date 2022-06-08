@@ -103,6 +103,7 @@ namespace RayCastEngine.GameComponents {
     private Sprite[] tempSpritePool;
     public Sprite LocalPlayer;
     private DungeonGenerator DungeonBuilder;
+    public MidiPlayer sound = new MidiPlayer();
     // Constructor
     public World (int sizeX, int sizeY, Network net) {
       // Set Properties

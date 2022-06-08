@@ -63,16 +63,18 @@ namespace RayCastEngine {
         // Update the current previous game time
         _previousGameTime = _previousGameTime + GameTime;
         // Update the game
-        bool update = currentEngine.Update(GameTime);
-        if (update) {
-          // Check if the state changed
-          SceneBuffer = currentEngine.DrawScene(GameTime);
-          SpriteBuffer = currentEngine.DrawSprites(GameTime);
-          UiBuffer = currentEngine.DrawUi(GameTime);
-          Invalidate();
-          Update();
+        if (this.Focused) {
+          bool update = currentEngine.Update(GameTime);
+          if (update) {
+            // Check if the state changed
+            SceneBuffer = currentEngine.DrawScene(GameTime);
+            SpriteBuffer = currentEngine.DrawSprites(GameTime);
+            UiBuffer = currentEngine.DrawUi(GameTime);
+            Invalidate();
+            Update();
+          }
+          DataView.Text = currentEngine.getDataText(GameTime);
         }
-        DataView.Text = currentEngine.getDataText(GameTime);
         // Update Game at 120fps
         await Task.Delay(1000 / 240);
       }
