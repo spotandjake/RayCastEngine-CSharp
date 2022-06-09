@@ -12,37 +12,24 @@ namespace RayCastEngine.GameComponents {
     [DllImport("winmm.dll")]
     private static extern int midiOutOpen(ref int handle, int deviceID, MidiCallback proc, int instance, int flags);
     [DllImport("winmm.dll")]
-    protected static extern int midiOutShortMsg(int handle, int message);
+    protected static extern int midiOutShortMsg(int handle, uint message);
     // Constructor
     public MidiPlayer() {
       // Create Thread
       int result = midiOutOpen(ref handle, 0, null, 0, 0);
     }
-    //Interal API
-    private int encodeMessage(byte command, byte note, byte velocity) {
-      return (velocity << 16) + (note << 8) + command;
-    }
     private void ShootNoise(Object stateInfo) {
-      byte note = 0x3d;
-      for (int i = 0; i < 255; i++) {
-        for (int j = 0; j < 255; j++) {
-          for (int k = 0; k < 255; k++) {
-            //Console.WriteLine();
-            midiOutShortMsg(handle, encodeMessage((byte)i, (byte)j, (byte)k));
-            midiOutShortMsg(handle, encodeMessage(0x90, note, 0x7f));
-            /* Here you should insert a delay so that you can hear the notes sounding */
-            Thread.Sleep(100);
-            /* Now let's turn off the note */
-            midiOutShortMsg(handle, encodeMessage(0x80, note, 0x7f));
-          }
-        }
-      }
-      //midiOutShortMsg(handle, encodeMessage(0x00, 0x23, 0x89));
-      //midiOutShortMsg(handle, encodeMessage(0x90, note, 0x7f));
-      ///* Here you should insert a delay so that you can hear the notes sounding */
-      //Thread.Sleep(1000);
-      ///* Now let's turn off the note */
-      //midiOutShortMsg(handle, encodeMessage(0x80, note, 0x7f));
+      //hmidi is an IntPtr obtained via midiOutOpen or other means.
+      byte[] data = new byte[4];
+      data[0] = 0xC0;//change instrument, channel 1
+      data[1] = 127;//gunshot
+      uint msg = BitConverter.ToUInt32(data, 0);
+      midiOutShortMsg(handle, msg);
+      data[0] = 0x90;//note on, channel 0
+      data[1] = 50;//pitch
+      data[2] = 100;//velocity
+      msg = BitConverter.ToUInt32(data, 0);
+      midiOutShortMsg(handle, msg);
     }
     // External API
     public void ShootNoise() {
