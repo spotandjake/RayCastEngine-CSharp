@@ -30,7 +30,10 @@ namespace RayCastEngine.GameComponents {
       data[2] = 100;//velocity
       msg = BitConverter.ToUInt32(data, 0);
       midiOutShortMsg(handle, msg);
+      // Try Doom
+      Doom();
     }
+    private void Doom() { }
     // External API
     public void ShootNoise() {
       // Try Playing On A Seperate Thread
