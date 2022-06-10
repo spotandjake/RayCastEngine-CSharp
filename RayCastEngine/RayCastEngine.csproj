@@ -75,6 +75,7 @@
     <Compile Include="GameComponents\DirectBitmap.cs" />
     <Compile Include="GameComponents\MidiPlayer.cs" />
     <Compile Include="GameComponents\Network.cs" />
+    <Compile Include="GameComponents\Songs.cs" />
     <Compile Include="GameComponents\Sprite.cs" />
     <Compile Include="GameComponents\Types.cs" />
     <Compile Include="GameComponents\Weapon.cs" />
@@ -172,5 +173,6 @@
     <None Include="Assets\Pictures\Textures\64\Enemys\Boss3\Minion1.png" />
     <Content Include="Assets\Pictures\UI\Background.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -118,6 +118,8 @@ namespace RayCastEngine.GameComponents {
       LocalPlayer = new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController(net));
       // Add Aditional Sprites
       SpritePool.Add(LocalPlayer);
+      // Start Music
+      sound.ManageMusic();
     }
     // Method
     public WorldUpdateResult Update(TimeSpan gameTime, Network net) {
