@@ -37,7 +37,9 @@ namespace RayCastEngine.GameComponents {
       // Connect
       ws.Connect();
       // Authenticate
-      sendAuthPackage();
+      try {
+        sendAuthPackage();
+      } catch (Exception) { }
     }
     // Message Creators
     private void sendAuthPackage () {
