@@ -19,46 +19,36 @@ namespace RayCastEngine.GameComponents {
       int result = midiOutOpen(ref handle, 0, null, 0, 0);
     }
     private void ShootNoise(Object stateInfo) {
-      //hmidi is an IntPtr obtained via midiOutOpen or other means.
-      //byte[] data = new byte[4];
-      //data[0] = 0xC0;//change instrument, channel 1
-      //data[1] = 127;//gunshot
-      //uint msg = BitConverter.ToUInt32(data, 0);
-      //midiOutShortMsg(handle, msg);
-      //data[0] = 0x90;//note on, channel 0
-      //data[1] = 50;//pitch
-      //data[2] = 100;//velocity
-      //msg = BitConverter.ToUInt32(data, 0);
-      //midiOutShortMsg(handle, msg);
       // Play shoot on channel 16
-      this.noteType(15, 127);
-      this.playNote(15, 50, 100);
+      this.programChange(15, 127);
+      this.noteOn(15, 50, 100);
     }
     // FrameWork
     public void changeController(int channel, byte controllerType, byte value) {
       // Send Properperty Change, need to make a binary package of command, channel, instrument
       midiOutShortMsg(handle, (uint)((0xb0 | channel) | (controllerType << 8) | (value << 16)));
     }
-    public void noteType(int channel, byte sound) {
+    public void programChange(int channel, byte sound) {
       // Send Instrument Change, need to make a binary package of command, channel, instrument
       midiOutShortMsg(handle, (uint)((0xc0 | channel) | (sound << 8)));
     }
     public void pitchBend(int channel, int value) {
-      byte[] data = new byte[4];
-      data[0] = (byte)(0xe0 | channel);//note on
-      data[1] = (byte)(value >> 16);
-      data[2] = (byte)(value >> 8);
-      midiOutShortMsg(handle, BitConverter.ToUInt32(data, 0));
+       // Send Pitch Bend, need to make a binary package of command, channel, instrument, low value bits, high value bits
+      midiOutShortMsg(handle, (uint)((0xe0 | channel) | ((value >> 16) << 8) | ((value >> 8) << 16)));
     }
-    public void playNote(int channel, byte noteNumber, byte velocity) {
+    public void noteOn(int channel, byte noteNumber, byte velocity) {
       // Send Note On, need to make a binary package of command, channel, note, velocity
       midiOutShortMsg(handle, (uint)((0x90 | channel) | (noteNumber << 8) | (velocity << 16)));
+    }
+    public void noteOff(int channel, byte noteNumber) {
+      // Send Note On, need to make a binary package of command, channel, note, velocity
+      midiOutShortMsg(handle, (uint)((0x80 | channel) | (noteNumber << 8)));
     }
     // Songs
     //Internal Music Manager
     private void handleMusic(Object stateInfo) {
       // TODO: Maybe Different Songs
-      //Songs.Doom(this);
+      Songs.Doom(this);
     }
     // External API
     public void ShootNoise() {

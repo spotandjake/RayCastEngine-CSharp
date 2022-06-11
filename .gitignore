@@ -396,3 +396,10 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+RayCastEngine/bin/Debug/RayCastEngine.exe
+
+RayCastEngine/bin/Debug/RayCastEngine.exe.CodeAnalysisLog.xml
+
+RayCastEngine/bin/Debug/
+
+RayCastEngine/obj/Debug/
