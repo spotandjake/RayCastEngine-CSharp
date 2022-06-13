@@ -79,6 +79,7 @@
     <Compile Include="GameComponents\Sprite.cs" />
     <Compile Include="GameComponents\Types.cs" />
     <Compile Include="GameComponents\Weapon.cs" />
+    <Compile Include="GameComponents\World.cs" />
     <Compile Include="Views\FullGame.cs">
       <SubType>Form</SubType>
     </Compile>

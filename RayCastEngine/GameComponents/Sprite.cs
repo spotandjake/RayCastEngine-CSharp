@@ -11,7 +11,6 @@ namespace RayCastEngine.GameComponents {
     public Controller Controller;
     public float health = 100f; // TODO: Set This Based On Sprite
     // Tempory Stuff For Drawing
-    // TODO: Move this out of the class
     public float distance;
     // Methods
     public Sprite(Vector3 position, Vector3 direction, Texture texture, bool render, Controller controller = null) {
@@ -36,7 +35,7 @@ namespace RayCastEngine.GameComponents {
         SceneUpdate = false,
         SpriteUpdate = false,
         UiUpdate = false,
-        removeSelf = this.health <= 0,
+        removeSelf = this.health <= 0 && (this.Controller is LocalPlayerController),
       };
     }
     // Handle health

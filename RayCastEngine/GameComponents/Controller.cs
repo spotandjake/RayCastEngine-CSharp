@@ -36,6 +36,17 @@ namespace RayCastEngine.GameComponents {
     }
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
+      // Handle Death
+      if (this.Parent.health <= 0) {
+        Console.WriteLine("Dead");
+        return new WorldUpdateResult {
+          SceneUpdate = false,
+          SpriteUpdate = false,
+          UiUpdate = false,
+          removeSelf = false,
+        };
+      }
+      // Handle Keys And Stuff
       KeyboardState keys = Keyboard.GetState();
       MouseState mouse = Mouse.GetState();
       GamePadState gamepad = GamePad.GetState(0);
@@ -287,22 +298,24 @@ namespace RayCastEngine.GameComponents {
           closestPlayer = currentPlayer;
         }
       }
-      // TODO: Generate A Random Number
+      // Choose A Random Decision
       if (closestDistance != 0 && closestDistance < 5) { // If close enough to attack
         // TODO: We want to follow close
+        Vector3 playerDirection = Vector3.Normalize(
+          Vector3.Subtract(
+            Position,
+            closestPlayer.Position
+          )
+        );
         newPosition = Vector3.Add(
           Position,
           Vector3.Multiply(
-            Vector3.Normalize(
-              Vector3.Subtract(
-                Position,
-                closestPlayer.Position
-              )
-            ),
+           playerDirection,
             -2f * gameTime.Milliseconds / 1000.0f
           )
         );
         // Turn towards Player
+        Direction = Vector3.Multiply(playerDirection, -1f);
         // Shoot
         #region shoot
         // Shooting
