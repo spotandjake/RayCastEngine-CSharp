@@ -28,7 +28,7 @@ namespace RayCastEngine.GameComponents {
     private bool Crouch = false;
     private bool CrouchButtonPressed = false;
     private Network net;
-    private Weapon currentWeapon = new Weapon(WeaponType.Pistol, 10f);
+    private Weapon currentWeapon = new Weapon(WeaponType.Pistol, 10f, false);
     private float LastFired = 0;
     // Constructor
     public LocalPlayerController(Network net) {
@@ -168,10 +168,7 @@ namespace RayCastEngine.GameComponents {
       #region shoot
       // Shooting
       if (shooting && currentWeapon != null && LastFired == 0) {
-        Console.WriteLine(currentWeapon);
-        Console.WriteLine(currentWeapon.shootRate);
-        // TODO: Find Target
-        // TODO: Spawn Bullet
+        // Spawn Bullet
         currentWeapon.spawnBullet(Position, Direction, world);
         // Set Update
         sceneState.SpriteUpdate = true;
@@ -192,9 +189,11 @@ namespace RayCastEngine.GameComponents {
     private float speed = 0.25f;
     private float accuracy = 1f;
     private float damage = 10f;
+    private bool hitPlayer;
     // Constructor
-    public BulletController(float distance) {
+    public BulletController(float distance, bool hitPlayer) {
       this.distance = distance;
+      this.hitPlayer = hitPlayer;
     }
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
@@ -217,7 +216,11 @@ namespace RayCastEngine.GameComponents {
       float closestDistance = 0;
       for (int spriteIndex = 0; spriteIndex < world.SpritePool.Count; spriteIndex++) {
         Sprite currentSprite = world.SpritePool[spriteIndex];
-        if (!(currentSprite.Controller is EnemyController)) continue;
+        if (this.hitPlayer) {
+          if (!(currentSprite.Controller is LocalPlayerController)) continue;
+        } else {
+          if (!(currentSprite.Controller is EnemyController)) continue;
+        }
         // Calculate Distance
         float spriteDistance = (float)Math.Sqrt(
           (Position.X - currentSprite.Position.X) *
@@ -234,10 +237,8 @@ namespace RayCastEngine.GameComponents {
         }
       }
       // If Close Enough Hit
-      if (closestDistance <= this.accuracy) {
-        // TODO: Make A health System
+      if (closestSprite != null && closestDistance <= this.accuracy) {
         closestSprite.lowerHealth(this.damage);
-        Console.WriteLine("Hit");
         currentState.removeSelf = true;
       }
       // Kill If has hit max range
@@ -250,6 +251,8 @@ namespace RayCastEngine.GameComponents {
   class EnemyController : Controller {
     // Properties
     private bool Boss;
+    private Weapon currentWeapon = new Weapon(WeaponType.Pistol, 10f, true);
+    private float LastFired = 0;
     // Constructor
     public EnemyController (bool boss) {
       Boss = boss;
@@ -299,6 +302,21 @@ namespace RayCastEngine.GameComponents {
             -2f * gameTime.Milliseconds / 1000.0f
           )
         );
+        // Turn towards Player
+        // Shoot
+        #region shoot
+        // Shooting
+        if (currentWeapon != null && LastFired == 0) {
+          // Spawn Bullet
+          currentWeapon.spawnBullet(Position, Direction, world);
+          // Set Update
+          currentState.SpriteUpdate = true;
+          // Set CoolDown
+          LastFired = currentWeapon.shootRate;
+        }
+        // Lower LastFired
+        if (LastFired > 0) LastFired--;
+        #endregion
         // TODO: Create A Random Decision Loop
         currentState.SpriteUpdate = true;
       } else if (closestDistance != 0 && closestDistance < 20) { // If close enough to move see player, we want to take the direction into consideration here eventaully

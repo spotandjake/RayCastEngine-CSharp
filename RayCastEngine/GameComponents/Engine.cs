@@ -369,7 +369,8 @@ namespace RayCastEngine.GameComponents {
       return (
 $@"frameRate: {(int)(1 / frameTime)}, x: {position.X - (position.X % 0.01)}, y: {position.Y - (position.Y % 0.01)}, z: {position.Z - (position.Z % 0.01)}
 pitch: { Math.Round(direction.Z, 3)}, dir: { Math.Atan2(direction.X, direction.Y) * 180 / Math.PI}
-dirX: {direction.X}, dirY: {direction.Y}"
+dirX: {direction.X}, dirY: {direction.Y}
+Health: {World.LocalPlayer.health}"
       );
     }
   }

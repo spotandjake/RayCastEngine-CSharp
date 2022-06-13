@@ -85,7 +85,8 @@ namespace RayCastEngine {
     }
     // Close Window
     private void Game_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e) {
-      System.Windows.Forms.Application.Exit();
+      Environment.Exit(Environment.ExitCode);
+      //System.Windows.Forms.Application.Exit();
     }
     // XNA
     void mWinForm_OnFrameRender(GraphicsDevice pDevice) {

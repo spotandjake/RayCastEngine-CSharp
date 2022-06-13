@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace RayCastEngine.GameComponents {
   enum WeaponType {
@@ -14,11 +9,13 @@ namespace RayCastEngine.GameComponents {
     // Properties
     public WeaponType weaponType;
     public float shootRate;
+    public bool hitPlayer;
     // Initiailizer
-    public Weapon(WeaponType weapon, float shootRate) {
+    public Weapon(WeaponType weapon, float shootRate, bool hitPlayer) {
       // Set Properties
       this.weaponType = weapon;
       this.shootRate = shootRate;
+      this.hitPlayer = hitPlayer;
     }
     // Get Texture
     public Texture getTexture() {
@@ -34,7 +31,7 @@ namespace RayCastEngine.GameComponents {
       // Try To Play Sound
       world.sound.ShootNoise();
       // TODO: Use Bullet Texture
-      world.SpritePool.Add(new Sprite(position, direction, Texture.Boss_1, true, new BulletController(25)));
+      world.SpritePool.Add(new Sprite(position, direction, Texture.Bullet, true, new BulletController(25, hitPlayer)));
     }
   }
 }
