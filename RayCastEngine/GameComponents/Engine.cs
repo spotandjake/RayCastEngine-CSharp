@@ -220,7 +220,7 @@ namespace RayCastEngine.GameComponents {
         //Calculate distance of perpendicular ray (Euclidean distance would give fisheye effect!)
         float perpWallDist = !side1 ? (sideDistX - deltaDistX) : (sideDistY - deltaDistY);
         // Calculate height of line to draw on screen
-        int lineHeight = (int)(ScreenHeight / perpWallDist );
+        int lineHeight = (int)(ScreenHeight / perpWallDist);
         // calculate lowest and highest pixel to fill in current stripe
         int drawBounds = (int)(screenHeight2 + direction.Z + (position.Z / perpWallDist));
         int drawStart = -lineHeight / 2 + drawBounds;
