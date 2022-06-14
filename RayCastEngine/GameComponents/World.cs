@@ -5,8 +5,9 @@ using Microsoft.Xna.Framework;
 
 namespace RayCastEngine.GameComponents {
   // World
-  class World {
+  class World : IDisposable {
     // Properties
+    private bool isDisposed;
     private int SizeX;
     private int SizeY;
     private Texture[,] WorldMap;
@@ -61,6 +62,22 @@ namespace RayCastEngine.GameComponents {
     }
     public Vector3 getSpawn() {
       return DungeonBuilder.getStartPosition();
+    }
+    // Dispoable
+    public void Dispose() {
+      // Dispose of unmanaged resources.
+      Dispose(true);
+      // Suppress finalization.
+      GC.SuppressFinalize(this);
+    }
+    // The bulk of the clean-up code is implemented in Dispose(bool)
+    protected virtual void Dispose(bool disposing) {
+      if (isDisposed) return;
+      if (disposing) {
+        // free managed resources
+        sound.Dispose();
+      }
+      isDisposed = true;
     }
   }
 }

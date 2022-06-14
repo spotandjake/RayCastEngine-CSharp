@@ -8,7 +8,8 @@ using Microsoft.Xna.Framework;
 
 namespace RayCastEngine.GameComponents {
   // Our Main Engine
-  class Engine {
+  class Engine : IDisposable {
+    private bool isDisposed;
     // Temporary Engine Variables
     private static int texWidth = 64;
     private static int texHeight = 64;
@@ -373,5 +374,23 @@ dirX: {direction.X}, dirY: {direction.Y}
 Health: {World.LocalPlayer.health}"
       );
     }
+    #region Garbage Collection
+    // Dispoable
+    public void Dispose() {
+      // Dispose of unmanaged resources.
+      Dispose(true);
+      // Suppress finalization.
+      GC.SuppressFinalize(this);
+    }
+    // The bulk of the clean-up code is implemented in Dispose(bool)
+    protected virtual void Dispose(bool disposing) {
+      if (isDisposed) return;
+      if (disposing) {
+        // free managed resources
+        World.Dispose();
+      }
+      isDisposed = true;
+    }
+    #endregion
   }
 }
