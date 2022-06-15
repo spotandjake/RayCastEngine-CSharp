@@ -367,10 +367,12 @@ namespace RayCastEngine.GameComponents {
       float frameTime = gameTime.Milliseconds / 1000.0f;
       Vector3 position = World.LocalPlayer.Position;
       Vector3 direction = World.LocalPlayer.Direction;
+      Vector2 plane = World.LocalPlayer.Controller.Plane;
       return (
 $@"frameRate: {(int)(1 / frameTime)}, x: {position.X - (position.X % 0.01)}, y: {position.Y - (position.Y % 0.01)}, z: {position.Z - (position.Z % 0.01)}
 pitch: { Math.Round(direction.Z, 3)}, dir: { Math.Atan2(direction.X, direction.Y) * 180 / Math.PI}
 dirX: {direction.X}, dirY: {direction.Y}
+planeX: {plane.X}, planeY: {plane.Y}
 Health: {World.LocalPlayer.health}"
       );
     }

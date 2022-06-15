@@ -11,3 +11,5 @@ C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\Microsoft.Xna.Framework.xml
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\Microsoft.Xna.Framework.Graphics.xml
 C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\obj\Release\RayCastEngine.FullGame.resources
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\websocket-sharp.dll
+C:\Users\s201069801\Source\Repos\RayCastEngine-CSharp\RayCastEngine\bin\Release\websocket-sharp.xml

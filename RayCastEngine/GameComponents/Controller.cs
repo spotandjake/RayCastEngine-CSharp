@@ -39,12 +39,12 @@ namespace RayCastEngine.GameComponents {
       // Handle Death
       if (this.Parent.health <= 0) {
         Console.WriteLine("Dead");
-        return new WorldUpdateResult {
-          SceneUpdate = false,
-          SpriteUpdate = false,
-          UiUpdate = false,
-          removeSelf = false,
-        };
+        //return new WorldUpdateResult {
+        //  SceneUpdate = false,
+        //  SpriteUpdate = false,
+        //  UiUpdate = false,
+        //  removeSelf = false,
+        //};
       }
       // Handle Keys And Stuff
       KeyboardState keys = Keyboard.GetState();
@@ -60,10 +60,7 @@ namespace RayCastEngine.GameComponents {
       // We want to normalize movement over time so you move the same distance no matter the fps
       float frameTime = gameTime.Milliseconds / 1000.0f;
       // Normalized Move Speeds
-      float moveSpeed = frameTime * 3f; //the constant value is in squares/second
-      float rotSpeed = frameTime * 2f; //the constant value is in radians/second
       #region Convert Input Axis
-      
       if (gamepad.IsConnected) {
         // Movement
         forwardAxis = gamepad.ThumbSticks.Left.Y;
@@ -104,6 +101,7 @@ namespace RayCastEngine.GameComponents {
       }
       #endregion
       Vector3 AdditionalVelocity = Vector3.Zero;
+      float rotSpeed = frameTime * 2f * yawAxis; //the constant value is in radians/second
       #region Movement
       if (Position.Z < 0.25f && Position.Z > -0.25f)
         Position.Z = 0;
@@ -118,13 +116,13 @@ namespace RayCastEngine.GameComponents {
       #endregion
       #region Rotation
       if (yawAxis != 0) {
-        float cosRotSpeed = (float)Math.Cos(rotSpeed);
-        float sinRotSpeed = (float)Math.Sin(rotSpeed) * yawAxis;
+        double cosRotSpeed = Math.Cos(rotSpeed);
+        double sinRotSpeed = Math.Sin(rotSpeed);
         float olddirx = Direction.X, oldPlaneX = Plane.X;
-        Direction.X = (Direction.X * cosRotSpeed - Direction.Y * -sinRotSpeed);
-        Direction.Y = (olddirx * -sinRotSpeed + Direction.Y * cosRotSpeed);
-        Plane.X = (Plane.X * cosRotSpeed - Plane.Y * -sinRotSpeed);
-        Plane.Y = (oldPlaneX * -sinRotSpeed + Plane.Y * cosRotSpeed);
+        Direction.X = (float)(Direction.X * cosRotSpeed - Direction.Y * -sinRotSpeed);
+        Direction.Y = (float)(olddirx * -sinRotSpeed + Direction.Y * cosRotSpeed);
+        Plane.X = (float)(Plane.X * cosRotSpeed - Plane.Y * -sinRotSpeed);
+        Plane.Y = (float)(oldPlaneX * -sinRotSpeed + Plane.Y * cosRotSpeed);
       }
       if (pitchAxis != 0) {
         Direction.Z += 400 * rotSpeed * (Direction.Z < 500 && Direction.Z > -500 ? pitchAxis : 0);
@@ -262,7 +260,7 @@ namespace RayCastEngine.GameComponents {
   class EnemyController : Controller {
     // Properties
     private bool Boss;
-    private Weapon currentWeapon = new Weapon(WeaponType.Pistol, 10f, true);
+    private Weapon currentWeapon = new Weapon(WeaponType.Pistol, 50f, true);
     private float LastFired = 0;
     // Constructor
     public EnemyController (bool boss) {
