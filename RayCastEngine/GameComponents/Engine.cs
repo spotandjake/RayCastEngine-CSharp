@@ -59,8 +59,11 @@ namespace RayCastEngine.GameComponents {
       textures.Add(Texture.Pistol_1_2, DirectBitmap.fromBitmap(Properties.Resources.Pistol_1_2));
       textures.Add(Texture.Pistol_1_3, DirectBitmap.fromBitmap(Properties.Resources.Pistol_1_3));
       textures.Add(Texture.Pistol_1_4, DirectBitmap.fromBitmap(Properties.Resources.Pistol_1_4));
-      // Bullet Texture
+      // Bullets
       textures.Add(Texture.Bullet, DirectBitmap.fromBitmap(Properties.Resources.Bullet));
+      // Power Ups
+      textures.Add(Texture.BulletPowerUp, DirectBitmap.fromBitmap(Properties.Resources.Pistol_1_1));
+      textures.Add(Texture.HeartPowerUp, DirectBitmap.fromBitmap(Properties.Resources.Heart));
       // Init Network
       // Random Username
       string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -404,7 +407,7 @@ $@"frameRate: {(int)(1 / frameTime)}, x: {position.X - (position.X % 0.01)}, y: 
 pitch: { Math.Round(direction.Z, 3)}, dir: { Math.Atan2(direction.X, direction.Y) * 180 / Math.PI}
 dirX: {direction.X}, dirY: {direction.Y}
 planeX: {plane.X}, planeY: {plane.Y}
-Health: {World.LocalPlayer.health}"
+Health: {World.LocalPlayer.health}/{World.LocalPlayer.maxHealth}"
       );
     }
     #region Garbage Collection

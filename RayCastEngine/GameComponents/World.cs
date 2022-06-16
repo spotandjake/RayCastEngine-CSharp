@@ -51,6 +51,7 @@ namespace RayCastEngine.GameComponents {
         if (updateData.removeSelf && !somethingRemoved) {
           SpritePool.RemoveAt(i);
           somethingRemoved = true;
+          worldUpdate.SpriteUpdate = true;
         }
         worldUpdate.SceneUpdate |= updateData.SceneUpdate;
         worldUpdate.SpriteUpdate |= updateData.SpriteUpdate;

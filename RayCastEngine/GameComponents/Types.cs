@@ -27,8 +27,15 @@
     Pistol_1_2,
     Pistol_1_3,
     Pistol_1_4,
-    // Bullets
+    // Bullet
     Bullet,
+    // Power Ups
+    BulletPowerUp,
+    HeartPowerUp,
+  }
+  public enum PowerUp {
+    MaxHealth,
+    Ammo
   }
   struct WorldUpdateResult {
     public bool SceneUpdate;

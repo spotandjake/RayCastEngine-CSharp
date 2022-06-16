@@ -142,14 +142,14 @@ namespace RayCastEngine.GameComponents {
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Room currentRoom = rooms[roomIndex];
         // Generate Barrel Positions
-        if (currentRoom.RoomType == RoomTypes.Loot) {
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity, true));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
+        if (currentRoom.RoomType == RoomTypes.Loot || currentRoom.RoomType == RoomTypes.Spawn) {
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity, true, new BarrrelController()));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity, true, new BarrrelController()));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity, true, new BarrrelController()));
 
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity, true));
-          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity, true));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity, true, new BarrrelController()));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity, true, new BarrrelController()));
+          sprites.Add(new Sprite(new Vector3(currentRoom.x + currentRoom.w - 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity, true, new BarrrelController()));
         }
         // Generate Column Positions
         if (currentRoom.w >= 8 && currentRoom.h >= 8) {

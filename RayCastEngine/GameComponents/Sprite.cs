@@ -9,8 +9,10 @@ namespace RayCastEngine.GameComponents {
     public Texture Texture;
     public bool Render;
     public Controller Controller;
-    public float health = 100f; // TODO: Set This Based On Sprite
+    public float maxHealth = 100f;
+    public float health; // TODO: Set This Based On Sprite
     // Tempory Stuff For Drawing
+    public int lastHit;
     public float distance;
     // Methods
     public Sprite(Vector3 position, Vector3 direction, Texture texture, bool render, Controller controller = null) {
@@ -19,16 +21,24 @@ namespace RayCastEngine.GameComponents {
       Texture = texture;
       Render = render;
       Controller = controller;
+      health = maxHealth;
+      lastHit = 0;
       // Init
       if (Controller != null)  Controller.Initialize(Position, Direction, this);
     }
     // Update
+    public void setMaxHealth(float maxHealth) {
+      this.maxHealth = maxHealth;
+      if (this.health > this.maxHealth)
+        this.health = this.maxHealth;
+    }
     public WorldUpdateResult Update(TimeSpan gameTime, World world) {
       if (Controller != null) {
         // TODO: Handle If There Is An Update
         WorldUpdateResult result = Controller.Update(gameTime, world, health);
         Position = Controller.Position;
         Direction = Controller.Direction;
+        lastHit++;
         return result;
       }
       return new WorldUpdateResult {
@@ -41,6 +51,7 @@ namespace RayCastEngine.GameComponents {
     // Handle health
     public void lowerHealth(float damage) {
       this.health -= damage;
+      lastHit = 0;
     }
   }
 }

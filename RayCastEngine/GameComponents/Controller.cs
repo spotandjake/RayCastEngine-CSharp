@@ -11,7 +11,7 @@ namespace RayCastEngine.GameComponents {
     public Vector2 Plane; // planeX, planeY
     public Sprite Parent;
     // Constructor
-    public void Initialize(Vector3 position, Vector3 direction, Sprite parent) {
+    public virtual void Initialize(Vector3 position, Vector3 direction, Sprite parent) {
       Position = position;
       Direction = direction;
       Plane = new Vector2(0f, 0.66f);
@@ -19,6 +19,99 @@ namespace RayCastEngine.GameComponents {
     }
     // Methods
     public abstract WorldUpdateResult Update(TimeSpan gameTime, World world, float health);
+  }
+  // Static Controllers
+  class BarrrelController : Controller {
+    // Properties
+    private Sprite lootItem;
+    // Constructor
+    public BarrrelController(Sprite lootItem = null) {
+      // Choose Loot Item
+      this.lootItem = lootItem;
+    }
+    public override void Initialize(Vector3 position, Vector3 direction, Sprite parent) {
+      Position = position;
+      Direction = direction;
+      Plane = new Vector2(0f, 0.66f);
+      Parent = parent;
+      // Set Loot
+      if (this.lootItem == null) {
+        // TODO: Choose The Item At Random
+        this.lootItem = new Sprite(this.Position, this.Direction, Texture.HeartPowerUp, true, new PowerUpController(PowerUp.MaxHealth));
+      }
+      // Set barrel Health
+      this.Parent.setMaxHealth(10f);
+    }
+    // Methods
+    public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
+      // Spawn In A new Sprite
+      if (health <= 0) {
+        // Add The Loot
+        world.SpritePool.Add(this.lootItem);
+      }
+      // Return The Current State
+      return new WorldUpdateResult {
+        SceneUpdate = false,
+        SpriteUpdate = true,
+        UiUpdate = true,
+        removeSelf = health <= 0,
+      };
+    }
+  }
+  class PowerUpController : Controller {
+    // Properties
+    private PowerUp powerUp;
+    // Constructor
+    public PowerUpController(PowerUp powerUp) {
+      // Choose Loot Item
+      this.powerUp = powerUp;
+    }
+    // Methods
+    public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
+      // If The player Is Within Range Give Them The PowerUp And Die
+      Sprite closestSprite = null;
+      float closestDistance = 0;
+      for (int spriteIndex = 0; spriteIndex < world.SpritePool.Count; spriteIndex++) {
+        Sprite currentSprite = world.SpritePool[spriteIndex];
+        if (!(currentSprite.Controller is LocalPlayerController)) continue;
+        // Calculate Distance
+        float spriteDistance = (float)Math.Sqrt(
+          (Position.X - currentSprite.Position.X) *
+          (Position.X - currentSprite.Position.X) +
+          (Position.Y - currentSprite.Position.Y) *
+          (Position.Y - currentSprite.Position.Y) +
+          (Position.Z - currentSprite.Position.Z) *
+          (Position.Z - currentSprite.Position.Z)
+        );
+        // Check Distance
+        if (closestDistance == 0 || closestDistance > spriteDistance) {
+          closestDistance = spriteDistance;
+          closestSprite = currentSprite;
+        }
+      }
+      // If Close Enough Hit
+      if (closestSprite != null && closestDistance <= 1f) {
+        switch (this.powerUp) {
+          case PowerUp.MaxHealth:
+            closestSprite.setMaxHealth(closestSprite.maxHealth + 10);
+            // Return The Current State
+            return new WorldUpdateResult {
+              SceneUpdate = false,
+              SpriteUpdate = true,
+              UiUpdate = true,
+              removeSelf = true,
+            };
+          // TODO: Handle An Ammo Powerup
+        }
+      }
+      // Return The Current State
+      return new WorldUpdateResult {
+        SceneUpdate = false,
+        SpriteUpdate = true,
+        UiUpdate = true,
+        removeSelf = health <= 0,
+      };
+    }
   }
   // Networked Controller
   // Local Controller
@@ -37,6 +130,9 @@ namespace RayCastEngine.GameComponents {
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
       // Handle Death
+      if (this.Parent.health < this.Parent.maxHealth && this.Parent.lastHit > 240) {
+        this.Parent.health++;
+      }
       if (this.Parent.health <= 0) {
         Console.WriteLine("Dead");
         //return new WorldUpdateResult {
@@ -101,7 +197,7 @@ namespace RayCastEngine.GameComponents {
       }
       #endregion
       Vector3 AdditionalVelocity = Vector3.Zero;
-      float rotSpeed = frameTime * 2f * yawAxis; //the constant value is in radians/second
+      float rotSpeed = frameTime * 2f; //the constant value is in radians/second
       #region Movement
       if (Position.Z < 0.25f && Position.Z > -0.25f)
         Position.Z = 0;
@@ -116,8 +212,8 @@ namespace RayCastEngine.GameComponents {
       #endregion
       #region Rotation
       if (yawAxis != 0) {
-        double cosRotSpeed = Math.Cos(rotSpeed);
-        double sinRotSpeed = Math.Sin(rotSpeed);
+        double cosRotSpeed = Math.Cos(rotSpeed * yawAxis);
+        double sinRotSpeed = Math.Sin(rotSpeed * yawAxis);
         float olddirx = Direction.X, oldPlaneX = Plane.X;
         Direction.X = (float)(Direction.X * cosRotSpeed - Direction.Y * -sinRotSpeed);
         Direction.Y = (float)(olddirx * -sinRotSpeed + Direction.Y * cosRotSpeed);
@@ -198,7 +294,7 @@ namespace RayCastEngine.GameComponents {
     private float speed = 0.25f;
     private float accuracy = 1f;
     private float damage = 10f;
-    private bool hitPlayer;
+    public bool hitPlayer;
     // Constructor
     public BulletController(float distance, bool hitPlayer) {
       this.distance = distance;
@@ -228,7 +324,12 @@ namespace RayCastEngine.GameComponents {
         if (this.hitPlayer) {
           if (!(currentSprite.Controller is LocalPlayerController)) continue;
         } else {
-          if (!(currentSprite.Controller is EnemyController)) continue;
+          if (
+            currentSprite.Controller is LocalPlayerController ||
+            currentSprite.Controller is BulletController ||
+            currentSprite.Controller == null
+          )
+            continue;
         }
         // Calculate Distance
         float spriteDistance = (float)Math.Sqrt(
