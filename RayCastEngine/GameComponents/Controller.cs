@@ -152,9 +152,9 @@ namespace RayCastEngine.GameComponents {
       if (AdditionalVelocity.Length() > 0) AdditionalVelocity.Normalize();
       // Dappen Velocity
       float dampening = Position.Z == 0 ? 3f : 5f;
-      if (AdditionalVelocity.X != 0) Velocity.X = AdditionalVelocity.X * (Running ? .3f : .2f) * (Crouch ? 0.5f : 1);
+      if (AdditionalVelocity.X != 0) Velocity.X = AdditionalVelocity.X * (Running ? .4f : .2f) * (Crouch ? 0.5f : 1);
       else Velocity.X /= dampening;
-      if (AdditionalVelocity.Y != 0) Velocity.Y = AdditionalVelocity.Y * (Running ? .3f : .2f) * (Crouch ? 0.5f : 1);
+      if (AdditionalVelocity.Y != 0) Velocity.Y = AdditionalVelocity.Y * (Running ? .4f : .2f) * (Crouch ? 0.5f : 1);
       else Velocity.Y /= dampening;
       if (AdditionalVelocity.Z != 0) Velocity.Z = AdditionalVelocity.Z;
       else Velocity.Z /= dampening;

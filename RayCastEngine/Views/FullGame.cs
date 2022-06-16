@@ -51,7 +51,7 @@ namespace RayCastEngine {
       // Load game content
       currentEngine.Load(currentGameType);
       // Load Size
-      currentEngine.Resize(Width, Height);
+      currentEngine.Resize(this.ClientSize.Width, this.ClientSize.Height);
       // Set gameloop state
       Running = true;
 

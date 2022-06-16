@@ -10,6 +10,7 @@ namespace RayCastEngine.GameComponents {
     private bool isDisposed;
     private int SizeX;
     private int SizeY;
+    public List<Room> rooms = new List<Room>();
     private Texture[,] WorldMap;
     public List<Sprite> SpritePool;
     private Sprite[] tempSpritePool;
@@ -25,6 +26,7 @@ namespace RayCastEngine.GameComponents {
       DungeonBuilder = new DungeonGenerator(SizeX, SizeY);
       WorldMap = DungeonBuilder.exportMap();
       SpritePool = DungeonBuilder.getEntityPositions();
+      rooms = DungeonBuilder.rooms;
       // Generate Local Player
       // TODO: Make A Better Texture
       LocalPlayer = new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController(net));

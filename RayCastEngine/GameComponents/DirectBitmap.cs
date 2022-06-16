@@ -21,8 +21,14 @@ namespace RayCastEngine.GameComponents {
         Bits[index] = colour;
       });
     }
-    public void SetPixel(int x, int y, Color colour) {
-      Bits[x + (y * Width)] = colour;
+    public void setPixelSafe(int x, int y, Color color) {
+      int pixelIndex = x +(y * Width);
+      if (pixelIndex < Bits.Length)
+        Bits[x + (y * Width)] = color;
+      else Console.WriteLine("Unsafe Write");
+    }
+    public void SetPixel(int x, int y, Color color) {
+      Bits[x + (y * Width)] = color;
     }
     public Color GetPixel(int x, int y) {
       int index = x + (y * Width);

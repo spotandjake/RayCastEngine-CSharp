@@ -98,7 +98,7 @@ namespace RayCastEngine.GameComponents {
     private int width;
     private int height;
     private Cell[] grid;
-    private List<Room> rooms = new List<Room>();
+    public List<Room> rooms = new List<Room>();
     private int disX = 0;
     private Random RandomNumberGenerator = new Random();
     public DungeonGenerator(
@@ -218,7 +218,20 @@ namespace RayCastEngine.GameComponents {
         int RoomProbability = RandomNumberGenerator.Next(0, 10);
         if (i == 0 || i < 1) {
           room.RoomType = RoomTypes.Spawn;
-        } else if (RoomProbability < 3 && roomWidth < 8 && roomHeight < 8) {
+        } else if (RoomProbability < 5 && roomWidth < 9 && roomHeight < 9) {
+          if (room.w % 2 == 0|| room.h % 2 == 0) {
+            int roomW, roomH;
+            if (room.w % 2 == 0) roomW = room.w - 1;
+            else roomW = room.w;
+            if (room.h % 2 == 0) roomH = room.h - 1;
+            else roomH = room.h;
+            room = new Room(
+              room.x,
+              room.y,
+              roomW,
+              roomH
+            );
+          }
           room.RoomType = RoomTypes.Loot;
         } else if (BossRoomCount < 20 && RoomProbability < 10 && roomWidth > 7 && roomHeight > 7) {
           BossRoomCount++;

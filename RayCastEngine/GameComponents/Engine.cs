@@ -341,19 +341,50 @@ namespace RayCastEngine.GameComponents {
       UiBiffer.clearImage();
       Vector3 position = World.LocalPlayer.Position;
       // Draw UI
-      for (int x = 1; x < worldSizeX; x++) {
+      for (int x = 0; x < worldSizeX; x++) {
         for (int y = 0; y < worldSizeY; y++) {
           UiBiffer.SetPixel(UiBiffer.Width - x, y, World.getWall(x, y) == Texture.Air ? Color.White : Color.Black);
         }
       }
+      // Draw Rooms
+      for (int i = 0; i < World.rooms.Count; i++) {
+        Room room = World.rooms[i];
+        Color color = Color.White;
+        switch (room.RoomType) {
+          case RoomTypes.Loot:
+            color = Color.Gold;
+            break;
+          case RoomTypes.Spawn:
+            color = Color.Gray;
+            break;
+          default:
+            break;
+        }
+        for (int x = room.x; x < room.x + room.w; x++) {
+          for (int y = room.y; y < room.y + room.h; y++) {
+            UiBiffer.SetPixel(UiBiffer.Width - x, y, color);
+          }
+        }
+      }
+      // Draw Sprites
       foreach (Sprite sprite in World.SpritePool) {
-        if (sprite.Controller == null) continue;
-        Color color = Color.Red;
-        if (sprite.Controller is LocalPlayerController)
-          color = Color.Blue;
-        for (int x = -1; x < 2; x++) {
-          for (int y = -1; y < 2; y++) {
-            UiBiffer.SetPixel(UiBiffer.Width - (int)sprite.Position.X - x, (int)sprite.Position.Y - y, color);
+        Color color;
+        if (sprite.Controller is EnemyController)
+          color = Color.Red;
+        else if (sprite.Controller is LocalPlayerController)
+          color = new Color(50, 205, 50);
+        else continue;
+        if (sprite.Controller is LocalPlayerController) {
+          for (int x = -2; x < 3; x++) {
+            for (int y = -2; y < 3; y++) {
+              UiBiffer.SetPixel(UiBiffer.Width - (int)sprite.Position.X - x, (int)sprite.Position.Y - y, color);
+            }
+          }
+        } else {
+          for (int x = -1; x < 2; x++) {
+            for (int y = -1; y < 2; y++) {
+              UiBiffer.SetPixel(UiBiffer.Width - (int)sprite.Position.X - x, (int)sprite.Position.Y - y, color);
+            }
           }
         }
       }
