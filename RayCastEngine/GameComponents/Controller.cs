@@ -467,6 +467,17 @@ namespace RayCastEngine.GameComponents {
         if (world.getWall((int)newPosition.X, (int)Position.Y) == Texture.Air) Position.X = newPosition.X;
         if (world.getWall((int)Position.X, (int)newPosition.Y) == Texture.Air) Position.Y = newPosition.Y;
       }
+      // Maybe Drop Loot On Level Up
+      #region DropLoot
+      if (currentState.removeSelf) {
+        int spawnLoot = world.worldRandomness.Next(5);
+        if (spawnLoot <= 1) {
+          Sprite lootItem = new Sprite(this.Position, this.Direction, Texture.HeartPowerUp, true, new PowerUpController(PowerUp.MaxHealth));
+          world.SpritePool.Add(lootItem);
+          currentState.SpriteUpdate = true;
+        }
+      }
+      #endregion
       // TODO: If We Are Not In View Of The Player No Update
       // If No Update Return False
       return currentState;

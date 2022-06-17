@@ -28,7 +28,7 @@ namespace RayCastEngine.GameComponents {
       int result = NativeMethods.midiOutOpen(ref handle, 0, null, 0, 0);
     }
     private void ShootNoise(Object stateInfo) {
-      // Play shoot on channel 16
+      // Play shoot on channel 16 at max volume
       this.programChange(15, 127);
       this.noteOn(15, 50, 100);
     }

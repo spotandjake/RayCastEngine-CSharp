@@ -17,8 +17,11 @@ namespace RayCastEngine.GameComponents {
     public Sprite LocalPlayer;
     private DungeonGenerator DungeonBuilder;
     public MidiPlayer sound = new MidiPlayer();
+    public Random worldRandomness;
     // Constructor
     public World(int sizeX, int sizeY, Network net) {
+      // Set Randomness
+      worldRandomness = new Random();
       // Set Properties
       SizeX = sizeX;
       SizeY = sizeY;

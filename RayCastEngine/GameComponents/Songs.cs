@@ -9379,6 +9379,7 @@ namespace RayCastEngine.GameComponents {
       Thread.Sleep(54); // Wait For The Next Note
       player.noteOff(0, 57); // Turn off Note 57, on channel 0
       player.noteOff(1, 51); // Turn off Note 51, on channel 1
+      Doom(player);
     }
     #endregion
   }
