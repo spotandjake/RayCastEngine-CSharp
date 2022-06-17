@@ -135,14 +135,13 @@ namespace RayCastEngine.GameComponents {
       // Generate Light Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Vector2 roomCenter = rooms[roomIndex].center;
-        sprites.Add(new Sprite(new Vector3(roomCenter.X, roomCenter.Y, 0), Vector3.Zero, Texture.GreenLight, true)
-        );
+        sprites.Add(new Sprite(new Vector3(roomCenter.X, roomCenter.Y, 0), Vector3.Zero, Texture.GreenLight, true));
       }
       // Generate Entity Positions
       for (int roomIndex = 0; roomIndex < rooms.Count; roomIndex++) {
         Room currentRoom = rooms[roomIndex];
         // Generate Barrel Positions
-        if (currentRoom.RoomType == RoomTypes.Loot || currentRoom.RoomType == RoomTypes.Spawn) {
+        if (currentRoom.RoomType == RoomTypes.Loot) {
           sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y - 1, 0), Vector3.Zero, Texture.BarrelEntity, true, new BarrrelController()));
           sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y, 0), Vector3.Zero, Texture.BarrelEntity, true, new BarrrelController()));
           sprites.Add(new Sprite(new Vector3(currentRoom.x + 1, currentRoom.center.Y + 1, 0), Vector3.Zero, Texture.BarrelEntity, true, new BarrrelController()));

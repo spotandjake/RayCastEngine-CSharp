@@ -119,6 +119,7 @@ namespace RayCastEngine.GameComponents {
     // Properties
     private Vector3 Velocity;
     private bool Crouch = false;
+    private bool Running = false;
     private bool CrouchButtonPressed = false;
     private Network net;
     private Weapon currentWeapon = new Weapon(WeaponType.Pistol, 10f, false);
@@ -151,7 +152,6 @@ namespace RayCastEngine.GameComponents {
       float yawAxis = 0;
       float pitchAxis = 0;
       bool Jump = false;
-      bool Running = false;
       bool shooting = false;
       // We want to normalize movement over time so you move the same distance no matter the fps
       float frameTime = gameTime.Milliseconds / 1000.0f;
@@ -174,8 +174,10 @@ namespace RayCastEngine.GameComponents {
           CrouchButtonPressed = true;
           Crouch = !Crouch;
         } else if (gamepad.Buttons.RightStick == ButtonState.Released) CrouchButtonPressed = false;
+        // Stop Running
+        if (forwardAxis == 0 && sideAxis == 0) Running = false;
         if (gamepad.Buttons.LeftStick == ButtonState.Pressed) Running = true;
-        if (gamepad.Triggers.Left > 0.5f) shooting = true;
+        if (gamepad.Triggers.Left > 0.5f || gamepad.Triggers.Right > 0.5f) shooting = true;
       } else {
         // WASD
         if (keys.IsKeyDown(Keys.W)) forwardAxis += 1;
@@ -233,7 +235,10 @@ namespace RayCastEngine.GameComponents {
       #endregion
       #region Modifiers 
       // jump
-      if (Jump && Position.Z == 0) Velocity.Z += 200;
+      if (Jump && Position.Z == 0) {
+        Velocity.Z += 200;
+        this.Parent.lowerHealth(1f);
+      }
       // crouch
       if (Crouch) Velocity.Z -= 200;
       #endregion
@@ -282,8 +287,15 @@ namespace RayCastEngine.GameComponents {
       }
       // Lower LastFired
       if (LastFired > 0) LastFired--;
+      // Vibrate Contoller
+      float vibrationAmmount = Math.Max(map(LastFired, currentWeapon.shootRate-7, currentWeapon.shootRate, 0, 1)*2, 0);
+      GamePad.SetVibration(PlayerIndex.One, vibrationAmmount, vibrationAmmount);
       #endregion
       return sceneState;
+    }
+    // Helper
+    private float map(float s, float a1, float a2, float b1, float b2) {
+      return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
     }
   }
   // Bullet Controller
@@ -303,7 +315,7 @@ namespace RayCastEngine.GameComponents {
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
       WorldUpdateResult currentState = new WorldUpdateResult {
-        SceneUpdate = false,
+        SceneUpdate = true,
         SpriteUpdate = true,
         UiUpdate = true,
         removeSelf = false,
