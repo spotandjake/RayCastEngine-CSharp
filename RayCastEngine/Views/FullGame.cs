@@ -129,11 +129,14 @@ namespace RayCastEngine {
           overlay.fillColor(new Color(0.5f, 0f, 0f, 0.5f));
           // Draw Game Over
           DirectBitmap GameOver = DirectBitmap.fromBitmap(Properties.Resources.GameOver);
-          int xOffset = 0;
-          int yOffset = 0;
+          int xOffset = (this.ClientSize.Width-GameOver.Width)/2;
+          int yOffset = (this.ClientSize.Height - GameOver.Height) / 2;
           for (int x = 0; x < GameOver.Width; x++) {
             for (int y = 0; y < GameOver.Height; y++) {
-              overlay.setPixelSafe(xOffset + x, yOffset + y, overlay.GetPixel(x, y));
+              Color color = GameOver.GetPixel(x, y);
+              if (color.A != 0) {
+                overlay.setPixelSafe(xOffset + x, yOffset + y, GameOver.GetPixel(x, y));
+              }
             }
           }
           // Draw Center Image

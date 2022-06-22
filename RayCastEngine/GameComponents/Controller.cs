@@ -194,6 +194,8 @@ namespace RayCastEngine.GameComponents {
         if (keys.IsKeyDown(Keys.LeftShift)) Running = true;
         // Shooting
         if (mouse.LeftButton == ButtonState.Pressed || keys.IsKeyDown(Keys.Space)) shooting = true;
+        // Handle Self Kill
+        if (keys.IsKeyDown(Keys.K)) this.Parent.lowerHealth(100);
       }
       #endregion
       Vector3 AdditionalVelocity = Vector3.Zero;

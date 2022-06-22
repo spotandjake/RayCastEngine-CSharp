@@ -27,6 +27,16 @@ namespace RayCastEngine {
     // TODO: Implement Other Buttons
     private void Menu_SinglePlayer(Object sender, System.EventArgs e) {
       this.Hide();
+      FullGame game = new FullGame();
+      game.Show();
+      // Loop while created
+      while (game.Created) {
+        // If RefreshMode is "always" explicitly call the Render method each pass
+        if (game.RefreshMode == XNAWinForm.eRefreshMode.Always)
+          game.Render();
+        // Let windows do it´s magic
+        Application.DoEvents();
+      }
     }
     private void Menu_Exit(Object sender, System.EventArgs e) {
       this.Close();

@@ -32,10 +32,6 @@ namespace RayCastEngine
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Menu));
       this.pictureBox1 = new System.Windows.Forms.PictureBox();
       this.SinglePlayer = new System.Windows.Forms.Button();
-      this.Multiplayer = new System.Windows.Forms.Button();
-      this.Settings = new System.Windows.Forms.Button();
-      this.Credits = new System.Windows.Forms.Button();
-      this.MapMaker = new System.Windows.Forms.Button();
       this.Exit = new System.Windows.Forms.Button();
       this.panel1 = new System.Windows.Forms.Panel();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -65,46 +61,6 @@ namespace RayCastEngine
       this.SinglePlayer.UseVisualStyleBackColor = false;
       this.SinglePlayer.Click += new System.EventHandler(this.Menu_SinglePlayer);
       // 
-      // Multiplayer
-      // 
-      this.Multiplayer.BackColor = System.Drawing.SystemColors.ActiveCaption;
-      this.Multiplayer.Location = new System.Drawing.Point(306, -2);
-      this.Multiplayer.Name = "Multiplayer";
-      this.Multiplayer.Size = new System.Drawing.Size(300, 100);
-      this.Multiplayer.TabIndex = 2;
-      this.Multiplayer.Text = "Multiplayer";
-      this.Multiplayer.UseVisualStyleBackColor = false;
-      // 
-      // Settings
-      // 
-      this.Settings.BackColor = System.Drawing.SystemColors.ActiveCaption;
-      this.Settings.Location = new System.Drawing.Point(-2, 305);
-      this.Settings.Name = "Settings";
-      this.Settings.Size = new System.Drawing.Size(300, 100);
-      this.Settings.TabIndex = 3;
-      this.Settings.Text = "Settings";
-      this.Settings.UseVisualStyleBackColor = false;
-      // 
-      // Credits
-      // 
-      this.Credits.BackColor = System.Drawing.SystemColors.ActiveCaption;
-      this.Credits.Location = new System.Drawing.Point(0, 166);
-      this.Credits.Name = "Credits";
-      this.Credits.Size = new System.Drawing.Size(300, 100);
-      this.Credits.TabIndex = 4;
-      this.Credits.Text = "Credits";
-      this.Credits.UseVisualStyleBackColor = false;
-      // 
-      // MapMaker
-      // 
-      this.MapMaker.BackColor = System.Drawing.SystemColors.ActiveCaption;
-      this.MapMaker.Location = new System.Drawing.Point(306, 166);
-      this.MapMaker.Name = "MapMaker";
-      this.MapMaker.Size = new System.Drawing.Size(300, 100);
-      this.MapMaker.TabIndex = 5;
-      this.MapMaker.Text = "MapMaker";
-      this.MapMaker.UseVisualStyleBackColor = false;
-      // 
       // Exit
       // 
       this.Exit.BackColor = System.Drawing.SystemColors.ActiveCaption;
@@ -120,14 +76,10 @@ namespace RayCastEngine
       // 
       this.panel1.AutoSize = true;
       this.panel1.BackColor = System.Drawing.Color.Transparent;
-      this.panel1.Controls.Add(this.Settings);
       this.panel1.Controls.Add(this.Exit);
       this.panel1.Controls.Add(this.SinglePlayer);
-      this.panel1.Controls.Add(this.MapMaker);
-      this.panel1.Controls.Add(this.Multiplayer);
-      this.panel1.Controls.Add(this.Credits);
       this.panel1.Location = new System.Drawing.Point(12, 12);
-      this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+      this.panel1.Margin = new System.Windows.Forms.Padding(2);
       this.panel1.Name = "panel1";
       this.panel1.Size = new System.Drawing.Size(610, 408);
       this.panel1.TabIndex = 7;
@@ -159,10 +111,6 @@ namespace RayCastEngine
 
     private System.Windows.Forms.PictureBox pictureBox1;
     private System.Windows.Forms.Button SinglePlayer;
-    private System.Windows.Forms.Button Multiplayer;
-    private System.Windows.Forms.Button Settings;
-    private System.Windows.Forms.Button Credits;
-    private System.Windows.Forms.Button MapMaker;
     private System.Windows.Forms.Button Exit;
     private System.Windows.Forms.Panel panel1;
   }
