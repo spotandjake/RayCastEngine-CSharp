@@ -51,6 +51,7 @@ namespace RayCastEngine.GameComponents {
     // Handle health
     public void lowerHealth(float damage) {
       this.health -= damage;
+      if (this.health < 0) this.health = 0;
       lastHit = 0;
     }
   }

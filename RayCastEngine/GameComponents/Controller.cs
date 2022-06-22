@@ -135,13 +135,12 @@ namespace RayCastEngine.GameComponents {
         this.Parent.health++;
       }
       if (this.Parent.health <= 0) {
-        Console.WriteLine("Dead");
-        //return new WorldUpdateResult {
-        //  SceneUpdate = false,
-        //  SpriteUpdate = false,
-        //  UiUpdate = false,
-        //  removeSelf = false,
-        //};
+        return new WorldUpdateResult {
+          SceneUpdate = false,
+          SpriteUpdate = false,
+          UiUpdate = false,
+          removeSelf = false,
+        };
       }
       // Handle Keys And Stuff
       KeyboardState keys = Keyboard.GetState();
@@ -190,12 +189,11 @@ namespace RayCastEngine.GameComponents {
         if (keys.IsKeyDown(Keys.Up)) pitchAxis += 1;
         if (keys.IsKeyDown(Keys.Down)) pitchAxis -= 1;
         // Modifiers
-        if (keys.IsKeyDown(Keys.Space)) Jump = true;
         if (keys.IsKeyDown(Keys.LeftControl)) Crouch = true;
         else if (keys.IsKeyUp(Keys.LeftControl)) Crouch = false;
         if (keys.IsKeyDown(Keys.LeftShift)) Running = true;
         // Shooting
-        if (mouse.LeftButton == ButtonState.Pressed) shooting = true;
+        if (mouse.LeftButton == ButtonState.Pressed || keys.IsKeyDown(Keys.Space)) shooting = true;
       }
       #endregion
       Vector3 AdditionalVelocity = Vector3.Zero;
@@ -282,6 +280,7 @@ namespace RayCastEngine.GameComponents {
         currentWeapon.spawnBullet(Position, Direction, world);
         // Set Update
         sceneState.SpriteUpdate = true;
+        sceneState.SceneUpdate = true;
         // Set CoolDown
         LastFired = currentWeapon.shootRate;
       }

@@ -128,6 +128,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="RoadMap.md" />
+    <None Include="Views\Death.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -140,6 +141,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\GameOver.png" />
     <None Include="Resources\Heart.png" />
     <None Include="Resources\download.png" />
     <None Include="Resources\Bullet.png" />

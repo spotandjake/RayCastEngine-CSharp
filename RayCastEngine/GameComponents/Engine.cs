@@ -17,7 +17,7 @@ namespace RayCastEngine.GameComponents {
     private static int worldSizeY = 300;
     private Dictionary<Texture, DirectBitmap> textures = new Dictionary<Texture, DirectBitmap>();
     // World Values
-    private World World;
+    public World World;
     // Buffers
     private DirectBitmap SceneBuffer;
     private DirectBitmap SpriteBuffer;
@@ -89,6 +89,8 @@ namespace RayCastEngine.GameComponents {
     }
     public bool Update(TimeSpan gameTime) {
       // Call World Update
+      if (World.LocalPlayer.health <= 0)
+        return true;
       WorldUpdateResult result = World.Update(gameTime, net);
       SceneUpdate |= result.SceneUpdate;
       SpriteUpdate |= result.SpriteUpdate;

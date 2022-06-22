@@ -33,6 +33,8 @@ namespace RayCastEngine {
     // Draw Menu
     // Menu
     private void singlePlayer() {
+      // Set Data View To Visbile
+      DataView.Visible = true;
       // GameType
       currentGameType = GameType.SinglePlayer;
       // Create Game
@@ -66,10 +68,12 @@ namespace RayCastEngine {
         if (this.Focused) {
           bool update = currentEngine.Update(GameTime);
           if (update) {
-            // Check if the state changed
-            SceneBuffer = currentEngine.DrawScene(GameTime);
-            SpriteBuffer = currentEngine.DrawSprites(GameTime);
-            UiBuffer = currentEngine.DrawUi(GameTime);
+            // Dont Update After Dead
+            if (currentEngine.World.LocalPlayer.health > 0) {
+              SceneBuffer = currentEngine.DrawScene(GameTime);
+              SpriteBuffer = currentEngine.DrawSprites(GameTime);
+              UiBuffer = currentEngine.DrawUi(GameTime);
+            }
             Invalidate();
             Update();
           }
@@ -86,7 +90,6 @@ namespace RayCastEngine {
     // Close Window
     private void Game_FormClosed(object sender, System.Windows.Forms.FormClosedEventArgs e) {
       Environment.Exit(Environment.ExitCode);
-      //System.Windows.Forms.Application.Exit();
     }
     // XNA
     void mWinForm_OnFrameRender(GraphicsDevice pDevice) {
@@ -117,6 +120,28 @@ namespace RayCastEngine {
         screenSprite.Draw(SpriteBufferTexture, new Rectangle(0, 0, SpriteBuffer.Width, SpriteBuffer.Height), Color.White);
         // Draw Our Ui
         screenSprite.Draw(UiBufferTexture, new Rectangle(0, 0, UiBuffer.Width, UiBuffer.Height), Color.White);
+        // Draw The Game Over Screen, If neccessairy
+        if (currentEngine != null && currentEngine.World.LocalPlayer.health <= 0) {
+          // Create Texture
+          Texture2D tex = new Texture2D(pDevice, ClientSize.Width, ClientSize.Height);
+          Device.Textures[0] = null;
+          DirectBitmap overlay = new DirectBitmap(tex.Width, tex.Height);
+          overlay.fillColor(new Color(0.5f, 0f, 0f, 0.5f));
+          // Draw Game Over
+          DirectBitmap GameOver = DirectBitmap.fromBitmap(Properties.Resources.GameOver);
+          int xOffset = 0;
+          int yOffset = 0;
+          for (int x = 0; x < GameOver.Width; x++) {
+            for (int y = 0; y < GameOver.Height; y++) {
+              overlay.setPixelSafe(xOffset + x, yOffset + y, overlay.GetPixel(x, y));
+            }
+          }
+          // Draw Center Image
+          tex.SetData(overlay.Bits);
+          DataView.Visible = false;
+          // Draw A Red Overlay
+          screenSprite.Draw(tex, new Rectangle(0, 0, tex.Width, tex.Height), Color.Red);
+        }
         screenSprite.End();
       }
     }
