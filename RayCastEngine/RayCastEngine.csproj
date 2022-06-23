@@ -74,7 +74,6 @@
     <Compile Include="GameComponents\Engine.cs" />
     <Compile Include="GameComponents\DirectBitmap.cs" />
     <Compile Include="GameComponents\MidiPlayer.cs" />
-    <Compile Include="GameComponents\Network.cs" />
     <Compile Include="GameComponents\Songs.cs" />
     <Compile Include="GameComponents\Sprite.cs" />
     <Compile Include="GameComponents\Types.cs" />
@@ -94,7 +93,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Types.cs" />
     <Compile Include="XNAWinForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -128,7 +126,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="RoadMap.md" />
-    <None Include="Views\Death.spritefont" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

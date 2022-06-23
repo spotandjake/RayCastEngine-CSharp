@@ -12,9 +12,17 @@ namespace RayCastEngine {
       Application.SetCompatibleTextRenderingDefault(false);
 
       // Create window and show it
-      Menu game = new Menu();
+      FullGame game = new FullGame();
       game.Show();
-      Application.Run(game);
+      // Loop while created
+      while (game.Created) {
+        // If RefreshMode is "always" explicitly call the Render method each pass
+        if (game.RefreshMode == XNAWinForm.eRefreshMode.Always)
+          game.Render();
+
+        // Let windows do it´s magic
+        Application.DoEvents();
+      }
     }
   }
 }

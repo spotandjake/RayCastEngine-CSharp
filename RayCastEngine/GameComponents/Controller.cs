@@ -101,7 +101,7 @@ namespace RayCastEngine.GameComponents {
               UiUpdate = true,
               removeSelf = true,
             };
-          // TODO: Handle An Ammo Powerup
+          // TODO: Handle An Ammo PowerUp
         }
       }
       // Return The Current State
@@ -113,7 +113,6 @@ namespace RayCastEngine.GameComponents {
       };
     }
   }
-  // Networked Controller
   // Local Controller
   class LocalPlayerController : Controller {
     // Properties
@@ -121,12 +120,10 @@ namespace RayCastEngine.GameComponents {
     private bool Crouch = false;
     private bool Running = false;
     private bool CrouchButtonPressed = false;
-    private Network net;
     private Weapon currentWeapon = new Weapon(WeaponType.Pistol, 10f, false);
     private float LastFired = 0;
     // Constructor
-    public LocalPlayerController(Network net) {
-      this.net = net;
+    public LocalPlayerController() {
     }
     // Methods
     public override WorldUpdateResult Update(TimeSpan gameTime, World world, float health) {
@@ -194,8 +191,6 @@ namespace RayCastEngine.GameComponents {
         if (keys.IsKeyDown(Keys.LeftShift)) Running = true;
         // Shooting
         if (mouse.LeftButton == ButtonState.Pressed || keys.IsKeyDown(Keys.Space)) shooting = true;
-        // Handle Self Kill
-        if (keys.IsKeyDown(Keys.K)) this.Parent.lowerHealth(100);
       }
       #endregion
       Vector3 AdditionalVelocity = Vector3.Zero;
@@ -267,8 +262,6 @@ namespace RayCastEngine.GameComponents {
         if (world.getWall((int)projectedX, (int)Position.Y) == Texture.Air) Position.X = projectedX;
         if (world.getWall((int)Position.X, (int)projectedY) == Texture.Air) Position.Y = projectedY;
         Position.Z += Velocity.Z;
-        // Send Update Data
-        net.sendPositionPackage(Position, Direction);
         // Set Update
         sceneState.SceneUpdate = true;
         sceneState.SpriteUpdate = true;
@@ -288,9 +281,9 @@ namespace RayCastEngine.GameComponents {
       }
       // Lower LastFired
       if (LastFired > 0) LastFired--;
-      // Vibrate Contoller
-      float vibrationAmmount = Math.Max(map(LastFired, currentWeapon.shootRate-7, currentWeapon.shootRate, 0, 1)*2, 0);
-      GamePad.SetVibration(PlayerIndex.One, vibrationAmmount, vibrationAmmount);
+      // Vibrate Controller
+      float vibrationAmount = Math.Max(map(LastFired, currentWeapon.shootRate-7, currentWeapon.shootRate, 0, 1)*2, 0);
+      GamePad.SetVibration(PlayerIndex.One, vibrationAmount, vibrationAmount);
       #endregion
       return sceneState;
     }
@@ -444,7 +437,7 @@ namespace RayCastEngine.GameComponents {
         #endregion
         // TODO: Create A Random Decision Loop
         currentState.SpriteUpdate = true;
-      } else if (closestDistance != 0 && closestDistance < 20) { // If close enough to move see player, we want to take the direction into consideration here eventaully
+      } else if (closestDistance != 0 && closestDistance < 20) { // If close enough to move see player, we want to take the direction into consideration here eventually
         // Move Towards Slower
         // TODO: Add Some Randomness To The Movement
         newPosition = Vector3.Add(
