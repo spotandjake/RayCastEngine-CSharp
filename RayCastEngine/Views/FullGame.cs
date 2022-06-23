@@ -9,6 +9,7 @@ namespace RayCastEngine {
   public partial class FullGame : XNAWinForm {
     // Temp Props
     private bool Running = false;
+    private GameType currentGameType;
     private Engine currentEngine;
     private SpriteBatch screenSprite;
     // Buffers
@@ -26,18 +27,34 @@ namespace RayCastEngine {
       DeviceReset += new GraphicsDeviceDelegate(mWinForm_DeviceReset);
       OnFrameRender += new GraphicsDeviceDelegate(mWinForm_OnFrameRender);
       // Initialize Stuff
+      // Start SinglePlayer
+      singlePlayer();
+    }
+    // Draw Menu
+    // Menu
+    private void singlePlayer() {
+      // Set Data View To Visbile
+      DataView.Visible = true;
+      // GameType
+      currentGameType = GameType.SinglePlayer;
       // Create Game
       currentEngine = new Engine();
       // Start
       Start();
     }
     // Game Loop
+    /// <summary>
+    /// Start GameLoop
+    /// </summary>
     public async void Start() {
+      // Make Sure We Load A Game
+      if (currentEngine == null)
+        throw new ArgumentException("Game not loaded!");
       // Load game content
-      currentEngine.Load();
+      currentEngine.Load(currentGameType);
       // Load Size
       currentEngine.Resize(this.ClientSize.Width, this.ClientSize.Height);
-      // Set game loop state
+      // Set gameloop state
       Running = true;
 
       // Set previous game time
@@ -103,7 +120,7 @@ namespace RayCastEngine {
         screenSprite.Draw(SpriteBufferTexture, new Rectangle(0, 0, SpriteBuffer.Width, SpriteBuffer.Height), Color.White);
         // Draw Our Ui
         screenSprite.Draw(UiBufferTexture, new Rectangle(0, 0, UiBuffer.Width, UiBuffer.Height), Color.White);
-        // Draw The Game Over Screen, If necessary
+        // Draw The Game Over Screen, If neccessairy
         if (currentEngine != null && currentEngine.World.LocalPlayer.health <= 0) {
           // Create Texture
           Texture2D tex = new Texture2D(pDevice, ClientSize.Width, ClientSize.Height);

@@ -30,8 +30,10 @@ namespace RayCastEngine.GameComponents {
     // Screen Size
     private int ScreenWidth;
     private int ScreenHeight;
+    // Network Class
+    private Network net;
     // Methods
-    public void Load() {
+    public void Load(GameType gameType) {
       // Load Images
       textures.Add(Texture.EagleWall, DirectBitmap.fromBitmap(Properties.Resources.eagle));
       textures.Add(Texture.RedBrickWall, DirectBitmap.fromBitmap(Properties.Resources.redbrick));
@@ -62,8 +64,14 @@ namespace RayCastEngine.GameComponents {
       // Power Ups
       textures.Add(Texture.BulletPowerUp, DirectBitmap.fromBitmap(Properties.Resources.Pistol_1_1));
       textures.Add(Texture.HeartPowerUp, DirectBitmap.fromBitmap(Properties.Resources.Heart));
+      // Init Network
+      // Random Username
+      string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      Random random = new Random();
+      string username = string.Join("", Enumerable.Repeat(0, 8).Select(x => chars[random.Next(chars.Length)]));
+      net = new Network("wss://socketTest.spotandjake.repl.co/", username);
       // Generate World
-      World = new World(worldSizeX, worldSizeY);
+      World = new World(worldSizeX, worldSizeY, net);
     }
     public void Resize(int width, int height) {
       // Resize our Buffers
@@ -83,7 +91,7 @@ namespace RayCastEngine.GameComponents {
       // Call World Update
       if (World.LocalPlayer.health <= 0)
         return true;
-      WorldUpdateResult result = World.Update(gameTime);
+      WorldUpdateResult result = World.Update(gameTime, net);
       SceneUpdate |= result.SceneUpdate;
       SpriteUpdate |= result.SpriteUpdate;
       UiUpdate |= result.UiUpdate;

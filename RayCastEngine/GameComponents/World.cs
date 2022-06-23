@@ -19,7 +19,7 @@ namespace RayCastEngine.GameComponents {
     public MidiPlayer sound = new MidiPlayer();
     public Random worldRandomness;
     // Constructor
-    public World(int sizeX, int sizeY) {
+    public World(int sizeX, int sizeY, Network net) {
       // Set Randomness
       worldRandomness = new Random();
       // Set Properties
@@ -32,14 +32,14 @@ namespace RayCastEngine.GameComponents {
       rooms = DungeonBuilder.rooms;
       // Generate Local Player
       // TODO: Make A Better Texture
-      LocalPlayer = new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController());
+      LocalPlayer = new Sprite(DungeonBuilder.getStartPosition(), new Vector3(-1.0f, 0.0f, 0.0f), Texture.Enemy_1, false, new LocalPlayerController(net));
       // Add Aditional Sprites
       SpritePool.Add(LocalPlayer);
       // Start Music
       sound.ManageMusic();
     }
     // Method
-    public WorldUpdateResult Update(TimeSpan gameTime) {
+    public WorldUpdateResult Update(TimeSpan gameTime, Network net) {
       WorldUpdateResult worldUpdate = new WorldUpdateResult {
         SceneUpdate = false,
         SpriteUpdate = false,
